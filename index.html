@@ -1,0 +1,1205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Resolve IT help desk tickets, climb from intern to founder, then build a global datacenter empire.">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style><title>Helpdesk to Billions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: sticky HUD + tab strip; Desk = ticket queue | workspace | runbook, collapsing to one column on phones.
+   Identity: a help-desk console that slowly turns into a private-bank ledger. Ink navy for work, gold for money. */
+:root{
+  --bg:#EDF0F5; --surface:#FFFFFF; --sunk:#F5F7FA; --ink:#121829; --muted:#5A6378; --line:#D5DBE6;
+  --signal:#2449C9; --signal-ink:#FFFFFF; --signal-soft:#E3E9FB;
+  --gold:#94620A; --gold-soft:#F6ECD6;
+  --ok:#1D7A46; --ok-soft:#DFF2E7; --warn:#A35F00; --warn-soft:#FBEBD2; --bad:#B9332A; --bad-soft:#F9E1DE;
+  --shadow:0 1px 2px rgba(18,24,41,.06),0 6px 20px rgba(18,24,41,.06);
+  --o-hoodie:#56637F; --o-blazer:#1F3A7A; --o-turtleneck:#1B1B1F; --o-gold:#B07C14;
+  --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0D1220; --surface:#151C2E; --sunk:#10172A; --ink:#E7EBF3; --muted:#98A2B8; --line:#273150;
+  --signal:#7E9DFF; --signal-ink:#0D1220; --signal-soft:#1D2A4F;
+  --gold:#E6B655; --gold-soft:#2E2614;
+  --ok:#5CCB8B; --ok-soft:#14301F; --warn:#F0A848; --warn-soft:#33240F; --bad:#F2776C; --bad-soft:#3A1916;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0D1220; --surface:#151C2E; --sunk:#10172A; --ink:#E7EBF3; --muted:#98A2B8; --line:#273150;
+  --signal:#7E9DFF; --signal-ink:#0D1220; --signal-soft:#1D2A4F;
+  --gold:#E6B655; --gold-soft:#2E2614;
+  --ok:#5CCB8B; --ok-soft:#14301F; --warn:#F0A848; --warn-soft:#33240F; --bad:#F2776C; --bad-soft:#3A1916;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{background:var(--bg);color:var(--ink)}
+body{font:15px/1.5 var(--f-body);padding-inline:16px;padding-block:0 40px}
+.app{max-width:1240px;margin:0 auto}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(1.7rem,3.6vw,2.6rem);font-weight:800;letter-spacing:-.02em}
+h2{font-size:1.3rem;font-weight:700}
+h3{font-size:1rem;font-weight:700}
+p{margin:0}
+.mono{font-family:var(--f-mono);font-size:.88em}
+.muted{color:var(--muted)}
+.eyebrow{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+button:disabled{cursor:not-allowed;opacity:.45}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:.5rem .85rem;font-weight:600;font-size:.9rem}
+.btn:hover:not(:disabled){border-color:var(--signal)}
+.btn.primary{background:var(--signal);color:var(--signal-ink);border-color:var(--signal)}
+.btn.primary:hover:not(:disabled){filter:brightness(1.08)}
+.btn.danger{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 45%,var(--line))}
+.btn.on{background:var(--signal-soft);border-color:var(--signal)}
+.btn.gold{background:var(--gold);color:var(--surface);border-color:var(--gold)}
+.btn.big{padding:.75rem 1.3rem;font-size:1rem}
+.row{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+
+/* HUD */
+.hud{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:14px 10px;display:grid;grid-template-columns:auto 1fr auto;gap:12px 24px;align-items:center;border-bottom:1px solid var(--line)}
+.who{display:flex;gap:10px;align-items:center;min-width:0}
+.pname{font-family:var(--f-display);font-weight:700;font-size:1.05rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prank{font-size:.8rem;color:var(--muted)}
+.avatar{--o:var(--o-hoodie);width:42px;height:42px;border-radius:50%;background:var(--o);color:#fff;display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:.95rem;flex:none;box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--o)}
+.avatar.lg{width:84px;height:84px;font-size:1.8rem}
+.avatar[data-o="blazer"]{--o:var(--o-blazer)} .avatar[data-o="turtleneck"]{--o:var(--o-turtleneck)} .avatar[data-o="gold"]{--o:var(--o-gold)}
+.stats{display:flex;flex-wrap:wrap;gap:6px 22px;margin:0;justify-content:center}
+.stats div{min-width:0}
+.stats dt{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.stats dd{margin:0;font-family:var(--f-display);font-weight:700;font-size:1.15rem;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:8px}
+.stats .gold{color:var(--gold)}
+.meter{display:inline-block;width:54px;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--ok)}
+.meter.low i{background:var(--bad)}
+.xp{min-width:180px}
+.xpl{display:flex;justify-content:space-between;font-size:.75rem;color:var(--muted);font-variant-numeric:tabular-nums;gap:8px}
+.bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden;margin-top:4px}
+.bar i{display:block;height:100%;background:var(--signal);transition:width .4s}
+.bar.goldbar i{background:var(--gold)}
+.tabs{display:flex;gap:4px;padding-block:12px;overflow-x:auto}
+.tabs button{border:0;background:none;padding:.45rem .9rem;border-radius:999px;font-weight:600;color:var(--muted)}
+.tabs button[aria-current="page"]{background:var(--ink);color:var(--bg)}
+.tabs .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--gold);margin-left:6px;vertical-align:middle}
+
+/* Panels */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px}
+.desk{display:grid;grid-template-columns:250px minmax(0,1fr) 290px;gap:16px;align-items:start}
+.queue h2,.runbook h2{display:flex;justify-content:space-between;align-items:baseline;font-size:1.05rem;margin-bottom:10px}
+.queue ol{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.qi{width:100%;text-align:left;border:1px solid var(--line);background:var(--sunk);border-radius:8px;padding:9px 10px;display:grid;gap:3px}
+.qi[aria-current="true"]{border-color:var(--signal);background:var(--signal-soft)}
+.qi .top{display:flex;justify-content:space-between;gap:6px;font-size:.78rem}
+.qi .who2{font-weight:600;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qi .sub{font-size:.8rem;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:.72rem;font-weight:600;padding:1px 8px;border-radius:999px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.pill.ok{background:var(--ok-soft);color:var(--ok)} .pill.warn{background:var(--warn-soft);color:var(--warn)} .pill.bad,.pill.late{background:var(--bad-soft);color:var(--bad)} .pill.info{background:var(--signal-soft);color:var(--signal)} .pill.gold{background:var(--gold-soft);color:var(--gold)}
+.chip{font-size:.75rem;border:1px solid var(--line);border-radius:6px;padding:1px 7px;color:var(--muted)}
+
+.work{display:grid;gap:14px}
+.tk-head{display:grid;gap:8px}
+.tk-meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.sla{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;font-size:.8rem;font-variant-numeric:tabular-nums}
+.sla .bar i{transition:width 1s linear}
+.sla.warn .bar i{background:var(--warn)} .sla.late .bar i{background:var(--bad)}
+.msg{background:var(--sunk);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;gap:8px}
+.msg-from{font-size:.82rem;color:var(--muted)}
+.msg blockquote{margin:0;font-size:1rem;max-width:65ch}
+.given{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.85rem;padding-top:8px;border-top:1px dashed var(--line)}
+.given b{font-weight:600}
+.step{display:grid;grid-template-columns:28px minmax(0,1fr);gap:12px}
+.step .n{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-family:var(--f-display);font-weight:700;font-size:.85rem;color:var(--muted)}
+.step.done .n{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.step-body{display:grid;gap:10px;min-width:0}
+.rec{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px 16px;margin:0;background:var(--sunk);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.rec dt{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.rec dd{margin:0;font-size:.9rem;overflow-wrap:anywhere}
+.rec .wide{grid-column:1/-1}
+.subpanel{border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;gap:10px;background:var(--sunk)}
+.temp{font-family:var(--f-mono);font-size:1.05rem;letter-spacing:.04em}
+label.check{display:flex;gap:8px;align-items:center;font-size:.9rem}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.form label{display:grid;gap:4px;font-size:.8rem;color:var(--muted);font-weight:600}
+.form input[type=text],.form select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:.45rem .6rem;font-size:.9rem;width:100%}
+.groups{display:flex;flex-wrap:wrap;gap:6px 14px}
+.groups label{display:flex;gap:6px;align-items:center;font-family:var(--f-mono);font-size:.8rem;color:var(--ink);font-weight:400}
+.log{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-family:var(--f-mono);font-size:.8rem;color:var(--muted)}
+.log li::before{content:"› ";color:var(--signal)}
+.hint{background:var(--gold-soft);color:var(--ink);border-radius:8px;padding:10px 12px;font-size:.88rem}
+.result{border-radius:12px;padding:16px 18px;display:grid;gap:10px;border:1px solid var(--line)}
+.result.l0{background:var(--ok-soft)} .result.l1{background:var(--warn-soft)} .result.l2,.result.l3{background:var(--bad-soft)}
+.result ul{margin:0;padding-left:18px;display:grid;gap:4px;max-width:70ch}
+.delta{display:flex;flex-wrap:wrap;gap:6px}
+
+.runbook{font-size:.86rem}
+.runbook details{border-top:1px solid var(--line);padding-block:8px}
+.runbook details:first-of-type{border-top:0}
+.runbook summary{font-weight:600;cursor:pointer}
+.runbook ul{margin:6px 0 0;padding-left:18px;display:grid;gap:4px}
+.runbook table{border-collapse:collapse;width:100%;margin-top:6px;font-size:.78rem}
+.runbook td{border-top:1px solid var(--line);padding:4px 4px 4px 0;vertical-align:top}
+.runbook td:first-child{font-weight:600}
+
+.brief{display:grid;gap:16px;padding:28px}
+.brief .lede{font-size:1.05rem;max-width:62ch;color:var(--muted)}
+.brief-grid{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:16px;align-items:start}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.kpi{background:var(--sunk);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.kpi b{display:block;font-family:var(--f-display);font-size:1.3rem;font-variant-numeric:tabular-nums}
+.kpi span{font-size:.75rem;color:var(--muted)}
+
+.ladder{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.ladder li{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:12px;align-items:start;padding:12px 0;border-top:1px solid var(--line)}
+.ladder li:first-child{border-top:0}
+.ladder .mk{width:14px;height:14px;border-radius:50%;border:2px solid var(--line);margin-top:4px}
+.ladder .past .mk{background:var(--ink);border-color:var(--ink)}
+.ladder .now .mk{background:var(--gold);border-color:var(--gold);box-shadow:0 0 0 4px var(--gold-soft)}
+.ladder .future{color:var(--muted)}
+.cols{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:16px;align-items:start}
+.journal{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.journal li{display:grid;gap:2px;font-size:.9rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:8px;align-content:start}
+.card .price{font-family:var(--f-display);font-weight:700;font-variant-numeric:tabular-nums}
+.notice{border:1px dashed var(--gold);background:var(--gold-soft);border-radius:10px;padding:10px 14px;font-size:.88rem}
+.section{display:grid;gap:12px;margin-bottom:26px}
+.small{font-size:.82rem}
+.empire-head{margin-bottom:20px}
+.cards.wide{grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.card.build{border-style:dashed;border-color:var(--gold);background:var(--gold-soft)}
+.mini{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:0}
+.mini dt{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.mini dd{margin:0;font-weight:600;font-variant-numeric:tabular-nums;font-size:.9rem}
+.bar.health i{background:var(--ok)}
+.acts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.acts .btn{font-size:.78rem;padding:.45rem .5rem}
+.incident{border:1px solid color-mix(in srgb,var(--bad) 50%,var(--line));background:var(--bad-soft);border-radius:12px;padding:16px;display:grid;gap:10px}
+.incident .choice{background:var(--surface)}
+.table-wrap{overflow-x:auto}
+table.staff{border-collapse:collapse;width:100%;font-size:.88rem}
+table.staff th{text-align:left;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:6px 8px 6px 0}
+table.staff td{border-top:1px solid var(--line);padding:10px 8px 10px 0;vertical-align:top}
+table.staff .num{font-variant-numeric:tabular-nums;white-space:nowrap}
+table.staff .btn{font-size:.78rem;padding:.4rem .6rem;white-space:nowrap}
+
+/* Modal */
+.scrim{position:fixed;inset:0;background:rgba(8,12,22,.55);display:grid;place-items:center;padding:16px;z-index:20}
+.modal{background:var(--surface);color:var(--ink);border-radius:16px;max-width:560px;width:100%;max-height:calc(100% - 32px);overflow:auto;padding:26px;display:grid;gap:14px;box-shadow:var(--shadow);border:1px solid var(--line)}
+.modal .body{display:grid;gap:10px;color:var(--muted);max-width:62ch}
+.choices{display:grid;gap:8px}
+.choice{text-align:left;border:1px solid var(--line);background:var(--sunk);border-radius:10px;padding:12px 14px;display:grid;gap:2px}
+.choice:hover{border-color:var(--signal)}
+.choice b{font-size:.95rem}
+.choice span{font-size:.82rem;color:var(--muted)}
+.modal input[type=text]{font:inherit;font-size:1rem;color:var(--ink);background:var(--sunk);border:1px solid var(--line);border-radius:8px;padding:.55rem .7rem;width:100%}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:.6rem 1rem;border-radius:999px;font-size:.88rem;font-weight:500;z-index:30;max-width:calc(100% - 32px);text-align:center}
+
+@media (max-width:1060px){
+  .desk{grid-template-columns:220px minmax(0,1fr)}
+  .desk .runbook{grid-column:1/-1}
+  .brief-grid{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  .hud{grid-template-columns:1fr;gap:10px}
+  .stats{justify-content:flex-start;gap:6px 16px}
+  .desk,.cols{grid-template-columns:1fr}
+  .queue ol{grid-auto-flow:column;grid-auto-columns:minmax(170px,1fr);overflow-x:auto;padding-bottom:4px}
+  .brief{padding:20px}
+  .panel{padding:14px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+</head>
+<body>
+<div class="app">
+  <header class="hud" id="hud"></header>
+  <nav class="tabs" id="tabs" aria-label="Sections"></nav>
+  <main id="view"></main>
+</div>
+<div id="modalRoot"></div>
+<div id="toastRoot"></div>
+
+<script>
+(() => {
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const rnd = a => a[Math.floor(Math.random() * a.length)];
+const ri = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+function money(n){
+  const s = n < 0 ? '−' : ''; n = Math.abs(n);
+  if (n >= 1e12) return s + '$' + (n/1e12).toFixed(2) + 'T';
+  if (n >= 1e9) return s + '$' + (n/1e9).toFixed(2) + 'B';
+  if (n >= 1e6) return s + '$' + (n/1e6).toFixed(1) + 'M';
+  if (n >= 1e5) return s + '$' + Math.round(n/1e3) + 'K';
+  return s + '$' + Math.round(n).toLocaleString('en-US');
+}
+
+/* ---------- world data ---------- */
+const FIRST = ['Priya','Marcus','Elena','Tomás','Aisha','Kenji','Grace','Diego','Fatima','Noah','Lena','Omar','Sofia','Wei','Hannah','Jamal','Ingrid','Ravi','Chloe','Mateo','Amara','Lucas','Yuki','Bianca'];
+const LAST = ['Nair','Okafor','Santos','Lindqvist','Haddad','Tanaka','Mbeki','Romero','Kowalski','Brennan','Osei','Fischer','Morales','Chen','Patel','Novak','Delgado','Sato','Walsh','Adeyemi','Kim','Varga','Silva','Moreau'];
+const MANAGERS = ['Dana Ortiz','Ruth Abara','Felix Haugen','Monica Reyes','Sanjay Iyer','Claire Dubois','Victor Mensah','Hye-jin Park'];
+const DEPTS = ['Sales','Engineering','Finance','HR','Marketing','Operations'];
+const TITLES = {Sales:['Account Executive','Sales Development Rep'],Engineering:['Software Engineer','QA Analyst','DevOps Engineer'],Finance:['Financial Analyst','Accounts Payable Clerk'],HR:['HR Generalist','Recruiter'],Marketing:['Content Strategist','Brand Designer'],Operations:['Logistics Coordinator','Warehouse Lead']};
+const GROUPS = {Sales:['SG-Sales','CRM-Users'],Engineering:['SG-Engineering','GitHub-Users'],Finance:['SG-Finance','ERP-Users'],HR:['SG-HR','HRIS-Users'],Marketing:['SG-Marketing','CMS-Users'],Operations:['SG-Operations','WMS-Users']};
+const ALL_GROUPS = ['All-Staff', ...DEPTS.flatMap(d => GROUPS[d]), 'Domain-Admins'];
+const LICENSES = ['M365 E3','M365 E5','No license'];
+const licenseFor = d => d === 'Engineering' ? 'M365 E5' : 'M365 E3';
+const CLIENTS = [{name:'Halcyon Foods',domain:'halcyonfoods.com'},{name:'Northpine Credit Union',domain:'northpinecu.org'},{name:'Vireo Health',domain:'vireohealth.com'},{name:'Quarry & Stone Law',domain:'quarrystone.law'},{name:'Lumen Aerospace',domain:'lumenaero.com'},{name:'Tidewater Schools',domain:'tidewater.edu'}];
+const HOME = {name:'Brightline Logistics',domain:'brightline.co'};
+const WORDS = ['Cedar','Harbor','Copper','Maple','Quartz','Juniper','Falcon','Ember','Tundra','Willow'];
+
+const RANKS = [
+  {name:'Help Desk Intern',xp:0,pay:40,tickets:4,blurb:'Phones, passwords, and a desk next to the printer.'},
+  {name:'IT Support Technician',xp:150,pay:90,tickets:5,blurb:'New hire accounts are yours now. Follow the naming rule.'},
+  {name:'Systems Administrator',xp:420,pay:220,tickets:5,blurb:'You hold the keys to the directory. Attackers know it, and they will call.'},
+  {name:'IT Manager',xp:850,pay:520,tickets:6,blurb:'Four technicians report to you. Lockouts start looking suspicious.'},
+  {name:'Chief Technology Officer',xp:1450,pay:1400,tickets:6,blurb:'Board meetings by day, password resets by habit.'},
+  {name:'Startup Founder',xp:2300,pay:0,tickets:6,blurb:'Your identity platform runs the help desks of other companies. Every clean ticket grows the valuation.'},
+  {name:'Tech Billionaire',xp:Infinity,pay:0,tickets:6,blurb:'Your stake is worth over $1B. The tickets still come in.'}
+];
+const POOLS = [
+  ['reset','reset','unlock','resetLocked'],
+  ['reset','unlock','resetLocked','create','create'],
+  ['reset','unlock','resetLocked','create','social','createFake'],
+  ['reset','unlock','resetLocked','create','social','createFake','unlockAttack']
+];
+
+const KINDS = {
+  reset:{label:'Password reset',lookup:true,identity:true,actions:['reset'],forbidden:[],
+    hint:'Details match the directory. Reset the password and require a change at next sign-in. The account is not locked, so there is nothing to unlock.',
+    win:'Verified, reset, and forced a new password at next sign-in. Textbook.'},
+  resetLocked:{label:'Account lockout',lookup:true,identity:true,actions:['unlock','reset'],forbidden:[],
+    hint:'A legitimate user, with failures from their own laptop. They need both: unlock the account and reset the password.',
+    win:'Unlocked and reset in one pass. The user is back at work.'},
+  unlock:{label:'Account lockout',lookup:true,identity:true,actions:['unlock'],forbidden:[],
+    hint:'Failures come from their own phone and they know the new password. Unlock only.',
+    win:'Unlock only, with no unnecessary password churn.'},
+  unlockAttack:{label:'Account lockout',lookup:true,identity:true,actions:['escalate'],forbidden:['unlock'],
+    hint:'Read the failure count and source. Dozens of attempts from an unknown external IP is a password spray. Leave it locked and escalate to Security.',
+    win:'You spotted a password spray and kept the door shut. Security blocked the IP range.'},
+  social:{label:'Password reset',lookup:true,identity:false,actions:['escalate'],forbidden:['reset','unlock'],
+    hint:'Compare the employee ID and manager character by character. Urgency plus a mismatch means impersonation. Flag it and escalate.',
+    win:'You caught a vishing attempt. Security added the caller to their watch list.'},
+  create:{label:'New hire account',lookup:false,identity:true,actions:['create'],forbidden:[],
+    hint:'The request came through the HR portal on the company domain. Apply the naming rule, check availability, give All-Staff plus the two department groups, and pick the license for the department.',
+    win:'Right name, right groups, right license. Their first day will go smoothly.'},
+  createFake:{label:'New hire account',lookup:false,identity:false,actions:['escalate'],forbidden:['create'],
+    hint:'Read the sender domain letter by letter. It is a lookalike, and it skips the HR portal. Mark it not authorized and escalate.',
+    win:'You stopped a lookalike-domain request that would have given an attacker a foothold.'}
+};
+const MISSING = {
+  unlock:'The account is still locked, so the user still cannot sign in.',
+  reset:'The user still does not know their password. A reset was needed.',
+  escalate:'This needed to go to Security.',
+  create:'The new hire still has no account.'
+};
+const EXTRA = {
+  reset:'They knew their password. An unneeded reset forces a change and adds friction.',
+  unlock:'Unlock was not needed here.',
+  escalate:'This was a routine, legitimate request. Escalating it left the user stuck for hours.',
+  create:'No account should have been created.'
+};
+const FORBID = {
+  unlockAttack:{unlock:'You unlocked an account under a password-spray attack. The attacker gets another round of guesses.'},
+  social:{reset:'You handed a password to an impersonator. Urgency plus authority plus "no time to verify" is the classic vishing script.',
+          unlock:'You unlocked an account for an impersonator.'},
+  createFake:{create:'You created an account from a lookalike-domain request. That is how attackers plant a foothold.'}
+};
+const SHOP = [
+  {id:'espresso',name:'Espresso machine',price:300,effect:'+30 seconds on every ticket SLA.'},
+  {id:'monitor',name:'Second monitor',price:800,effect:'The directory record opens automatically with each ticket.'},
+  {id:'keyboard',name:'Mechanical keyboard',price:1500,effect:'+15% pay on every resolved ticket.'},
+  {id:'headset',name:'Noise-cancelling headset',price:4000,effect:'+10% XP on every ticket.'},
+  {id:'office',name:'Corner office',price:20000,effect:'+1 extra reputation on every clean resolution.'}
+];
+const OUTFITS = [
+  {id:'hoodie',name:'Help desk hoodie',gems:0},
+  {id:'blazer',name:'Navy blazer',gems:20},
+  {id:'turtleneck',name:'Black turtleneck',gems:60},
+  {id:'gold',name:'Gold-trim headset',gems:120}
+];
+const PACKS = [
+  {id:'p1',gems:50,price:'$0.99',label:'Pocket change'},
+  {id:'p2',gems:300,price:'$4.99',label:'Stock options'},
+  {id:'p3',gems:1000,price:'$9.99',label:'Seed round'},
+  {id:'starter',gems:200,price:'$2.99',label:'Starter pack',extra:'Includes the espresso machine'}
+];
+
+/* ---------- empire: datacenters, staff, OS ---------- */
+const CITIES = ['Austin','Ashburn','Dublin','Frankfurt','Singapore','Tokyo','São Paulo','Sydney','Mumbai','Johannesburg','Stockholm','Reykjavík'];
+const dcCost = i => 50e3 * Math.pow(4.5, i);
+const rackRev = i => 25 * Math.pow(2.6, i);
+const rackCost = (i, n) => 30e3 * Math.pow(2.6, i) * Math.pow(1.1, n);
+const maxRacks = dc => 8 + 8 * dc.exp;
+const expandCost = dc => dcCost(dc.tier) * .6 * (dc.exp + 1);
+const coolCost = dc => rackCost(dc.tier, 0) * 6 * (dc.cooling + 1);
+const maintCost = dc => Math.max(1000, rackRev(dc.tier) * Math.max(1, dc.racks) * 120);
+const STAFF = [
+  {id:'tech',name:'Help desk technicians',effect:'+4% revenue each. Happier customers renew.',salary:4},
+  {id:'sre',name:'Site reliability engineers',effect:'Each covers 2 datacenters: keeps health up and handles incidents for you.',salary:10},
+  {id:'sec',name:'Security analysts',effect:'Each cuts attack incidents by 20%, up to 80%.',salary:12},
+  {id:'sales',name:'Sales reps',effect:'+6% revenue each.',salary:6}
+];
+const OS_STAGES = [
+  {name:'Kernel',cost:2e6,secs:300},
+  {name:'Drivers and hardware support',cost:8e6,secs:600},
+  {name:'Desktop shell',cost:3e7,secs:900},
+  {name:'App store',cost:1.2e8,secs:1200},
+  {name:'Public launch',cost:5e8,secs:1800}
+];
+const INCIDENTS = [
+  {id:'cooling',sec:false,title:'Cooling failure',desc:'CRAC unit 2 failed. Cold-aisle inlet temperature is 35°C and climbing.',
+   opts:[['Shift workloads to other halls and dispatch HVAC',0,'Move the load off the heat, then fix the cause.'],
+         ['Prop the doors open and add floor fans',1,'Outside air helps a little but brings in dust and humidity.'],
+         ['Raise fan speeds and wait it out',2,'Fans cannot beat a dead chiller. Servers throttled and some shut down.']]},
+  {id:'power',sec:false,title:'Utility power lost',desc:'Running on UPS batteries with about 9 minutes left. The backup generator did not auto-start.',
+   opts:[['Start the generator manually and shed non-critical load',0,'Generator first, then stretch the UPS by dropping low-priority racks.'],
+         ['Gracefully shut everything down',1,'Safe, but every customer went offline.'],
+         ['Wait for the utility to restore power',2,'The UPS drained and racks crashed hard. Some disks did not come back.']]},
+  {id:'ddos',sec:true,title:'DDoS attack',desc:'Inbound traffic is 40× normal from tens of thousands of IPs. Customer logins are timing out.',
+   opts:[['Turn on upstream scrubbing and edge rate limiting',0,'Filter attack traffic before it reaches you.'],
+         ['Block the top 20 attacking IPs by hand',1,'A botnet has thousands more. It helped for a few minutes.'],
+         ['Reboot the edge routers',2,'The flood resumed the moment they came back, plus you added downtime.']]},
+  {id:'raid',sec:false,title:'Storage array degraded',desc:'2 of 8 disks failed in a RAID 6 storage node. One more failure means data loss.',
+   opts:[['Hot-swap both drives, let it rebuild, confirm backups',0,'Replace, rebuild, and confirm you can restore.'],
+         ['Restore the whole node from backup right now',1,'It worked, but you caused hours of avoidable downtime.'],
+         ['Leave it. RAID will handle it',2,'A third disk failed during peak load. You lost customer data.']]},
+  {id:'cert',sec:false,title:'Expired TLS certificate',desc:'The customer login portal shows a full-page security warning. The certificate expired at midnight.',
+   opts:[['Renew it now and turn on automatic renewal',0,'Fix it and make sure it cannot happen again.'],
+         ['Swap in a self-signed certificate',1,'Browsers still warn. Customers called support all day.'],
+         ['Tell customers to click past the warning',2,'You just trained customers to ignore security warnings.']]},
+  {id:'ransom',sec:true,title:'Ransomware detected',desc:'Endpoint protection flagged mass file encryption on a file server. A ransom note appeared.',
+   opts:[['Isolate the host and restore from immutable backups',0,'Contain first, then recover from backups the attacker cannot touch.'],
+         ['Reboot the server',1,'The encryption stopped, but you lost the memory evidence and it spread to a share.'],
+         ['Pay the ransom',2,'The decryptor half-worked, and now you are on a list of companies that pay.']]},
+  {id:'cve',sec:true,title:'Critical hypervisor CVE',desc:'A remote-code-execution bug in your hypervisor was published with a working exploit.',
+   opts:[['Patch in rolling waves and live-migrate VMs',0,'Patched fast with no customer downtime.'],
+         ['Patch every host at once right now',1,'Patched, but every VM rebooted at the same time.'],
+         ['Wait for the next maintenance window',2,'Someone used the exploit before the window arrived.']]}
+];
+const MILESTONES = [{v:1e10,name:'Decabillionaire',gems:100},{v:1e11,name:'Hundred-billion club',gems:250},{v:1e12,name:'Trillionaire',gems:1000}];
+const shuffle = a => a.map(v => [Math.random(), v]).sort((x, y) => x[0] - y[0]).map(x => x[1]);
+function fmtDur(s){ s = Math.round(s); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60); return h ? `${h}h ${m}m` : m ? `${m}m ${s % 60}s` : `${s}s`; }
+
+/* ---------- state ---------- */
+const KEY = 'h2b-save-v1';
+let state;
+let toastTimer;
+function fresh(){
+  return {v:1,name:'Jordan Lee',outfit:'hoodie',outfits:['hoodie'],items:[],cash:150,gems:25,rep:50,xp:0,rank:0,day:1,seq:10421,
+    stats:{resolved:0,perfect:0,breach:0,shifts:0},journal:[],founder:null,empire:null,milestones:[],shift:null,lastShift:null,modals:[{type:'welcome'}],tab:'desk',confirmReset:false};
+}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+function load(){ try{ const s = JSON.parse(localStorage.getItem(KEY)); return s && s.v === 1 ? s : null; }catch(e){ return null; } }
+const owns = id => state.items.includes(id);
+const netWorth = () => state.cash + (state.founder ? state.founder.stake * state.founder.valuation : 0);
+const initials = n => n.trim().split(/\s+/).map(w => w[0]).slice(0,2).join('').toUpperCase() || '?';
+function toast(msg){
+  const r = $('#toastRoot'); r.innerHTML = `<div class="toast" role="status">${esc(msg)}</div>`;
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => r.innerHTML = '', 2600);
+}
+
+/* ---------- ticket generation ---------- */
+function company(){ return state.founder ? rnd(CLIENTS) : HOME; }
+function lookalike(d){
+  const opts = [d.replace('.', '-') + '.net', d.replace(/\.[a-z]+$/, '-hr.com')];
+  if (d.includes('i')) opts.push(d.replace('i', 'l'));
+  if (d.includes('o')) opts.push(d.replace('o', '0'));
+  return rnd(opts);
+}
+function swapDigits(id){
+  const d = id.slice(2).split(''); const i = ri(0, 3);
+  if (d[i] === d[i+1]) { d[i+1] = String((+d[i+1] + 3) % 10); } else { [d[i], d[i+1]] = [d[i+1], d[i]]; }
+  return 'E-' + d.join('');
+}
+const fmtTime = () => `${ri(7,8)}:${String(ri(0,59)).padStart(2,'0')} AM`;
+
+function makeTicket(kind, i){
+  const co = company();
+  const first = rnd(FIRST), last = rnd(LAST), dept = rnd(DEPTS);
+  const username = (first[0] + last).toLowerCase().normalize('NFD').replace(/[^a-z]/g, '');
+  const empId = 'E-' + ri(10000, 99999);
+  const manager = rnd(MANAGERS);
+  const user = {first,last,username,empId,manager,dept,title:rnd(TITLES[dept]),status:'Active',badPwd:0,lastFail:'None',src:'None',phone:'ext. ' + ri(2000,7999)};
+  const t = {id:'INC-' + (state.seq++), kind, co, user, age:0, sla:100 + i*55 + (owns('espresso') ? 30 : 0), done:false, result:null,
+    provided:{empId, manager}, temp:`${rnd(WORDS)}-${rnd(WORDS)}-${ri(1000,9999)}`,
+    st:{lookedUp:owns('monitor') && KINDS[kind].lookup, verified:null, actions:[], mustChange:false, blind:false, resetOpen:false, hint:false, avail:null,
+        form:{username:'',dept:'',groups:[],license:''}}};
+  const name = `${first} ${last}`;
+  switch (kind){
+    case 'reset':
+      t.channel = 'Phone'; t.from = `${name} · ${dept}`; t.subject = 'Forgot my password';
+      t.body = rnd([`Hi, it's ${first} in ${dept}. I just got back from two weeks off and my password is completely gone from my head.`,
+                    `Morning! I changed my password Friday and now I can't remember what I picked. Can you reset it?`,
+                    `I think my password expired over the weekend and I can't remember the new one I set.`]);
+      break;
+    case 'resetLocked':
+      Object.assign(user, {status:'Locked', badPwd:5, lastFail:'Today ' + fmtTime(), src:`LT-${username.toUpperCase()} · company laptop · HQ network`});
+      t.channel = 'Phone'; t.from = `${name} · ${dept}`; t.subject = 'Locked out and forgot password';
+      t.body = `I kept trying old passwords and now it says my account is locked. Honestly, I don't remember the current one either.`;
+      break;
+    case 'unlock':
+      Object.assign(user, {status:'Locked', badPwd:5, lastFail:'Today ' + fmtTime(), src:`iPhone · Mail app · ${co.name} Wi-Fi`});
+      t.channel = 'Chat'; t.from = `${name} · ${dept}`; t.subject = 'Account locked';
+      t.body = `I changed my password yesterday but my phone kept using the old one, and now I'm locked out. I do know the new password.`;
+      break;
+    case 'unlockAttack':
+      Object.assign(user, {status:'Locked', badPwd:ri(38,95), lastFail:'Today ' + fmtTime(), src:`${rnd(['185.220.101','45.141.84','91.240.118'])}.${ri(2,250)} · unknown device · ${rnd(['Netherlands','Romania','Unknown region'])}`});
+      t.channel = 'Chat'; t.from = `${name} · ${dept}`; t.subject = 'Locked out?';
+      t.body = `My account says it's locked, but I haven't even tried to log in today. Can you just unlock it? I have a meeting in ten minutes.`;
+      break;
+    case 'social': {
+      user.title = rnd(['VP of Finance','Chief Revenue Officer','VP of Sales']);
+      const mismatchManager = Math.random() < .4;
+      t.provided = mismatchManager ? {empId, manager: rnd(MANAGERS.filter(m => m !== manager))} : {empId: swapDigits(empId), manager};
+      t.channel = rnd(['Phone','Phone','Email']);
+      t.from = t.channel === 'Email' ? `${first.toLowerCase()}.${last.toLowerCase()}${ri(70,99)}@gmail.com` : `Caller says: ${name}, ${user.title}`;
+      t.subject = 'URGENT: reset needed now';
+      t.body = rnd([`This is ${name}, ${user.title}. I'm boarding a flight in five minutes and I'm locked out of everything. Reset it and text the new password to this number. There is no time for the usual process.`,
+                    `${first} here, ${user.title}. The board deck is due in an hour and my password isn't working. Send a temporary password to my personal email. I'll be very unhappy if this is delayed.`]);
+      break;
+    }
+    case 'create': case 'createFake': {
+      const hire = {first:rnd(FIRST), last:rnd(LAST), dept:rnd(DEPTS)};
+      hire.title = rnd(TITLES[hire.dept]);
+      const base = (hire.first[0] + hire.last).toLowerCase().normalize('NFD').replace(/[^a-z]/g, '');
+      const taken = Math.random() < .45;
+      const twinFirst = rnd(FIRST.filter(f => f[0] === hire.first[0] && f !== hire.first)) || hire.first[0] + '.';
+      t.hire = hire; t.user = null;
+      t.expectForm = {username: taken ? base + '2' : base, base, taken, twin: `${twinFirst} ${hire.last} (${rnd(DEPTS)})`, dept:hire.dept, groups:['All-Staff', ...GROUPS[hire.dept]], license:licenseFor(hire.dept)};
+      if (kind === 'create'){
+        t.channel = 'HR Portal'; t.from = `hr@${co.domain}`; t.subject = `New hire: ${hire.first} ${hire.last}`;
+        t.body = `Please provision an account for ${hire.first} ${hire.last}, ${hire.title} in ${hire.dept}, starting Monday. Manager: ${rnd(MANAGERS)}.`;
+      } else {
+        t.channel = 'Email'; t.from = `hr@${lookalike(co.domain)}`; t.subject = 'Contractor access needed today';
+        t.hire.dept = 'Finance';
+        t.body = `Hi IT, please create an account for our new contractor ${hire.first} ${hire.last} with Finance and ERP access. The CFO approved it verbally. Please skip the portal, we are in a hurry, and reply with the password.`;
+      }
+      break;
+    }
+  }
+  return t;
+}
+
+/* ---------- shift flow ---------- */
+function startShift(){
+  const rank = state.rank;
+  const pool = POOLS[Math.min(rank, 3)];
+  const n = RANKS[rank].tickets;
+  const kinds = [];
+  for (let i = 0; i < n; i++) kinds.push(rnd(pool));
+  if (rank >= 2 && !kinds.some(k => ['social','createFake','unlockAttack'].includes(k))) kinds[ri(1, n-1)] = rnd(pool.filter(k => ['social','createFake','unlockAttack'].includes(k)));
+  if (rank >= 1 && !kinds.includes('create') && !kinds.includes('createFake')) kinds[0] = 'create';
+  const tickets = kinds.map((k, i) => makeTicket(k, i));
+  state.shift = {tickets, active:tickets[0].id, cash:0, xp:0, rep:0, gems:0, valStart: state.founder ? state.founder.valuation : 0};
+  state.tab = 'desk';
+  commit();
+}
+const activeTicket = () => state.shift && state.shift.tickets.find(t => t.id === state.shift.active);
+
+function act(type){
+  const t = activeTicket(); if (!t || t.done) return;
+  const st = t.st, K = KINDS[t.kind];
+  if (st.actions.some(a => a.type === type)) { toast('Already done on this ticket.'); return; }
+  if (K.lookup && (type === 'unlock' || type === 'reset') && !st.lookedUp) { toast('Look up the account first.'); return; }
+  if (type === 'unlock' && t.user.status !== 'Locked') { toast(`${t.user.username} is not locked. Nothing to unlock.`); return; }
+  if (['unlock','reset','create'].includes(type) && st.verified === null) st.blind = true;
+  let line = '';
+  if (type === 'unlock'){ t.user.status = 'Active'; t.user.badPwd = 0; line = `Unlock-Account ${t.user.username} · status Active`; }
+  if (type === 'reset'){ st.mustChange = !!($('#mustChange') && $('#mustChange').checked); st.resetOpen = false;
+    line = `Set-Password ${t.user.username} · temp issued · change at next sign-in: ${st.mustChange ? 'yes' : 'NO'}`; }
+  if (type === 'escalate'){ line = `Escalated to Security Operations · ${t.id}`; }
+  if (type === 'create'){
+    const f = st.form;
+    if (!f.username || !f.dept || !f.license){ toast('Fill in username, department and license first.'); return; }
+    st.created = JSON.parse(JSON.stringify(f));
+    line = `New-User ${f.username} · ${f.dept} · ${f.groups.join(', ') || 'no groups'} · ${f.license}`;
+  }
+  st.actions.push({type, line});
+  commit();
+}
+
+function grade(t){
+  const K = KINDS[t.kind], st = t.st, did = new Set(st.actions.map(a => a.type));
+  const notes = []; let level = 0;
+  const bump = (l, m) => { level = Math.max(level, l); notes.push(m); };
+  for (const f of K.forbidden) if (did.has(f)) bump(3, FORBID[t.kind][f]);
+  for (const a of K.actions) if (!did.has(a)) bump(2, MISSING[a]);
+  for (const a of did) if (!K.actions.includes(a) && !K.forbidden.includes(a)) bump(a === 'escalate' ? 2 : 1, EXTRA[a]);
+  if (st.verified === null) bump(1, 'You never recorded the identity check. Verify before every account change.');
+  else if (st.verified !== K.identity) bump(1, K.identity ? 'The details actually matched. Read the record again before flagging someone.' : 'The details did not match. You should have flagged it.');
+  if (st.blind && st.verified !== null) bump(1, 'You changed the account before verifying. Order matters.');
+  if (did.has('reset') && !st.mustChange && level < 3) bump(1, 'Always require a password change at next sign-in so only the user knows the final password.');
+  if (did.has('create') && t.kind === 'create'){
+    const f = st.created, x = t.expectForm; let errs = 0;
+    if (f.username.trim().toLowerCase() !== x.username){ errs++; bump(1, `Username should be ${x.username}: ${x.taken ? `${x.base} was taken, so add 2` : 'first initial plus last name, lowercase'}.`); }
+    if (f.dept !== x.dept){ errs++; bump(1, `Department should be ${x.dept}.`); }
+    if ([...f.groups].sort().join() !== [...x.groups].sort().join()){ errs++;
+      bump(f.groups.includes('Domain-Admins') ? 2 : 1, f.groups.includes('Domain-Admins') ? 'Domain-Admins on a new hire is a serious least-privilege violation.' : `Groups should be exactly ${x.groups.join(', ')}.`); }
+    if (f.license !== x.license){ errs++; bump(1, `License should be ${x.license}.`); }
+    if (errs >= 3) bump(2, 'Too many errors. The account will need to be rebuilt.');
+  }
+  if (level === 0) notes.unshift(K.win);
+  return {level, notes};
+}
+
+function resolve(){
+  const t = activeTicket(); if (!t || t.done) return;
+  const g = grade(t), L = g.level, r = RANKS[state.rank];
+  const inSla = t.age <= t.sla;
+  let cash, val = 1;
+  if (state.founder){
+    cash = [2500, 1000, 0, -5000][L];
+    val = [1.16, 1.05, 0.98, 0.85][L] + (L === 0 && inSla ? .02 : 0);
+    state.founder.valuation *= val;
+  } else {
+    const mult = (0.5 + state.rep / 100) * (owns('keyboard') ? 1.15 : 1);
+    cash = Math.round([1, .5, 0, -.5][L] * r.pay * mult);
+    if (L === 0 && inSla) cash += Math.round(r.pay * .25);
+  }
+  const xp = Math.round([30, 12, 3, 0][L] * (1 + state.rank * .35) * (owns('headset') ? 1.1 : 1));
+  const rep = [3, 0, -4, -12][L] + (L === 0 && owns('office') ? 1 : 0);
+  const gems = L === 0 ? 1 : 0;
+  state.cash += cash; state.xp += xp; state.rep = clamp(state.rep + rep, 0, 100); state.gems += gems;
+  state.stats.resolved++; if (L === 0) state.stats.perfect++; if (L === 3) state.stats.breach++;
+  Object.assign(state.shift, {cash: state.shift.cash + cash, xp: state.shift.xp + xp, rep: state.shift.rep + rep, gems: state.shift.gems + gems});
+  t.done = true; t.result = {...g, cash, xp, rep, gems, val, inSla};
+  commit();
+}
+
+function nextTicket(){
+  const open = state.shift.tickets.find(t => !t.done);
+  if (open){ state.shift.active = open.id; commit(); window.scrollTo({top:0}); }
+}
+
+function endShift(){
+  const s = state.shift, ts = s.tickets;
+  const summary = {day:state.day, tickets:ts.length, clean:ts.filter(t => t.result.level === 0).length, incidents:ts.filter(t => t.result.level === 3).length,
+    cash:s.cash, xp:s.xp, rep:s.rep, gems:s.gems, valGrowth: state.founder && s.valStart ? state.founder.valuation / s.valStart : null};
+  state.lastShift = summary; state.shift = null; state.day++; state.stats.shifts++;
+  state.modals.push({type:'report', data:summary});
+  if (state.rep <= 0) state.modals.push({type:'pip'});
+  while (state.rank < 5 && state.xp >= RANKS[state.rank + 1].xp){ state.rank++; state.gems += 5; state.modals.push({type:'story', rank:state.rank}); }
+  if (state.founder && !state.founder.seriesA && state.founder.valuation >= 1e8) state.modals.push({type:'seriesA'});
+  commit();
+}
+
+/* ---------- story ---------- */
+function journal(title, choice){ state.journal.unshift({day:state.day, title, choice}); }
+const STORIES = {
+  1:{eyebrow:'Promotion · IT Support Technician', title:'Dana noticed your ticket notes.',
+     body:['Clean notes, verified callers, zero escalations bounced back. Your manager Dana Ortiz moves you up to Technician, and HR starts sending you new-hire accounts.','She offers you a choice for your first month.'],
+     choices:[{label:'Take weekend on-call',sub:'+$600 cash now',fx(){state.cash += 600;}},
+              {label:'Shadow the Security team',sub:'+8 reputation',fx(){state.rep = clamp(state.rep + 8, 0, 100);}}]},
+  2:{eyebrow:'Promotion · Systems Administrator', title:'A partner company just got phished.',
+     body:['Their help desk reset a "VP" password over the phone. Leadership is nervous, and you are now the admin for the whole directory.','They ask you to lead the response.'],
+     choices:[{label:'Roll out MFA to everyone this week',sub:'+12 reputation, users grumble',fx(){state.rep = clamp(state.rep + 12, 0, 100);}},
+              {label:'Phase it in department by department',sub:'+$1,800 bonus, +4 reputation',fx(){state.cash += 1800; state.rep = clamp(state.rep + 4, 0, 100);}}]},
+  3:{eyebrow:'Promotion · IT Manager', title:'Four technicians, one budget.',
+     body:['You now run the help desk you started on. The team wants structure. You want time back.'],
+     choices:[{label:'Write the team runbook',sub:'+10 reputation, +20 gems',fx(){state.rep = clamp(state.rep + 10, 0, 100); state.gems += 20;}},
+              {label:'Enroll in a night-school MBA',sub:'−$2,000 tuition, +200 XP',fx(){state.cash -= 2000; state.xp += 200;}}]},
+  4:{eyebrow:'Promotion · Chief Technology Officer', title:'The board wants a three-year roadmap.',
+     body:['You have seen thousands of password tickets. You know exactly where the pain is. The roadmap you pick will shape what you build next.'],
+     choices:[{label:'Bet on identity and zero trust',sub:'+10 reputation. An idea starts forming.',fx(){state.rep = clamp(state.rep + 10, 0, 100); state.idea = 'identity';}},
+              {label:'Bet on cost-cutting and automation',sub:'+$8,000 bonus',fx(){state.cash += 8000; state.idea = 'automation';}}]},
+  5:{eyebrow:'New chapter · Startup Founder', title:'You quit to build the help desk you always wanted.',
+     body:['A self-service identity platform: verified resets, smart lockout detection, clean onboarding. Other companies send their tickets to you. Every clean resolution grows your valuation.','The Empire tab is now open. Build datacenters, hire a team, and ship your own operating system. Your infrastructure earns around the clock, even while you are away.','Name the company, then choose how to fund it.'],
+     input:true,
+     choices:[{label:'Bootstrap it',sub:'Keep 90% · $4M valuation · $120K in the bank',fx(name){state.founder = {name, valuation:4e6, stake:.9}; initEmpire(120e3);}},
+              {label:'Raise a seed round',sub:'Keep 60% · $20M valuation · $1.5M in the bank',fx(name){state.founder = {name, valuation:2e7, stake:.6}; initEmpire(1.5e6);}}]}
+};
+function modalSpec(m){
+  if (m.type === 'welcome') return {eyebrow:'Day 1 · Brightline Logistics', title:'Welcome to the help desk.',
+    body:['You are the new intern. The phones ring, the passwords are forgotten, and every ticket you close well moves you up.','Look up the account, verify the person, take only the actions the ticket needs, then resolve. Get careless and you will hand an attacker the keys.','Climb from intern to CTO, found your own company, build datacenters around the world, and reach a $1B net worth. Then keep going.'],
+    choices:[{label:'Got it',sub:'Your first shift has 4 tickets. The runbook sits beside every ticket.',fx(){}}]};
+  if (m.type === 'report'){
+    const d = m.data;
+    return {eyebrow:`End of day ${d.day}`, title: d.incidents ? 'Rough shift.' : d.clean === d.tickets ? 'Perfect shift.' : 'Shift complete.',
+      body:[`${d.clean} of ${d.tickets} tickets resolved cleanly${d.incidents ? `, ${d.incidents} security incident${d.incidents > 1 ? 's' : ''}` : ''}.`,
+            `Earned ${money(d.cash)}, ${d.xp} XP, ${d.gems} gem${d.gems === 1 ? '' : 's'}. Reputation ${d.rep >= 0 ? '+' : ''}${d.rep}.` + (d.valGrowth ? ` Valuation grew ${((d.valGrowth - 1) * 100).toFixed(0)}%.` : '')],
+      choices:[{label:'Continue',sub:'',fx(){}}]};
+  }
+  if (m.type === 'pip') return {eyebrow:'Performance review', title:'HR wants a word.',
+    body:['Your reputation hit zero. You are placed on a performance plan and lose part of your savings to a "mandatory retraining" fee.'],
+    choices:[{label:'Accept the plan',sub:'Reputation resets to 25 · −20% cash',fx(){state.rep = 25; state.cash = Math.round(state.cash * .8);}}]};
+  if (m.type === 'seriesA') return {eyebrow:`${esc(state.founder.name)} · Series A`, title:'Your valuation passed $100M.',
+    body:['A growth fund wants in. More capital means faster growth, but you give up part of the company.'],
+    choices:[{label:'Take the Series A',sub:'Valuation ×1.5 · your stake ×0.8',fx(){state.founder.valuation *= 1.5; state.founder.stake *= .8; state.founder.seriesA = 'taken';}},
+             {label:'Stay lean',sub:'+15 reputation, keep your stake',fx(){state.rep = clamp(state.rep + 15, 0, 100); state.founder.seriesA = 'declined';}}]};
+  if (m.type === 'billionaire') return {eyebrow:'Net worth over $1B', title:'You are a tech billionaire.',
+    body:[`It started with a forgotten password at Brightline Logistics. Now ${esc(state.founder.name)} handles identity for companies around the world.`,'The tickets will keep coming. What now?'],
+    choices:[{label:'Keep building',sub:'+50 gems',fx(){state.gems += 50; state.rank = 6;}},
+             {label:'Fund free IT training for students',sub:'+30 reputation · donate 5% of your shares',fx(){state.rep = clamp(state.rep + 30, 0, 100); state.founder.stake *= .95; state.rank = 6;}}]};
+  if (m.type === 'story') return STORIES[m.rank];
+  if (m.type === 'away') return {eyebrow:'Welcome back', title:`Your infrastructure ran for ${fmtDur(m.data.secs)}.`,
+    body:[`While you were away your datacenters earned ${money(m.data.net)} after payroll. Offline time runs at half speed, up to 8 hours. No incidents happen while you are offline.`],
+    choices:[{label:'Back to work',sub:'',fx(){}}]};
+  if (m.type === 'milestone'){
+    const ms = MILESTONES.find(x => x.v === m.v);
+    return {eyebrow:'Milestone', title:`${ms.name}.`, body:[`Your net worth passed ${money(ms.v)}. The board sends a bonus of ${ms.gems} gems.`], choices:[{label:'Keep building',sub:'',fx(){}}]};
+  }
+}
+
+/* ---------- render ---------- */
+function commit(){ save(); render(); }
+function render(){ renderHud(); renderTabs(); renderView(); renderModal(); }
+
+function avatar(lg){ return `<div class="avatar${lg ? ' lg' : ''}" data-o="${state.outfit}" aria-hidden="true">${esc(initials(state.name))}</div>`; }
+
+function renderHud(){
+  const r = RANKS[state.rank], next = RANKS[state.rank + 1];
+  let prog;
+  if (state.founder){
+    const nw = netWorth(), goal = [1e9, 1e10, 1e11, 1e12, 1e13].find(g => nw < g) || 1e13;
+    const pct = clamp(nw / goal, 0, 1) * 100;
+    prog = `<div class="xp"><div class="xpl"><span>Day ${state.day}</span><span>${money(nw)} of ${money(goal)}</span></div><div class="bar goldbar"><i style="width:${pct}%"></i></div></div>`;
+  } else if (!isFinite(next.xp)){
+    prog = `<div class="xp"><div class="xpl"><span>Day ${state.day}</span><span>Founder</span></div><div class="bar goldbar"><i style="width:0%"></i></div></div>`;
+  } else {
+    const pct = clamp((state.xp - r.xp) / (next.xp - r.xp), 0, 1) * 100;
+    prog = `<div class="xp"><div class="xpl"><span>Day ${state.day}</span><span>${state.xp} / ${next.xp} XP</span></div><div class="bar"><i style="width:${pct}%"></i></div></div>`;
+  }
+  $('#hud').innerHTML = `
+    <div class="who">${avatar()}<div style="min-width:0"><div class="pname">${esc(state.name)}</div><div class="prank">${r.name}${state.founder ? ' · ' + esc(state.founder.name) : ''}</div></div></div>
+    <dl class="stats">
+      <div><dt>Cash</dt><dd>${money(state.cash)}</dd></div>
+      <div><dt>Net worth</dt><dd class="gold">${money(netWorth())}</dd></div>
+      <div><dt>Gems</dt><dd>${state.gems}</dd></div>
+      <div><dt>Reputation</dt><dd>${state.rep}<span class="meter${state.rep < 25 ? ' low' : ''}"><i style="width:${state.rep}%"></i></span></dd></div>
+    </dl>${prog}`;
+}
+function renderTabs(){
+  const tabs = [['desk','Desk'],['empire','Empire'],['career','Career'],['shop','Shop'],['profile','Profile']];
+  const alert = id => state.tab !== id && ((id === 'desk' && state.shift) || (id === 'empire' && state.empire && state.empire.incidents.length));
+  const sig = state.tab + tabs.map(([id]) => alert(id) ? 1 : 0).join('');
+  if (sig === renderTabs.sig && $('#tabs').childElementCount) return;
+  renderTabs.sig = sig;
+  $('#tabs').innerHTML = tabs.map(([id, l]) => `<button data-act="tab" data-v="${id}" ${state.tab === id ? 'aria-current="page"' : ''}>${l}${alert(id) ? '<span class="dot"></span>' : ''}</button>`).join('');
+}
+function renderView(){
+  const v = $('#view');
+  if (state.tab === 'desk') v.innerHTML = state.shift ? deskView() : briefView();
+  if (state.tab === 'empire') v.innerHTML = empireView();
+  if (state.tab === 'career') v.innerHTML = careerView();
+  if (state.tab === 'shop') v.innerHTML = shopView();
+  if (state.tab === 'profile') v.innerHTML = profileView();
+}
+
+function runbook(){
+  const domain = state.founder ? "the client's own domain" : HOME.domain;
+  const groupRows = DEPTS.map(d => `<tr><td>${d}</td><td class="mono">${GROUPS[d].join(', ')}</td><td>${licenseFor(d).replace('M365 ', '')}</td></tr>`).join('');
+  return `<aside class="panel runbook" aria-label="Runbook"><h2>Runbook <span class="eyebrow">IT-SOP-01</span></h2>
+    <details open><summary>Verify before you act</summary><ul>
+      <li>Look up the account. Compare the employee ID and manager the requester gives with the directory record.</li>
+      <li>Any mismatch: flag it and escalate. Pressure and urgency are red flags, not reasons to skip.</li></ul></details>
+    <details open><summary>Passwords and lockouts</summary><ul>
+      <li>Forgot password: reset with a temp password and require a change at next sign-in.</li>
+      <li>Locked but knows the password: unlock only.</li>
+      <li>Locked and forgot: unlock and reset.</li>
+      <li>Dozens of failures from an unknown external IP: password spray. Leave it locked and escalate.</li>
+      <li>Never send passwords to personal email or a number the caller gives you.</li></ul></details>
+    ${state.rank >= 1 ? `<details open><summary>New accounts</summary><ul>
+      <li>Only from the HR Portal, sender <span class="mono">hr@${esc(domain)}</span>. Lookalike domains go to Security.</li>
+      <li>Username: first initial + last name, lowercase. If taken, add <span class="mono">2</span>.</li>
+      <li>Groups: <span class="mono">All-Staff</span> + the two department groups. Never <span class="mono">Domain-Admins</span>.</li></ul>
+      <table><tbody>${groupRows}</tbody></table></details>` : ''}
+  </aside>`;
+}
+
+function briefView(){
+  const r = RANKS[state.rank], ls = state.lastShift;
+  const intro = state.founder ? `${esc(state.founder.name)} handles help desk tickets for client companies.` : `Brightline Logistics, ${HOME.domain}.`;
+  return `<div class="brief-grid"><section class="panel brief">
+      <p class="eyebrow">Day ${state.day} · ${r.name}</p>
+      <h1>${state.stats.shifts === 0 ? 'Your first shift starts at 9:00.' : state.rank === 6 ? 'Another day at the top.' : 'The queue is filling up.'}</h1>
+      <p class="lede">${intro} ${r.blurb} Expect ${r.tickets} tickets today.</p>
+      <div class="row"><button class="btn primary big" data-act="start">Clock in</button>
+        ${state.founder ? `<span class="pill gold">Valuation ${money(state.founder.valuation)} · you own ${Math.round(state.founder.stake * 100)}%</span>` : `<span class="pill info">${money(r.pay)} per clean ticket</span>`}</div>
+      ${ls ? `<div class="section" style="margin:6px 0 0"><p class="eyebrow">Last shift · day ${ls.day}</p><div class="summary">
+        <div class="kpi"><b>${ls.clean}/${ls.tickets}</b><span>clean resolutions</span></div>
+        <div class="kpi"><b>${money(ls.cash)}</b><span>earned</span></div>
+        <div class="kpi"><b>${ls.xp}</b><span>XP</span></div>
+        <div class="kpi"><b>${ls.incidents}</b><span>security incidents</span></div></div></div>` : ''}
+    </section>${runbook()}</div>`;
+}
+
+function slaInfo(t){
+  const left = t.sla - t.age, pct = clamp(left / t.sla, 0, 1) * 100;
+  const cls = left <= 0 ? 'late' : left < 25 ? 'warn' : 'ok';
+  const txt = left > 0 ? `${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')} to SLA` : 'SLA missed';
+  return {pct, cls, txt};
+}
+const GRADE = ['Clean resolution','Resolved with issues','Not resolved','Security incident'];
+const GRADE_PILL = ['ok','warn','bad','bad'];
+
+function deskView(){
+  const s = state.shift, t = activeTicket();
+  const open = s.tickets.filter(x => !x.done).length;
+  const q = s.tickets.map(x => {
+    const name = x.user ? `${x.user.first} ${x.user.last}` : x.from;
+    const sl = slaInfo(x);
+    const badge = x.done ? `<span class="pill ${GRADE_PILL[x.result.level]}">${['Clean','Issues','Failed','Incident'][x.result.level]}</span>` : `<span class="pill ${sl.cls}" data-slapill="${x.id}">${sl.txt}</span>`;
+    return `<li><button class="qi" data-act="pick" data-v="${x.id}" aria-current="${x.id === s.active}"><span class="top"><span class="mono">${x.id}</span>${badge}</span><span class="who2">${esc(name)}</span><span class="sub">${x.channel} · ${esc(x.subject)}</span></button></li>`;
+  }).join('');
+  return `<div class="desk">
+    <aside class="panel queue" aria-label="Ticket queue"><h2>Queue <span class="eyebrow">${open} open</span></h2><ol>${q}</ol>
+      ${open === 0 ? `<button class="btn primary" style="width:100%;margin-top:12px" data-act="end">Clock out</button>` : ''}</aside>
+    <section class="panel work" aria-label="Ticket">${ticketView(t)}</section>
+    ${runbook()}</div>`;
+}
+
+function ticketView(t){
+  const K = KINDS[t.kind], st = t.st, sl = slaInfo(t), isCreate = !K.lookup;
+  const u = t.user;
+  const head = `<header class="tk-head"><div class="tk-meta"><span class="mono">${t.id}</span><span class="chip">${t.channel}</span><span class="chip">${K.label}</span>${state.founder ? `<span class="chip">Client: ${esc(t.co.name)}</span>` : ''}</div>
+    <h2>${esc(t.subject)}</h2>
+    ${t.done ? '' : `<div class="sla ${sl.cls}" data-sla="${t.id}"><div class="bar"><i style="width:${sl.pct}%"></i></div><span>${sl.txt}</span></div>`}</header>`;
+  const given = isCreate
+    ? `<div class="given"><span>Sender <b class="mono">${esc(t.from)}</b></span><span>Company domain <b class="mono">${esc(t.co.domain)}</b></span></div>`
+    : `<div class="given"><span>Requester gives: Employee ID <b class="mono">${t.provided.empId}</b></span><span>Manager <b>${esc(t.provided.manager)}</b></span></div>`;
+  const msg = `<div class="msg"><div class="msg-from">From ${esc(t.from)} · via ${t.channel}</div><blockquote>${esc(t.body)}</blockquote>${given}</div>`;
+
+  let step1;
+  if (isCreate){
+    const h = t.hire;
+    step1 = `<div class="step done"><span class="n">1</span><div class="step-body"><h3>Read the request</h3>
+      <dl class="rec"><div><dt>New hire</dt><dd>${esc(h.first)} ${esc(h.last)}</dd></div><div><dt>Department</dt><dd>${h.dept}</dd></div><div><dt>Title</dt><dd>${esc(h.title)}</dd></div><div><dt>Channel</dt><dd>${t.channel}</dd></div></dl></div></div>`;
+  } else if (!st.lookedUp){
+    step1 = `<div class="step"><span class="n">1</span><div class="step-body"><h3>Look up the account</h3><div class="row"><button class="btn" data-act="lookup">Search directory for “${esc(u.first)} ${esc(u.last)}”</button></div></div></div>`;
+  } else {
+    const statusPill = u.status === 'Locked' ? '<span class="pill bad">Locked</span>' : '<span class="pill ok">Active</span>';
+    step1 = `<div class="step done"><span class="n">1</span><div class="step-body"><h3>Directory record</h3>
+      <dl class="rec"><div><dt>Name</dt><dd>${esc(u.first)} ${esc(u.last)}</dd></div><div><dt>Username</dt><dd class="mono">${u.username}</dd></div>
+      <div><dt>Employee ID</dt><dd class="mono">${u.empId}</dd></div><div><dt>Manager</dt><dd>${esc(u.manager)}</dd></div>
+      <div><dt>Department</dt><dd>${u.dept} · ${esc(u.title)}</dd></div><div><dt>Status</dt><dd>${statusPill}</dd></div>
+      <div><dt>Failed sign-ins</dt><dd class="mono">${u.badPwd}</dd></div><div><dt>Last failure</dt><dd>${u.lastFail}</dd></div>
+      <div class="wide"><dt>Failure source</dt><dd class="mono">${esc(u.src)}</dd></div><div><dt>Phone on file</dt><dd class="mono">${u.phone}</dd></div></dl></div></div>`;
+  }
+
+  const vq = isCreate ? 'Is this request authorized?' : 'Do the requester’s details match the directory?';
+  const [yes, no] = isCreate ? ['Authorized', 'Not authorized'] : ['Details match', 'Details don’t match'];
+  const vDisabled = (!isCreate && !st.lookedUp) || t.done ? 'disabled' : '';
+  const step2 = `<div class="step ${st.verified !== null ? 'done' : ''}"><span class="n">2</span><div class="step-body"><h3>${vq}</h3>
+    <div class="row"><button class="btn ${st.verified === true ? 'on' : ''}" data-act="verify" data-v="1" ${vDisabled}>${yes}</button><button class="btn ${st.verified === false ? 'on' : ''}" data-act="verify" data-v="0" ${vDisabled}>${no}</button></div></div></div>`;
+
+  if (t.done) return head + msg + step1 + step2 + resultView(t);
+
+  const did = new Set(st.actions.map(a => a.type));
+  let tools;
+  if (isCreate){
+    const f = st.form;
+    const deptOpts = ['<option value="">Choose…</option>', ...DEPTS.map(d => `<option ${f.dept === d ? 'selected' : ''}>${d}</option>`)].join('');
+    const licOpts = ['<option value="">Choose…</option>', ...LICENSES.map(l => `<option ${f.license === l ? 'selected' : ''}>${l}</option>`)].join('');
+    const groups = ALL_GROUPS.map(g => `<label><input type="checkbox" id="g-${g}" data-field="group" value="${g}" ${f.groups.includes(g) ? 'checked' : ''}>${g}</label>`).join('');
+    tools = `<div class="subpanel"><div class="form">
+        <label>Username<input type="text" id="f-username" data-field="username" value="${esc(f.username)}" autocomplete="off" spellcheck="false" placeholder="e.g. jdoe"></label>
+        <label>Department<select id="f-dept" data-field="dept">${deptOpts}</select></label>
+        <label>License<select id="f-license" data-field="license">${licOpts}</select></label></div>
+        <div class="row"><button class="btn" data-act="avail">Check availability</button><span id="availOut" class="muted" style="font-size:.85rem">${st.avail ? esc(st.avail) : ''}</span></div>
+        <div><p class="eyebrow" style="margin-bottom:6px">Groups</p><div class="groups">${groups}</div></div>
+        <div class="row"><button class="btn primary" data-act="do" data-v="create" ${did.has('create') ? 'disabled' : ''}>Create account</button>
+        <button class="btn danger" data-act="do" data-v="escalate" ${did.has('escalate') ? 'disabled' : ''}>Escalate to Security</button></div></div>`;
+  } else {
+    tools = `<div class="row"><button class="btn" data-act="do" data-v="unlock" ${did.has('unlock') ? 'disabled' : ''}>Unlock account</button>
+      <button class="btn ${st.resetOpen ? 'on' : ''}" data-act="resetOpen" ${did.has('reset') ? 'disabled' : ''}>Reset password</button>
+      <button class="btn danger" data-act="do" data-v="escalate" ${did.has('escalate') ? 'disabled' : ''}>Escalate to Security</button></div>
+      ${st.resetOpen && !did.has('reset') ? `<div class="subpanel"><div><p class="eyebrow">Temporary password</p><p class="temp">${t.temp}</p></div>
+        <label class="check"><input type="checkbox" id="mustChange"> Require change at next sign-in</label>
+        <p class="muted" style="font-size:.82rem">Delivered to the phone on file, ${u.phone}.</p>
+        <div class="row"><button class="btn primary" data-act="do" data-v="reset">Apply reset</button></div></div>` : ''}`;
+  }
+  const log = st.actions.length ? `<ul class="log">${st.actions.map(a => `<li>${esc(a.line)}</li>`).join('')}</ul>` : '';
+  const step3 = `<div class="step ${st.actions.length ? 'done' : ''}"><span class="n">3</span><div class="step-body"><h3>${isCreate ? 'Provision or escalate' : 'Take action'}</h3>${tools}${log}</div></div>`;
+  const step4 = `<div class="step"><span class="n">4</span><div class="step-body"><h3>Close it out</h3>
+    ${st.hint ? `<p class="hint">${esc(K.hint)}</p>` : ''}
+    <div class="row"><button class="btn primary" data-act="resolve">Resolve ticket</button>${st.hint ? '' : `<button class="btn" data-act="hint">Ask a senior · 1 gem</button>`}</div></div></div>`;
+  return head + msg + step1 + step2 + step3 + step4;
+}
+
+function resultView(t){
+  const r = t.result, open = state.shift.tickets.some(x => !x.done);
+  const d = [];
+  if (state.founder) d.push(`<span class="pill gold">Valuation ×${r.val.toFixed(2)}</span>`);
+  if (r.cash) d.push(`<span class="pill ${r.cash > 0 ? 'ok' : 'bad'}">${r.cash > 0 ? '+' : ''}${money(r.cash)}</span>`);
+  d.push(`<span class="pill info">+${r.xp} XP</span>`);
+  d.push(`<span class="pill ${r.rep >= 0 ? 'ok' : 'bad'}">Rep ${r.rep >= 0 ? '+' : ''}${r.rep}</span>`);
+  if (r.gems) d.push(`<span class="pill gold">+${r.gems} gem</span>`);
+  if (r.level === 0) d.push(`<span class="pill ${r.inSla ? 'ok' : 'warn'}">${r.inSla ? 'Within SLA' : 'SLA missed'}</span>`);
+  const log = t.st.actions.length ? `<ul class="log">${t.st.actions.map(a => `<li>${esc(a.line)}</li>`).join('')}</ul>` : '<p class="muted">No actions taken.</p>';
+  return `<div class="result l${r.level}" role="status"><h3>${GRADE[r.level]}</h3><ul>${r.notes.map(n => `<li>${esc(n)}</li>`).join('')}</ul>
+    <div class="delta">${d.join('')}</div>${log}
+    <div class="row">${open ? '<button class="btn primary" data-act="next">Next ticket</button>' : '<button class="btn primary" data-act="end">Clock out</button>'}</div></div>`;
+}
+
+/* ---------- empire engine ---------- */
+function initEmpire(cash){
+  state.empire = {dcs:[], staff:{tech:0,sre:0,sec:0,sales:0}, incidents:[], log:[], os:{stage:0,endsAt:null}, lastTs:Date.now(), earned:0, seq:1};
+  state.cash += cash;
+}
+const salaryScale = () => Math.pow(2, Math.max(0, state.empire.dcs.length - 1));
+const staffCap = () => 2 + 2 * state.empire.dcs.length;
+const hireCost = s => s.salary * salaryScale() * 600;
+function revMult(){
+  const e = state.empire, c = e.os.stage;
+  return (1 + .04 * e.staff.tech + .06 * e.staff.sales) * (1 + .2 * Math.min(c, 4) + (c >= 5 ? .5 : 0));
+}
+const dcRev = dc => dc.racks * rackRev(dc.tier) * (dc.health / 100) * (dc.down ? .2 : 1) * revMult();
+const revPerSec = () => state.empire.dcs.reduce((a, d) => a + dcRev(d), 0);
+const payPerSec = () => STAFF.reduce((a, s) => a + state.empire.staff[s.id] * s.salary * salaryScale(), 0);
+const coverage = () => { const n = state.empire.dcs.length; return n ? state.empire.staff.sre * 2 / n : 0; };
+const avgHealth = () => { const d = state.empire.dcs; return d.length ? Math.round(d.reduce((a, x) => a + x.health, 0) / d.length) : 100; };
+
+let dirty = false;
+function empireTick(){
+  const e = state.empire; if (!state.founder || !e) return;
+  const now = Date.now(); let dt = (now - e.lastTs) / 1000; e.lastTs = now;
+  if (dt <= 0) return;
+  const away = dt > 5, eff = away ? .5 : 1;
+  if (away) dt = Math.min(dt, 8 * 3600);
+  const rev = revPerSec(), pay = payPerSec();
+  const gross = rev * dt * eff, net = (rev - pay) * dt * eff;
+  state.cash += net; e.earned += gross; state.founder.valuation += gross * 15;
+  const cov = Math.min(1, coverage());
+  for (const dc of e.dcs) dc.health = clamp(dc.health + (.045 * cov - .03 + .008 * dc.cooling) * dt * eff, 0, 100);
+  if (e.os.endsAt && now >= e.os.endsAt){ e.os.stage++; e.os.endsAt = null; toast(`${OS_STAGES[e.os.stage - 1].name} shipped. Revenue boosted.`); dirty = true; }
+  if (away){
+    if (dt > 120) state.modals.push({type:'away', data:{secs:dt, net}});
+    dirty = true;
+  } else {
+    if (e.incidents.length < 3){
+      for (const [i, dc] of e.dcs.entries()){
+        if (dc.down || !dc.racks || Math.random() >= dt / 360) continue;
+        const T = rnd(INCIDENTS);
+        if (T.id === 'cooling' && Math.random() < .25 * dc.cooling) continue;
+        if (T.sec && Math.random() < Math.min(.8, .2 * e.staff.sec)) continue;
+        const inc = {id:e.seq++, type:T.id, dc:i, age:0, order:shuffle([0, 1, 2])};
+        dc.down = inc.id; e.incidents.push(inc); dirty = true;
+        if (state.tab !== 'empire') toast(`Incident in ${CITIES[i]}: ${T.title}`);
+        break;
+      }
+    }
+    for (const inc of [...e.incidents]){
+      inc.age += dt;
+      if (cov >= 1 && inc.age >= 30) resolveIncident(inc.id, 0, true);
+      else if (cov >= .5 && inc.age >= 60) resolveIncident(inc.id, 1, true);
+    }
+  }
+  if (state.rank === 5 && netWorth() >= 1e9 && !state.modals.some(m => m.type === 'billionaire')){ state.modals.push({type:'billionaire'}); dirty = true; }
+  if (state.rank === 6) for (const m of MILESTONES) if (netWorth() >= m.v && !state.milestones.includes(m.v)){
+    state.milestones.push(m.v); state.gems += m.gems; state.modals.push({type:'milestone', v:m.v}); dirty = true;
+  }
+}
+function resolveIncident(id, quality, auto){
+  const e = state.empire, inc = e.incidents.find(x => x.id === id); if (!inc) return;
+  const T = INCIDENTS.find(x => x.id === inc.type);
+  const oi = auto ? T.opts.findIndex(o => o[1] === quality) : quality;
+  const [label, q, lesson] = T.opts[oi], dc = e.dcs[inc.dc];
+  const cost = Math.max(2000, rackRev(dc.tier) * Math.max(1, dc.racks) * [30, 90, 240][q]);
+  state.cash -= cost; dc.health = clamp(dc.health + [5, -10, -30][q], 0, 100); state.rep = clamp(state.rep + [2, 0, -4][q], 0, 100);
+  dc.down = null; e.incidents = e.incidents.filter(x => x !== inc);
+  e.log.unshift({city:CITIES[inc.dc], title:T.title, choice:label, q, lesson, cost, auto:!!auto}); e.log = e.log.slice(0, 8);
+  dirty = true;
+  return {q, lesson};
+}
+function spend(cost){
+  if (state.cash < cost){ toast(`You need ${money(cost - state.cash)} more.`); return false; }
+  state.cash -= cost; return true;
+}
+function autoNote(inc){
+  const cov = coverage();
+  if (cov >= 1) return `Your SRE team will handle it in ${Math.max(0, Math.ceil(30 - inc.age))}s if you don't.`;
+  if (cov >= .5) return `Your SREs will patch it, imperfectly, in ${Math.max(0, Math.ceil(60 - inc.age))}s if you don't.`;
+  return 'No SRE coverage here. This waits for you.';
+}
+
+function empireView(){
+  if (!state.founder) return `<section class="panel brief"><p class="eyebrow">Locked · opens when you become a Startup Founder</p><h1>Run your own cloud.</h1>
+    <p class="lede">Once you found your company you will build datacenters in up to ${CITIES.length} cities, fill them with racks, hire SREs, security analysts and sales reps, handle live incidents, and ship your own operating system. It keeps earning while you are away.</p>
+    <div class="row"><span class="pill info">Opens at ${RANKS[5].xp.toLocaleString()} XP</span><span class="pill gold">You have ${state.xp.toLocaleString()} XP</span></div></section>`;
+  const e = state.empire, n = e.dcs.length, net = revPerSec() - payPerSec();
+  const racks = e.dcs.reduce((a, d) => a + d.racks, 0);
+  const head = `<section class="panel brief empire-head"><p class="eyebrow">Operations · ${esc(state.founder.name)}</p><h1>${n ? `${n} datacenter${n > 1 ? 's' : ''}, ${racks} racks.` : 'Your cloud starts in a garage.'}</h1>
+    ${n ? '' : `<p class="lede">Rent a colocation cage in Austin, rack your first server, and start selling compute to the clients you already support.</p>`}
+    <div class="summary"><div class="kpi"><b data-k="rev">${money(revPerSec())}/s</b><span>revenue</span></div><div class="kpi"><b data-k="pay">${money(payPerSec())}/s</b><span>payroll</span></div>
+    <div class="kpi"><b data-k="net">${net < 0 ? '' : '+'}${money(net)}/s</b><span>net cash flow</span></div><div class="kpi"><b data-k="val">${money(state.founder.valuation)}</b><span>valuation</span></div>
+    <div class="kpi"><b data-k="health">${avgHealth()}%</b><span>average health</span></div><div class="kpi"><b>${money(e.earned)}</b><span>lifetime revenue</span></div></div></section>`;
+
+  const incidents = e.incidents.length ? `<section class="section"><h2>Active incidents</h2>${e.incidents.map(inc => {
+    const T = INCIDENTS.find(x => x.id === inc.type);
+    return `<article class="incident"><div class="row" style="justify-content:space-between"><h3>${T.title} · ${CITIES[inc.dc]}</h3><span class="pill bad">Revenue −80%</span></div>
+      <p>${T.desc}</p><div class="choices">${inc.order.map(oi => `<button class="choice" data-act="incident" data-v="${inc.id}:${oi}"><b>${T.opts[oi][0]}</b></button>`).join('')}</div>
+      <p class="small muted" data-k="inc-${inc.id}">${autoNote(inc)}</p></article>`;
+  }).join('')}</section>` : '';
+
+  const dcs = e.dcs.map((dc, i) => {
+    const st = dc.down ? ['bad','Incident'] : dc.health < 40 ? ['warn','Degraded'] : ['ok','Online'];
+    const full = dc.racks >= maxRacks(dc);
+    return `<div class="card"><div class="row" style="justify-content:space-between"><h3>${CITIES[i]}</h3><span class="pill ${st[0]}">${st[1]}</span></div>
+      <p class="small muted">${i === 0 ? 'Garage colo' : `Tier ${i + 1} datacenter`} · ${money(rackRev(i) * revMult())}/s per rack</p>
+      <dl class="mini"><div><dt>Racks</dt><dd>${dc.racks}/${maxRacks(dc)}</dd></div><div><dt>Revenue</dt><dd data-k="dcrev-${i}">${money(dcRev(dc))}/s</dd></div><div><dt>Cooling</dt><dd>Lv ${dc.cooling}/3</dd></div></dl>
+      <div><div class="xpl"><span>Health</span><span data-k="dch-${i}">${Math.round(dc.health)}%</span></div><div class="bar health"><i data-hb="${i}" style="width:${dc.health}%"></i></div></div>
+      <div class="acts">
+        <button class="btn primary" data-act="rack" data-v="${i}" ${full ? 'disabled' : ''}>${full ? 'Hall full' : `Add rack · ${money(rackCost(i, dc.racks))}`}</button>
+        <button class="btn" data-act="expand" data-v="${i}" ${dc.exp >= 3 ? 'disabled' : ''}>${dc.exp >= 3 ? 'Max size' : `Expand hall · ${money(expandCost(dc))}`}</button>
+        <button class="btn" data-act="cool" data-v="${i}" ${dc.cooling >= 3 ? 'disabled' : ''}>${dc.cooling >= 3 ? 'Best cooling' : `Upgrade cooling · ${money(coolCost(dc))}`}</button>
+        <button class="btn" data-act="maint" data-v="${i}">Maintenance · ${money(maintCost(dc))}</button></div></div>`;
+  }).join('');
+  const nextDc = n < CITIES.length ? `<div class="card build"><p class="eyebrow">${n ? `Region ${n + 1} of ${CITIES.length}` : 'First site'}</p><h3>${n ? `Build in ${CITIES[n]}` : 'Rent a cage in Austin'}</h3>
+      <p class="small muted">Comes with 1 rack. Racks here earn ${money(rackRev(n) * revMult())}/s each. Payroll doubles with each new region.</p>
+      <button class="btn gold" data-act="build">${n ? 'Build' : 'Rent'} · ${money(dcCost(n))}</button></div>`
+    : `<div class="card build"><h3>All ${CITIES.length} regions online.</h3><p class="small muted">Expand halls and upgrade cooling to keep growing.</p></div>`;
+
+  const cap = staffCap();
+  const staff = STAFF.map(s => `<tr><td><b>${s.name}</b><br><span class="small muted">${s.effect}</span></td><td class="num">${e.staff[s.id]}/${cap}</td>
+    <td class="num">${money(s.salary * salaryScale())}/s each</td><td><div class="row" style="flex-wrap:nowrap">
+    <button class="btn primary" data-act="hire" data-v="${s.id}" ${e.staff[s.id] >= cap || !n ? 'disabled' : ''}>Hire · ${money(hireCost(s))}</button>
+    <button class="btn" data-act="fire" data-v="${s.id}" ${e.staff[s.id] ? '' : 'disabled'}>Let go</button></div></td></tr>`).join('');
+
+  const os = e.os, osName = `${esc(state.founder.name)} OS`;
+  const stages = OS_STAGES.map((s, i) => {
+    const cls = i < os.stage ? 'past' : i === os.stage ? 'now' : 'future';
+    return `<li class="${cls}"><span class="mk"></span><div><h3>${s.name}</h3><p class="small muted">${money(s.cost)} · ${fmtDur(s.secs)} of R&amp;D · ${i === 4 ? '+50%' : '+20%'} revenue</p></div><span class="pill ${i < os.stage ? 'ok' : 'info'}">${i < os.stage ? 'Shipped' : i === os.stage && os.endsAt ? 'Building' : 'Planned'}</span></li>`;
+  }).join('');
+  let osAction;
+  if (n < 2) osAction = `<p class="small muted">Open a second datacenter to start the OS project.</p>`;
+  else if (os.endsAt) osAction = `<div><div class="xpl"><span>${OS_STAGES[os.stage].name}</span><span data-k="os">${fmtDur((os.endsAt - Date.now()) / 1000)} left</span></div><div class="bar"><i data-osb style="width:0%"></i></div></div>`;
+  else if (os.stage < OS_STAGES.length) osAction = `<button class="btn primary" data-act="os">Start ${OS_STAGES[os.stage].name} · ${money(OS_STAGES[os.stage].cost)}</button>`;
+  else osAction = `<p class="pill ok">${osName} ships on every rack you own.</p>`;
+
+  const log = e.log.length ? `<ul class="journal">${e.log.map(l => `<li><span class="eyebrow">${l.city} · ${l.title}${l.auto ? ' · SRE team' : ''}</span><b>${esc(l.choice)}</b><span class="muted">${['Good call.','Partly worked.','Bad call.'][l.q]} ${esc(l.lesson)} Cost ${money(l.cost)}.</span></li>`).join('')}</ul>`
+    : '<p class="muted">Incidents you handle will be logged here with what you learned.</p>';
+
+  return `${head}${incidents}
+    <section class="section"><h2>Datacenters</h2><div class="cards wide">${dcs}${nextDc}</div></section>
+    <div class="cols"><section class="panel section"><h2>Team</h2><div class="table-wrap"><table class="staff"><thead><tr><th>Role</th><th>Team</th><th>Payroll</th><th></th></tr></thead><tbody>${staff}</tbody></table></div>
+      ${payPerSec() > revPerSec() ? '<p class="hint">Payroll is higher than revenue. Add racks or let someone go before cash runs out.</p>' : ''}</section>
+      <section class="panel section"><p class="eyebrow">R&amp;D</p><h2>${osName}</h2><p class="small muted">Your own operating system, tuned for your hardware. Every milestone lifts revenue in every datacenter.</p><ol class="ladder">${stages}</ol>${osAction}</section></div>
+    <section class="panel section"><h2>Ops log</h2>${log}</section>`;
+}
+function updateLive(){
+  const e = state.empire; if (!e || !state.founder) return;
+  const set = (k, v) => { const el = document.querySelector(`[data-k="${k}"]`); if (el) el.textContent = v; };
+  const net = revPerSec() - payPerSec();
+  set('rev', money(revPerSec()) + '/s'); set('pay', money(payPerSec()) + '/s'); set('net', (net < 0 ? '' : '+') + money(net) + '/s');
+  set('val', money(state.founder.valuation)); set('health', avgHealth() + '%');
+  e.dcs.forEach((dc, i) => { set('dcrev-' + i, money(dcRev(dc)) + '/s'); set('dch-' + i, Math.round(dc.health) + '%'); const b = document.querySelector(`[data-hb="${i}"]`); if (b) b.style.width = dc.health + '%'; });
+  for (const inc of e.incidents) set('inc-' + inc.id, autoNote(inc));
+  if (e.os.endsAt){
+    const s = OS_STAGES[e.os.stage], left = Math.max(0, (e.os.endsAt - Date.now()) / 1000);
+    set('os', fmtDur(left) + ' left'); const b = document.querySelector('[data-osb]'); if (b) b.style.width = (100 - left / s.secs * 100) + '%';
+  }
+}
+
+function careerView(){
+  const ladder = RANKS.map((r, i) => {
+    const cls = i < state.rank ? 'past' : i === state.rank ? 'now' : 'future';
+    const req = i === 6 ? '$1B net worth' : i === 0 ? 'Start' : `${r.xp.toLocaleString()} XP`;
+    return `<li class="${cls}"><span class="mk"></span><div><h3>${r.name}</h3><p class="muted" style="font-size:.85rem">${r.blurb}</p></div><span class="pill ${cls === 'now' ? 'gold' : 'info'}">${req}</span></li>`;
+  }).join('');
+  const f = state.founder;
+  const founder = f ? `<section class="panel section"><p class="eyebrow">Your company</p><h2>${esc(f.name)}</h2><div class="summary">
+      <div class="kpi"><b>${money(f.valuation)}</b><span>valuation</span></div><div class="kpi"><b>${Math.round(f.stake * 100)}%</b><span>your stake</span></div>
+      <div class="kpi"><b>${money(f.stake * f.valuation)}</b><span>stake value</span></div></div></section>` : '';
+  const j = state.journal.length ? state.journal.map(e => `<li><span class="eyebrow">Day ${e.day}</span><b>${esc(e.title)}</b><span class="muted">${esc(e.choice)}</span></li>`).join('') : '<li class="muted">Your choices will be recorded here as your career unfolds.</li>';
+  return `<div class="cols"><section class="panel"><h2 style="margin-bottom:8px">Career ladder</h2><ol class="ladder">${ladder}</ol></section>
+    <div>${founder}<section class="panel section"><h2>Story so far</h2><ul class="journal">${j}</ul></section></div></div>`;
+}
+
+function shopView(){
+  const items = SHOP.map(i => {
+    const own = owns(i.id);
+    return `<div class="card"><h3>${i.name}</h3><p class="muted" style="font-size:.88rem">${i.effect}</p><div class="row" style="justify-content:space-between"><span class="price">${money(i.price)}</span>
+      <button class="btn ${own ? '' : 'primary'}" data-act="buy" data-v="${i.id}" ${own ? 'disabled' : ''}>${own ? 'Owned' : 'Buy'}</button></div></div>`;
+  }).join('');
+  const outfits = OUTFITS.map(o => {
+    const own = state.outfits.includes(o.id);
+    return `<div class="card"><div class="row"><div class="avatar" data-o="${o.id}">${esc(initials(state.name))}</div><h3>${o.name}</h3></div>
+      <div class="row" style="justify-content:space-between"><span class="price">${o.gems ? o.gems + ' gems' : 'Free'}</span>
+      ${own ? `<button class="btn ${state.outfit === o.id ? 'on' : ''}" data-act="wear" data-v="${o.id}">${state.outfit === o.id ? 'Wearing' : 'Wear'}</button>` : `<button class="btn primary" data-act="outfit" data-v="${o.id}">Unlock</button>`}</div></div>`;
+  }).join('');
+  const packs = PACKS.map(p => `<div class="card"><h3>${p.label}</h3><p class="muted" style="font-size:.88rem">${p.gems} gems${p.extra ? '. ' + p.extra + '.' : ''}</p>
+      <div class="row" style="justify-content:space-between"><span class="price">${p.price}</span><button class="btn gold" data-act="iap" data-v="${p.id}">Add (demo)</button></div></div>`).join('');
+  return `<section class="section"><h2>Desk upgrades</h2><div class="cards">${items}</div></section>
+    <section class="section"><h2>Style</h2><div class="cards">${outfits}</div></section>
+    <section class="section"><h2>Gem packs</h2><p class="notice">Demo store. No payment is taken. Tapping a pack adds the gems so you can test the in-app economy. Gems also come from clean tickets (1 each) and promotions (5 each).</p><div class="cards">${packs}</div></section>`;
+}
+
+function profileView(){
+  const s = state.stats, rate = s.resolved ? Math.round(s.perfect / s.resolved * 100) : 0;
+  return `<div class="cols"><section class="panel section"><div class="row" style="gap:16px">${avatar(true)}<div><p class="eyebrow">${RANKS[state.rank].name}</p><h2>${esc(state.name)}</h2></div></div>
+      <div class="form"><label>Display name<input type="text" id="p-name" data-field="name" value="${esc(state.name)}" maxlength="28"></label></div>
+      <div class="summary"><div class="kpi"><b>${s.resolved}</b><span>tickets resolved</span></div><div class="kpi"><b>${rate}%</b><span>clean rate</span></div>
+      <div class="kpi"><b>${s.breach}</b><span>security incidents</span></div><div class="kpi"><b>${s.shifts}</b><span>shifts worked</span></div></div></section>
+    <section class="panel section"><h2>Save data</h2><p class="muted">Progress saves in this browser only.</p>
+      ${state.rank < 5 ? `<div class="row"><button class="btn" data-act="devFounder">Testing: jump to Startup Founder</button></div>` : ''}
+      <div class="row">${state.confirmReset ? `<span>Erase all progress?</span><button class="btn danger" data-act="wipe">Erase</button><button class="btn" data-act="wipeCancel">Keep playing</button>` : `<button class="btn danger" data-act="wipeAsk">Start a new career</button>`}</div></section></div>`;
+}
+
+function renderModal(){
+  const root = $('#modalRoot'), m = state.modals[0];
+  if (!m){ root.innerHTML = ''; return; }
+  const spec = modalSpec(m);
+  root.innerHTML = `<div class="scrim"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <p class="eyebrow">${spec.eyebrow}</p><h2 id="mTitle" style="font-size:1.6rem">${spec.title}</h2>
+    <div class="body">${spec.body.map(p => `<p>${p}</p>`).join('')}</div>
+    ${spec.input ? `<label class="form" style="grid-template-columns:1fr"><span class="eyebrow">Company name</span><input type="text" id="startupName" value="${state.idea === 'automation' ? 'Autopilot IT' : 'KeyForge'}" maxlength="24"></label>` : ''}
+    <div class="choices">${spec.choices.map((c, i) => `<button class="choice" data-act="choose" data-v="${i}"><b>${c.label}</b>${c.sub ? `<span>${c.sub}</span>` : ''}</button>`).join('')}</div></div></div>`;
+  const first = root.querySelector('.choice'); if (first && !spec.input) first.focus();
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]'); if (!b || b.disabled) return;
+  const v = b.dataset.v, t = activeTicket();
+  switch (b.dataset.act){
+    case 'tab': state.tab = v; state.confirmReset = false; commit(); break;
+    case 'start': startShift(); break;
+    case 'pick': state.shift.active = v; commit(); break;
+    case 'lookup': t.st.lookedUp = true; commit(); break;
+    case 'verify': t.st.verified = v === '1'; commit(); break;
+    case 'resetOpen':
+      if (!t.st.lookedUp){ toast('Look up the account first.'); break; }
+      t.st.resetOpen = !t.st.resetOpen; commit(); break;
+    case 'do': act(v); break;
+    case 'avail': {
+      const u = t.st.form.username.trim().toLowerCase(), x = t.expectForm;
+      t.st.avail = !u ? 'Type a username first.' : (u === x.base && x.taken) ? `${u} is taken by ${x.twin}.` : `${u} is available.`;
+      commit(); break;
+    }
+    case 'hint':
+      if (state.gems < 1){ toast('You are out of gems. Earn more with clean tickets.'); break; }
+      state.gems--; t.st.hint = true; commit(); break;
+    case 'resolve': resolve(); break;
+    case 'next': nextTicket(); break;
+    case 'end': endShift(); break;
+    case 'buy': {
+      const it = SHOP.find(i => i.id === v);
+      if (state.cash < it.price){ toast(`You need ${money(it.price - state.cash)} more.`); break; }
+      state.cash -= it.price; state.items.push(v); toast(`${it.name} installed.`); commit(); break;
+    }
+    case 'outfit': {
+      const o = OUTFITS.find(x => x.id === v);
+      if (state.gems < o.gems){ toast(`You need ${o.gems - state.gems} more gems.`); break; }
+      state.gems -= o.gems; state.outfits.push(v); state.outfit = v; toast(`${o.name} unlocked.`); commit(); break;
+    }
+    case 'wear': state.outfit = v; commit(); break;
+    case 'iap': {
+      const p = PACKS.find(x => x.id === v);
+      state.gems += p.gems; if (p.id === 'starter' && !owns('espresso')) state.items.push('espresso');
+      toast(`Demo: added ${p.gems} gems. No payment taken.`); commit(); break;
+    }
+    case 'choose': {
+      const m = state.modals[0], spec = modalSpec(m), c = spec.choices[+v];
+      if (spec.input){
+        const name = ($('#startupName').value || '').trim().slice(0, 24) || 'KeyForge';
+        c.fx(name);
+      } else c.fx();
+      if (m.type === 'story' || m.type === 'seriesA' || m.type === 'billionaire') journal(spec.title, c.label);
+      state.modals.shift(); commit(); break;
+    }
+    case 'build': {
+      const e = state.empire, n = e.dcs.length; if (n >= CITIES.length) break;
+      if (!spend(dcCost(n))) break;
+      e.dcs.push({tier:n, racks:1, exp:0, cooling:0, health:100, down:null});
+      journal(`Opened a datacenter in ${CITIES[n]}`, n ? `Region ${n + 1}` : 'A rented cage and one rack');
+      toast(`${CITIES[n]} is online.`); commit(); break;
+    }
+    case 'rack': { const dc = state.empire.dcs[+v]; if (dc.racks < maxRacks(dc) && spend(rackCost(dc.tier, dc.racks))){ dc.racks++; commit(); } break; }
+    case 'expand': { const dc = state.empire.dcs[+v]; if (dc.exp < 3 && spend(expandCost(dc))){ dc.exp++; toast(`${CITIES[+v]} hall expanded to ${maxRacks(dc)} racks.`); commit(); } break; }
+    case 'cool': { const dc = state.empire.dcs[+v]; if (dc.cooling < 3 && spend(coolCost(dc))){ dc.cooling++; commit(); } break; }
+    case 'maint': { const dc = state.empire.dcs[+v]; if (spend(maintCost(dc))){ dc.health = 100; toast(`${CITIES[+v]} serviced. Health 100%.`); commit(); } break; }
+    case 'hire': { const s = STAFF.find(x => x.id === v); if (state.empire.staff[v] < staffCap() && spend(hireCost(s))){ state.empire.staff[v]++; commit(); } break; }
+    case 'fire': if (state.empire.staff[v] > 0){ state.empire.staff[v]--; commit(); } break;
+    case 'os': {
+      const os = state.empire.os, s = OS_STAGES[os.stage];
+      if (s && !os.endsAt && spend(s.cost)){ os.endsAt = Date.now() + s.secs * 1000; commit(); } break;
+    }
+    case 'incident': {
+      const [id, oi] = v.split(':').map(Number);
+      const r = resolveIncident(id, oi, false);
+      if (r) toast(`${['Good call.','Partly worked.','Bad call.'][r.q]} ${r.lesson}`);
+      commit(); break;
+    }
+    case 'devFounder':
+      if (state.rank >= 5) break;
+      state.shift = null; state.rank = 5; state.xp = Math.max(state.xp, RANKS[5].xp);
+      state.modals.push({type:'story', rank:5}); state.tab = 'empire'; commit(); break;
+    case 'wipeAsk': state.confirmReset = true; commit(); break;
+    case 'wipeCancel': state.confirmReset = false; commit(); break;
+    case 'wipe': state = fresh(); commit(); break;
+  }
+});
+document.addEventListener('input', e => {
+  const f = e.target.dataset && e.target.dataset.field; if (!f) return;
+  const t = activeTicket();
+  if (f === 'username') t.st.form.username = e.target.value;
+  if (f === 'name'){ state.name = e.target.value || 'Jordan Lee'; renderHud(); }
+  save();
+});
+document.addEventListener('change', e => {
+  const f = e.target.dataset && e.target.dataset.field; if (!f) return;
+  const t = activeTicket();
+  if (f === 'dept') t.st.form.dept = e.target.value;
+  if (f === 'license') t.st.form.license = e.target.value;
+  if (f === 'group'){
+    const g = t.st.form.groups, val = e.target.value;
+    if (e.target.checked && !g.includes(val)) g.push(val);
+    if (!e.target.checked) t.st.form.groups = g.filter(x => x !== val);
+  }
+  if (f === 'name') render();
+  save();
+});
+
+/* ---------- clock ---------- */
+let ticks = 0, pending = false;
+function tick(){
+  dirty = false;
+  empireTick();
+  shiftTick();
+  const typing = document.activeElement && document.activeElement.matches('#view input, #view select, #modalRoot input');
+  if ((dirty || pending) && !typing){ pending = false; save(); render(); }
+  else {
+    if (dirty) pending = true;
+    renderHud(); renderTabs();
+    if (state.tab === 'empire') updateLive();
+  }
+  if (++ticks % 5 === 0) save();
+}
+function shiftTick(){
+  if (!state.shift || state.modals.length || document.hidden) return;
+  for (const t of state.shift.tickets) if (!t.done) t.age++;
+  for (const t of state.shift.tickets){
+    if (t.done) continue;
+    const sl = slaInfo(t);
+    const bar = document.querySelector(`[data-sla="${t.id}"]`);
+    if (bar){ bar.className = `sla ${sl.cls}`; bar.querySelector('i').style.width = sl.pct + '%'; bar.querySelector('span').textContent = sl.txt; }
+    const pill = document.querySelector(`[data-slapill="${t.id}"]`);
+    if (pill){ pill.className = `pill ${sl.cls}`; pill.textContent = sl.txt; }
+  }
+}
+
+/* ---------- boot ---------- */
+function start(data){
+  state = (data && data.v === 1) ? data : (load() || fresh());
+  state.milestones = state.milestones || [];
+  if (state.founder && !state.empire) initEmpire(150e3);
+  window.claude?.hot?.snapshot?.(() => state);
+  dirty = false; empireTick();
+  render();
+  setInterval(tick, 1000);
+}
+window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
+})();
+</script>
+
+</body>
+</html>
