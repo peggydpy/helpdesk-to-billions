@@ -170,6 +170,79 @@ label.check{display:flex;gap:8px;align-items:center;font-size:.9rem}
 .section{display:grid;gap:12px;margin-bottom:26px}
 .small{font-size:.82rem}
 .empire-head{margin-bottom:20px}
+.chat{position:fixed;right:16px;bottom:calc(72px + env(safe-area-inset-bottom,0px));z-index:28;display:grid;gap:10px;width:min(360px,calc(100% - 32px));pointer-events:none}
+.chat-msg{pointer-events:auto;position:relative;display:grid;grid-template-columns:36px minmax(0,1fr);gap:10px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:16px 16px 16px 4px;padding:12px 34px 12px 12px;box-shadow:var(--shadow);animation:chatIn .28s ease-out}
+.chat-av{width:36px;height:36px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:.75rem}
+.chat-body{display:grid;gap:3px;min-width:0}
+.chat-body b{font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.chat-body p{margin:0;font-size:.92rem;line-height:1.4}
+.chat-replies{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chat-replies button{border:1px solid var(--signal);background:var(--signal-soft);color:var(--ink);border-radius:999px;padding:.35rem .75rem;font-size:.82rem;font-weight:600}
+.chat-x{position:absolute;top:6px;right:8px;border:0;background:none;color:var(--muted);font-size:1.1rem;line-height:1;padding:4px;min-width:28px;min-height:28px}
+.typing{display:flex;gap:4px;padding:6px 0}
+.typing i{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:dot 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+.chat-msg.memo{border:2px solid var(--bad);border-radius:6px;background:var(--bad-soft)}
+.chat-msg.memo .chat-av{background:var(--bad);color:var(--surface)}
+.chat-msg.memo p{font-family:var(--f-mono);font-size:.82rem}
+.memo-line{font-family:var(--f-mono);font-size:.85rem;color:var(--bad)}
+@keyframes chatIn{from{transform:translateY(12px) scale(.96);opacity:0}to{transform:none;opacity:1}}
+@keyframes dot{0%,60%,100%{opacity:.25;transform:none}30%{opacity:1;transform:translateY(-3px)}}
+.week{display:grid;gap:12px;border-top:1px solid var(--line);padding-top:16px}
+.week-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:16px;align-items:start}
+.board{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.board li{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:8px;align-items:center;padding:7px 10px;border-radius:8px;background:var(--sunk);font-size:.9rem;font-variant-numeric:tabular-nums}
+.board li b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.board li.you{background:var(--gold-soft);outline:1px solid var(--gold)}
+.board li span:first-child{font-family:var(--f-display);font-weight:800;color:var(--muted)}
+.chal{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.chal li{display:grid;gap:4px;font-size:.9rem}
+.office .scene{border-radius:10px;overflow:hidden;border:1px solid var(--line);margin-top:12px}
+.office .scene svg{display:block;width:100%;height:auto}
+.deco-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+.card.deco{gap:10px}
+.race-row{display:grid;grid-template-columns:110px minmax(0,1fr) 90px;gap:12px;align-items:center;font-variant-numeric:tabular-nums}
+.race-row span{text-align:right;font-weight:600}
+.bar.rivalbar i{background:var(--bad)}
+.skin{width:36px;height:36px;border-radius:50%;border:2px solid var(--line);padding:0}
+.char-edit{display:grid;grid-template-columns:140px minmax(0,1fr);gap:20px;align-items:start}
+.char-preview{background:var(--sunk);border:1px solid var(--line);border-radius:12px;padding:10px}
+.char-preview svg{display:block;width:100%;height:auto}
+.char-opts{display:grid;gap:14px;min-width:0}
+@media (max-width:480px){.char-edit{grid-template-columns:1fr}.char-preview{max-width:160px}}
+.skin.on{border-color:var(--signal);box-shadow:0 0 0 3px var(--signal-soft)}
+@media (max-width:760px){
+  .week-grid{grid-template-columns:1fr}
+  .race-row{grid-template-columns:80px minmax(0,1fr) 72px;gap:8px}
+  .chat{right:16px;left:16px;width:auto;bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+}
+.tabs .sound{margin-left:auto;border:1px solid var(--line);font-size:.8rem;white-space:nowrap}
+.tabs .sound[aria-pressed="true"]{color:var(--ink)}
+.confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:40}
+.float{position:fixed;transform:translate(-50%,0);font-family:var(--f-display);font-weight:800;font-size:1.05rem;color:var(--ok);pointer-events:none;z-index:35;white-space:nowrap;animation:floatUp 1.3s ease-out forwards;text-shadow:0 1px 0 var(--bg)}
+.float.bad{color:var(--bad)} .float.gold{color:var(--gold)}
+@keyframes floatUp{0%{transform:translate(-50%,0);opacity:0}15%{opacity:1}100%{transform:translate(-50%,-52px);opacity:0}}
+.mail{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;gap:8px}
+.mail-h{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 12px;margin:0;font-size:.86rem}
+.mail-h dt{color:var(--muted)} .mail-h dd{margin:0;overflow-wrap:anywhere}
+.mail-link{color:var(--signal);overflow-wrap:anywhere;font-size:.8rem}
+.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.day{display:grid;gap:2px;text-align:center;border:1px solid var(--line);border-radius:8px;padding:8px 2px;font-size:.72rem;background:var(--sunk);color:var(--muted)}
+.day b{font-size:.72rem;color:var(--ink)}
+.day.got{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.day.today{background:var(--gold-soft);border-color:var(--gold);color:var(--gold);font-weight:700}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
+.badge{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:10px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--sunk)}
+.badge>div{display:grid;gap:1px;min-width:0}
+.badge .medal{font-size:1.3rem;color:var(--muted);text-align:center}
+.badge.got{background:var(--gold-soft);border-color:color-mix(in srgb,var(--gold) 40%,var(--line))}
+.badge.got .medal{color:var(--gold)}
+.badge:not(.got) b{color:var(--muted)}
+#worldMap{display:block;width:100%;height:auto}
+.legend{gap:12px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.lg{display:inline-block;width:9px;height:9px;border-radius:50%}
+.lg.ok{background:var(--ok)} .lg.warn{background:var(--warn)} .lg.bad{background:var(--bad)} .lg.next{border:1.5px dashed var(--muted)}
 .cards.wide{grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
 .card.build{border-style:dashed;border-color:var(--gold);background:var(--gold-soft)}
 .mini{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:0}
@@ -224,6 +297,7 @@ table.staff .btn{font-size:.78rem;padding:.4rem .6rem;white-space:nowrap}
 </div>
 <div id="modalRoot"></div>
 <div id="toastRoot"></div>
+<div id="chatRoot" class="chat" aria-live="polite"></div>
 
 <script>
 (() => {
@@ -257,20 +331,32 @@ const HOME = {name:'Brightline Logistics',domain:'brightline.co'};
 const WORDS = ['Cedar','Harbor','Copper','Maple','Quartz','Juniper','Falcon','Ember','Tundra','Willow'];
 
 const RANKS = [
-  {name:'Help Desk Intern',xp:0,pay:40,tickets:4,blurb:'Phones, passwords, and a desk next to the printer.'},
-  {name:'IT Support Technician',xp:150,pay:90,tickets:5,blurb:'New hire accounts are yours now. Follow the naming rule.'},
-  {name:'Systems Administrator',xp:420,pay:220,tickets:5,blurb:'You hold the keys to the directory. Attackers know it, and they will call.'},
-  {name:'IT Manager',xp:850,pay:520,tickets:6,blurb:'Four technicians report to you. Lockouts start looking suspicious.'},
-  {name:'Chief Technology Officer',xp:1450,pay:1400,tickets:6,blurb:'Board meetings by day, password resets by habit.'},
-  {name:'Startup Founder',xp:2300,pay:0,tickets:6,blurb:'Your identity platform runs the help desks of other companies. Every clean ticket grows the valuation.'},
-  {name:'Tech Billionaire',xp:Infinity,pay:0,tickets:6,blurb:'Your stake is worth over $1B. The tickets still come in.'}
+  {name:'Help Desk Intern',short:'Intern',ab:'IN',xp:0,pay:40,tickets:4,blurb:'Phones, passwords, and a desk next to the printer.'},
+  {name:'IT Support Technician',short:'Technician',ab:'TC',xp:150,pay:90,tickets:5,blurb:'New hire accounts are yours now. Follow the naming rule.'},
+  {name:'Systems Administrator',short:'Sysadmin',ab:'SA',xp:420,pay:220,tickets:5,blurb:'You hold the keys to the directory. Attackers know it, and they will call.'},
+  {name:'IT Manager',short:'IT Manager',ab:'IM',xp:850,pay:520,tickets:6,blurb:'Four technicians report to you. Lockouts start looking suspicious.'},
+  {name:'Chief Technology Officer',short:'CTO',ab:'CTO',xp:1450,pay:1400,tickets:6,blurb:'Board meetings by day, password resets by habit.'},
+  {name:'Startup Founder',short:'Founder',ab:'CEO',xp:2300,pay:0,tickets:6,blurb:'Your identity platform runs the help desks of other companies. Every clean ticket grows the valuation.'},
+  {name:'Tech Billionaire',short:'Billionaire',ab:'CEO',xp:Infinity,pay:0,tickets:6,blurb:'Your stake is worth over $1B. The tickets still come in.'}
 ];
 const POOLS = [
-  ['reset','reset','unlock','resetLocked'],
-  ['reset','unlock','resetLocked','create','create'],
-  ['reset','unlock','resetLocked','create','social','createFake'],
-  ['reset','unlock','resetLocked','create','social','createFake','unlockAttack']
+  ['reset','reset','unlock','resetLocked','mfa','vpn'],
+  ['reset','unlock','resetLocked','mfa','vpn','create','create','mailbox','phishReport','phishLegit'],
+  ['reset','unlock','resetLocked','mfa','vpn','create','mailbox','phishReport','phishLegit','social','createFake','mfaTrap','mailboxDeny','offboard'],
+  ['reset','unlock','resetLocked','mfa','vpn','create','mailbox','phishReport','phishLegit','social','createFake','mfaTrap','mailboxDeny','offboard','unlockAttack','phishClicked']
 ];
+const TRAPS = new Set(['social','createFake','unlockAttack','mfaTrap','mailboxDeny','phishReport','phishClicked']);
+const ACTS = {unlock:'Unlock account',reset:'Reset password',mfa:'Reset MFA',vpn:'Reissue VPN cert',disable:'Disable account',revoke:'Revoke sessions + groups',
+  grant:'Grant mailbox access',askApproval:'Request manager approval',purge:'Block sender + purge',confirmSafe:'Tell reporter it’s safe',escalate:'Escalate to Security'};
+const ACCOUNT_ACTS = ['unlock','reset','mfa','vpn','disable','revoke','grant','askApproval'];
+const VERIFY = {
+  id:{q:'Do the requester’s details match the directory?',yes:'Details match',no:'Details don’t match',
+      wrong:['The details actually matched. Read the record again before flagging someone.','The details did not match. You should have flagged it.']},
+  request:{q:'Is this request authorized?',yes:'Authorized',no:'Not authorized',
+      wrong:['That request was legitimate.','That request was not authorized. Check the sender and the channel.']},
+  email:{q:'Is the reported email legitimate?',yes:'Legitimate',no:'Phishing',
+      wrong:['That email was legitimate. Check the sender domain and the link before calling it phishing.','That was phishing. Look at the sender domain and where the link really goes.']}
+};
 
 const KINDS = {
   reset:{label:'Password reset',lookup:true,identity:true,actions:['reset'],forbidden:[],
@@ -288,10 +374,37 @@ const KINDS = {
   social:{label:'Password reset',lookup:true,identity:false,actions:['escalate'],forbidden:['reset','unlock'],
     hint:'Compare the employee ID and manager character by character. Urgency plus a mismatch means impersonation. Flag it and escalate.',
     win:'You caught a vishing attempt. Security added the caller to their watch list.'},
-  create:{label:'New hire account',lookup:false,identity:true,actions:['create'],forbidden:[],
+  mfa:{label:'MFA problem',lookup:true,identity:true,actions:['mfa'],forbidden:[],
+    hint:'Details match and they have a new phone. Reset the MFA registration so they can enroll the new device. The password is fine.',
+    win:'MFA re-registered. They enrolled the new phone and kept MFA on.'},
+  mfaTrap:{label:'MFA problem',lookup:true,identity:false,actions:['escalate'],forbidden:['mfa','reset'],
+    hint:'Compare the ID and manager. "Turn off my MFA" plus urgency plus a mismatch is an MFA-bypass attempt. Flag it and escalate.',
+    win:'You blocked an MFA-bypass attempt. That is exactly how big breaches start.'},
+  vpn:{label:'VPN issue',lookup:true,identity:true,actions:['vpn'],forbidden:[],
+    hint:'Their password works and the record shows an expired VPN certificate. Reissue the certificate. Nothing else.',
+    win:'New VPN certificate issued. They connected on the first try.'},
+  mailbox:{label:'Access request',lookup:true,identity:true,actions:['grant'],forbidden:[],more:['grant','askApproval'],
+    hint:'Details match and the approval comes from their own manager in the directory. Grant the access.',
+    win:'Approved by the right manager, granted, and logged. Least privilege done right.'},
+  mailboxDeny:{label:'Access request',lookup:true,identity:true,actions:['askApproval'],forbidden:['grant'],more:['grant','askApproval'],
+    hint:'There is no approval attached, and it is a sensitive mailbox. Request approval from their manager. Do not grant it yet.',
+    win:'You asked for approval instead of granting access on request. That is how payroll data stays private.'},
+  offboard:{label:'Offboarding',lookup:true,verify:'request',identity:true,actions:['disable','revoke'],forbidden:[],
+    hint:'A legitimate HR Portal request. Disable the account and revoke sessions and groups. Both are needed.',
+    win:'Account disabled, sessions killed, groups removed. Nothing left behind.'},
+  phishReport:{label:'Suspicious email',lookup:false,verify:'email',identity:false,actions:['purge'],forbidden:['confirmSafe'],okExtra:['escalate'],
+    hint:'Read the sender domain and the link. Neither belongs to the company. Mark it phishing, then block the sender and purge it from every mailbox.',
+    win:'Phish blocked and purged before anyone else clicked.'},
+  phishLegit:{label:'Suspicious email',lookup:false,verify:'email',identity:true,actions:['confirmSafe'],forbidden:[],
+    hint:'The sender and the link both use the real company domain, and it matches a known HR event. Tell the reporter it is safe.',
+    win:'Correctly confirmed a real email. Reporting was the right instinct, and you told them so.'},
+  phishClicked:{label:'Suspicious email',lookup:true,verify:'email',identity:false,actions:['purge','reset'],forbidden:['confirmSafe'],more:['purge'],okExtra:['escalate','revoke','mfa'],
+    hint:'They typed their password into a phishing page, and the sign-in log already shows a foreign login. Purge the email and reset their password. Revoking sessions is a smart extra.',
+    win:'Phish purged and the stolen password made useless within minutes.'},
+  create:{label:'New hire account',mode:'create',verify:'request',lookup:false,identity:true,actions:['create'],forbidden:[],
     hint:'The request came through the HR portal on the company domain. Apply the naming rule, check availability, give All-Staff plus the two department groups, and pick the license for the department.',
     win:'Right name, right groups, right license. Their first day will go smoothly.'},
-  createFake:{label:'New hire account',lookup:false,identity:false,actions:['escalate'],forbidden:['create'],
+  createFake:{label:'New hire account',mode:'create',verify:'request',lookup:false,identity:false,actions:['escalate'],forbidden:['create'],
     hint:'Read the sender domain letter by letter. It is a lookalike, and it skips the HR portal. Mark it not authorized and escalate.',
     win:'You stopped a lookalike-domain request that would have given an attacker a foothold.'}
 };
@@ -299,19 +412,41 @@ const MISSING = {
   unlock:'The account is still locked, so the user still cannot sign in.',
   reset:'The user still does not know their password. A reset was needed.',
   escalate:'This needed to go to Security.',
-  create:'The new hire still has no account.'
+  create:'The new hire still has no account.',
+  mfa:'They still cannot complete MFA. Reset the registration so they can enroll the new phone.',
+  vpn:'The VPN certificate is still expired, so they still cannot connect.',
+  disable:'The departed employee’s account is still enabled. That is an open door.',
+  revoke:'Their sessions and groups are still live. A disabled account with an open session can still read mail.',
+  grant:'The access was properly approved and still not granted.',
+  askApproval:'Sensitive access needs approval from the user’s manager. Request it instead of guessing.',
+  purge:'The phishing email is still sitting in other people’s inboxes.',
+  confirmSafe:'The reporter never heard back, so they will not trust real HR emails.'
 };
 const EXTRA = {
   reset:'They knew their password. An unneeded reset forces a change and adds friction.',
   unlock:'Unlock was not needed here.',
   escalate:'This was a routine, legitimate request. Escalating it left the user stuck for hours.',
-  create:'No account should have been created.'
+  create:'No account should have been created.',
+  mfa:'MFA was not the problem. Resetting it weakened their account for no reason.',
+  vpn:'The VPN certificate was not the problem.',
+  disable:'You disabled the account of someone who still works here. They are locked out of everything.',
+  revoke:'Revoking sessions and groups signed them out everywhere and broke their access for no reason.',
+  grant:'Access should not have been granted.',
+  askApproval:'Approval was already attached. Asking again just delayed them.',
+  purge:'You purged a legitimate company email from every inbox.',
+  confirmSafe:'This was not safe to confirm.'
 };
+const EXTRA_SEVERE = ['escalate','disable'];
 const FORBID = {
   unlockAttack:{unlock:'You unlocked an account under a password-spray attack. The attacker gets another round of guesses.'},
   social:{reset:'You handed a password to an impersonator. Urgency plus authority plus "no time to verify" is the classic vishing script.',
           unlock:'You unlocked an account for an impersonator.'},
-  createFake:{create:'You created an account from a lookalike-domain request. That is how attackers plant a foothold.'}
+  createFake:{create:'You created an account from a lookalike-domain request. That is how attackers plant a foothold.'},
+  mfaTrap:{mfa:'You reset MFA for an impersonator. MFA-reset scams are how attackers walk past MFA.',
+           reset:'You handed a password to an impersonator.'},
+  mailboxDeny:{grant:'You granted payroll-level access with no manager approval. That is how data leaks start.'},
+  phishReport:{confirmSafe:'You told a user a phishing email was safe. They clicked it.'},
+  phishClicked:{confirmSafe:'You told a user who already got phished that the email was safe.'}
 };
 const SHOP = [
   {id:'espresso',name:'Espresso machine',price:300,effect:'+30 seconds on every ticket SLA.'},
@@ -389,13 +524,514 @@ const MILESTONES = [{v:1e10,name:'Decabillionaire',gems:100},{v:1e11,name:'Hundr
 const shuffle = a => a.map(v => [Math.random(), v]).sort((x, y) => x[0] - y[0]).map(x => x[1]);
 function fmtDur(s){ s = Math.round(s); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60); return h ? `${h}h ${m}m` : m ? `${m}m ${s % 60}s` : `${s}s`; }
 
+/* ---------- sound (synthesized, no files) ---------- */
+let actx = null;
+function audio(){
+  if (!actx){ const C = window.AudioContext || window.webkitAudioContext; if (!C) return null; try{ actx = new C(); }catch(e){ return null; } }
+  if (actx.state === 'suspended') actx.resume().catch(() => {});
+  return actx;
+}
+function tone(freq, at, dur, type, vol){
+  const a = audio(); if (!a) return;
+  const t0 = a.currentTime + at, o = a.createOscillator(), g = a.createGain();
+  o.type = type || 'sine'; o.frequency.setValueAtTime(freq, t0);
+  g.gain.setValueAtTime(.0001, t0); g.gain.exponentialRampToValueAtTime(vol || .12, t0 + .012); g.gain.exponentialRampToValueAtTime(.0001, t0 + dur);
+  o.connect(g); g.connect(a.destination); o.start(t0); o.stop(t0 + dur + .05);
+}
+const SFX = {
+  ping(){ tone(988, 0, .16, 'sine', .1); tone(1318, .09, .2, 'sine', .07); },
+  good(){ tone(660, 0, .12, 'triangle', .12); tone(880, .1, .22, 'triangle', .12); },
+  meh(){ tone(440, 0, .22, 'triangle', .1); },
+  bad(){ tone(196, 0, .28, 'sawtooth', .07); tone(147, .2, .36, 'sawtooth', .07); },
+  cash(){ tone(1319, 0, .08, 'square', .045); tone(1760, .07, .2, 'square', .045); },
+  alarm(){ [0, .26, .52].forEach(t => { tone(880, t, .12, 'square', .05); tone(660, t + .13, .12, 'square', .05); }); },
+  fanfare(){ [523, 659, 784, 1047].forEach((f, i) => tone(f, i * .11, .32, 'triangle', .11)); },
+  blip(){ tone(1046, 0, .07, 'sine', .07); tone(1568, .06, .09, 'sine', .05); },
+  badge(){ [784, 988, 1175, 1568].forEach((f, i) => tone(f, i * .07, .22, 'sine', .09)); }
+};
+function sfx(name){ if (!state || state.sound === false) return; try{ SFX[name] && SFX[name](); }catch(e){} }
+
+/* ---------- juice: confetti + floating numbers ---------- */
+const reducedMotion = () => window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+function confetti(count){
+  if (reducedMotion()) return;
+  const c = document.createElement('canvas'); c.className = 'confetti'; c.setAttribute('aria-hidden', 'true'); document.body.appendChild(c);
+  const dpr = Math.min(2, window.devicePixelRatio || 1), W = innerWidth, H = innerHeight;
+  c.width = W * dpr; c.height = H * dpr; const g = c.getContext('2d'); g.scale(dpr, dpr);
+  const cs = getComputedStyle(document.documentElement), cols = ['--gold','--signal','--ok','--warn','--bad'].map(v => cs.getPropertyValue(v).trim());
+  const ps = Array.from({length: count || 140}, () => ({x: W / 2 + (Math.random() - .5) * W * .4, y: H * .35, vx: (Math.random() - .5) * 13, vy: -Math.random() * 13 - 4,
+    r: Math.random() * 7 + 4, c: rnd(cols), a: Math.random() * 6, va: (Math.random() - .5) * .3}));
+  const t0 = performance.now();
+  (function frame(t){
+    g.clearRect(0, 0, W, H);
+    for (const p of ps){ p.vy += .32; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.a += p.va;
+      g.save(); g.translate(p.x, p.y); g.rotate(p.a); g.fillStyle = p.c; g.fillRect(-p.r / 2, -p.r / 4, p.r, p.r / 2); g.restore(); }
+    if (t - t0 < 2800) requestAnimationFrame(frame); else c.remove();
+  })(t0);
+}
+function floatAt(sel, text, cls){
+  const el = typeof sel === 'string' ? document.querySelector(sel) : sel; if (!el) return;
+  const r = el.getBoundingClientRect(); if (!r.width) return;
+  const s = document.createElement('span'); s.className = 'float ' + (cls || ''); s.textContent = text; s.setAttribute('aria-hidden', 'true');
+  s.style.left = (r.left + r.width / 2) + 'px'; s.style.top = r.top + 'px';
+  document.body.appendChild(s); setTimeout(() => s.remove(), 1300);
+}
+
+/* ---------- daily rewards ---------- */
+const DAILY = [5, 10, 15, 20, 30, 40, 75];
+const dateKey = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+function dailyCash(){
+  if (state.founder && state.empire) return Math.max(25e3, revPerSec() * 600);
+  return Math.max(100, RANKS[state.rank].pay * 5);
+}
+function checkDaily(){
+  const today = dateKey(new Date()), d = state.daily;
+  if (d.last === today || state.modals.some(m => m.type === 'daily')) return;
+  const y = new Date(); y.setDate(y.getDate() - 1);
+  state.modals.push({type:'daily', streak: d.last === dateKey(y) ? d.streak + 1 : 1});
+  dirty = true;
+}
+
+/* ---------- achievements ---------- */
+const ACH = [
+  {id:'first',name:'First ticket',desc:'Resolve your first ticket.',gems:5,test:s => s.stats.resolved >= 1},
+  {id:'clean1',name:'Clean start',desc:'Get your first clean resolution.',gems:5,test:s => s.stats.perfect >= 1},
+  {id:'clean25',name:'Reliable',desc:'25 clean resolutions.',gems:15,test:s => s.stats.perfect >= 25},
+  {id:'clean100',name:'Help desk legend',desc:'100 clean resolutions.',gems:50,test:s => s.stats.perfect >= 100},
+  {id:'shift',name:'Perfect shift',desc:'Finish a shift with every ticket clean.',gems:15,test:s => (s.stats.perfectShifts || 0) >= 1},
+  {id:'trap1',name:'Not today',desc:'Catch your first scam, phish or attack.',gems:10,test:s => (s.stats.traps || 0) >= 1},
+  {id:'trap25',name:'Human firewall',desc:'Catch 25 scams, phishes or attacks.',gems:40,test:s => (s.stats.traps || 0) >= 25},
+  {id:'acct10',name:'Onboarding pro',desc:'Create 10 new-hire accounts perfectly.',gems:15,test:s => (s.stats.accounts || 0) >= 10},
+  {id:'tech',name:'Moving up',desc:'Reach IT Support Technician.',gems:5,test:s => s.rank >= 1},
+  {id:'admin',name:'Keys to the kingdom',desc:'Reach Systems Administrator.',gems:10,test:s => s.rank >= 2},
+  {id:'mgr',name:'The boss now',desc:'Reach IT Manager.',gems:15,test:s => s.rank >= 3},
+  {id:'cto',name:'C-suite',desc:'Reach Chief Technology Officer.',gems:25,test:s => s.rank >= 4},
+  {id:'founder',name:'Founder',desc:'Start your own company.',gems:30,test:s => !!s.founder},
+  {id:'dc1',name:'Garage to cloud',desc:'Open your first datacenter.',gems:10,test:s => !!s.empire && s.empire.dcs.length >= 1},
+  {id:'dc6',name:'Global footprint',desc:'Run 6 datacenters.',gems:40,test:s => !!s.empire && s.empire.dcs.length >= 6},
+  {id:'dc12',name:'Every region',desc:'Run all 12 datacenters.',gems:100,test:s => !!s.empire && s.empire.dcs.length >= 12},
+  {id:'inc10',name:'Calm under fire',desc:'Make the best call on 10 incidents.',gems:25,test:s => (s.stats.incGood || 0) >= 10},
+  {id:'os',name:'Ship it',desc:'Launch your own operating system.',gems:60,test:s => !!s.empire && s.empire.os.stage >= OS_STAGES.length},
+  {id:'b1',name:'Billionaire',desc:'Reach a $1B net worth.',gems:50,test:s => s.rank >= 6},
+  {id:'t1',name:'Trillionaire',desc:'Reach a $1T net worth.',gems:250,test:s => s.milestones.includes(1e12)},
+  {id:'streak7',name:'Regular',desc:'Claim the daily bonus 7 days in a row.',gems:30,test:s => (s.daily.best || 0) >= 7}
+];
+function checkAch(){
+  const got = [];
+  for (const a of ACH) if (!state.ach.includes(a.id) && a.test(state)){ state.ach.push(a.id); state.gems += a.gems; got.push(a); }
+  if (!got.length) return false;
+  const gems = got.reduce((n, a) => n + a.gems, 0);
+  toast(got.length === 1 ? `Achievement: ${got[0].name} (+${gems} gems)` : `${got.length} achievements unlocked (+${gems} gems)`);
+  sfx('badge'); confetti(60);
+  setTimeout(() => floatAt('[data-hud="gems"]', `+${gems}`, 'gold'), 50);
+  return true;
+}
+
+/* ---------- world map ---------- */
+const CITY_LL = [[-97.7,30.3],[-77.5,39],[-6.3,53.3],[8.7,50.1],[103.8,1.35],[139.7,35.7],[-46.6,-23.5],[151.2,-33.9],[72.9,19.1],[28,-26.2],[18,59.3],[-21.9,64.1]];
+const LABEL_SIDE = [-1, 1, -1, 1, 1, 1, 1, -1, -1, 1, 1, -1];
+const LAND = [
+  [[-168,66],[-162,70],[-140,70],[-120,72],[-95,72],[-82,70],[-65,62],[-56,52],[-66,45],[-70,42],[-76,35],[-81,31],[-80,25],[-82,27],[-85,30],[-90,30],[-97,27],[-97,22],[-92,18],[-87,21],[-88,16],[-83,10],[-79,8],[-85,12],[-92,15],[-105,20],[-110,24],[-112,29],[-117,32],[-124,40],[-124,48],[-133,56],[-146,60],[-158,58],[-165,62]],
+  [[-52,60],[-42,60],[-20,70],[-18,81],[-60,83],[-72,78],[-56,68]],
+  [[-80,9],[-60,11],[-50,1],[-35,-6],[-40,-22],[-48,-28],[-58,-38],[-65,-42],[-68,-55],[-75,-50],[-72,-30],[-70,-18],[-76,-14],[-81,-5]],
+  [[-10,36],[-9,43],[-2,44],[-5,48],[2,51],[8,54],[8,57],[5,62],[15,69],[25,71],[32,70],[42,67],[45,60],[42,46],[30,46],[28,41],[26,38],[22,37],[19,41],[13,45],[16,40],[11,37],[8,44],[3,43],[-5,36]],
+  [[-6,50],[1,51],[-2,56],[-5,58.6],[-6,56]],
+  [[-10,51.5],[-6,52],[-6,55],[-9,54.5]],
+  [[-24,63.5],[-14,64],[-14,66.5],[-22,66.5]],
+  [[-17,21],[-10,30],[-5,36],[10,37],[20,32],[32,31],[35,28],[43,12],[51,12],[42,-2],[40,-15],[35,-25],[20,-35],[17,-30],[12,-17],[13,-5],[9,4],[-5,5],[-15,10]],
+  [[44,-25],[50,-15],[49,-12],[43,-17]],
+  [[28,41],[36,36],[35,30],[43,13],[52,16],[57,23],[60,25],[67,25],[73,20],[77,8],[80,15],[88,22],[92,22],[98,16],[100,6],[104,1],[104,10],[109,12],[108,21],[117,24],[121,30],[122,38],[118,39],[122,40],[126,38],[129,35],[130,42],[140,48],[142,54],[135,55],[140,60],[155,60],[163,62],[170,66],[180,68],[180,72],[140,73],[110,77],[80,73],[70,73],[60,70],[45,68],[42,67],[45,60],[42,46]],
+  [[130,31],[136,34],[141,36],[142,40],[141,45],[145,44],[140,41],[135,35],[130,34]],
+  [[95,5],[106,-6],[104,-6],[95,3]],[[109,1],[117,7],[119,1],[116,-4],[110,-3]],[[131,-1],[141,-3],[150,-10],[141,-9],[132,-4]],
+  [[114,-22],[122,-18],[130,-12],[137,-12],[142,-11],[146,-19],[153,-26],[150,-37],[141,-38],[135,-35],[131,-31],[118,-35],[115,-34]],
+  [[172,-35],[178,-38],[174,-41],[167,-46],[171,-44]]
+];
+const MAP_COLS = 120, MAP_ROWS = 52, LAT_TOP = 80, LAT_SPAN = 138;
+let landDots = null, mapColors = null, mapColorsAt = 0;
+function buildDots(){
+  const c = document.createElement('canvas'); c.width = MAP_COLS; c.height = MAP_ROWS;
+  const g = c.getContext('2d'); g.fillStyle = '#000';
+  for (const poly of LAND){
+    g.beginPath();
+    poly.forEach(([lo, la], i) => { const x = (lo + 180) / 360 * MAP_COLS, y = (LAT_TOP - la) / LAT_SPAN * MAP_ROWS; i ? g.lineTo(x, y) : g.moveTo(x, y); });
+    g.closePath(); g.fill();
+  }
+  const d = g.getImageData(0, 0, MAP_COLS, MAP_ROWS).data; landDots = [];
+  for (let y = 0; y < MAP_ROWS; y++) for (let x = 0; x < MAP_COLS; x++) if (d[(y * MAP_COLS + x) * 4 + 3] > 90) landDots.push([x, y]);
+}
+function drawMap(t){
+  const cv = document.getElementById('worldMap');
+  if (cv && state && state.empire){
+    if (!landDots) buildDots();
+    if (!mapColors || t - mapColorsAt > 1000){
+      const cs = getComputedStyle(document.documentElement), v = k => cs.getPropertyValue(k).trim();
+      mapColors = {land:v('--line'), ink:v('--ink'), muted:v('--muted'), gold:v('--gold'), ok:v('--ok'), warn:v('--warn'), bad:v('--bad'), font:v('--f-body')}; mapColorsAt = t;
+    }
+    const C = mapColors, dpr = Math.min(2, window.devicePixelRatio || 1), W = cv.clientWidth, H = Math.round(W * MAP_ROWS / MAP_COLS);
+    if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)){ cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); cv.style.height = H + 'px'; }
+    const g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
+    const cell = W / MAP_COLS, still = reducedMotion();
+    g.fillStyle = C.land;
+    for (const [x, y] of landDots){ g.beginPath(); g.arc((x + .5) * cell, (y + .5) * cell, cell * .3, 0, 7); g.fill(); }
+    const e = state.empire, P = CITY_LL.map(([lo, la]) => [(lo + 180) / 360 * W, (LAT_TOP - la) / LAT_SPAN * H]);
+    const arc = (a, b) => { const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2 - Math.hypot(b[0] - a[0], b[1] - a[1]) * .22; return [mx, my]; };
+    g.lineWidth = 1.3; g.strokeStyle = C.gold;
+    for (let i = 1; i < e.dcs.length; i++){
+      const a = P[0], b = P[i], m = arc(a, b);
+      g.globalAlpha = .45; g.beginPath(); g.moveTo(a[0], a[1]); g.quadraticCurveTo(m[0], m[1], b[0], b[1]); g.stroke();
+      if (!still){ const k = ((t / 2200) + i * .37) % 1, q = 1 - k;
+        const px = q * q * a[0] + 2 * q * k * m[0] + k * k * b[0], py = q * q * a[1] + 2 * q * k * m[1] + k * k * b[1];
+        g.globalAlpha = 1; g.fillStyle = C.gold; g.beginPath(); g.arc(px, py, 2.2, 0, 7); g.fill(); }
+    }
+    g.globalAlpha = 1;
+    const fs = W < 520 ? 10 : 12; g.font = `600 ${fs}px ${C.font}`; g.textBaseline = 'middle';
+    P.forEach((p, i) => {
+      const dc = e.dcs[i];
+      if (!dc){
+        if (i === e.dcs.length){ g.setLineDash([3, 3]); g.strokeStyle = C.muted; g.beginPath(); g.arc(p[0], p[1], 6, 0, 7); g.stroke(); g.setLineDash([]);
+          g.fillStyle = C.muted; g.textAlign = LABEL_SIDE[i] > 0 ? 'left' : 'right'; g.fillText(`${CITIES[i]} · next`, p[0] + LABEL_SIDE[i] * 11, p[1]); }
+        return;
+      }
+      const col = dc.down ? C.bad : dc.health < 40 ? C.warn : C.ok;
+      if (!still){ const k = ((t / (dc.down ? 700 : 1600)) + i * .21) % 1; g.globalAlpha = 1 - k; g.strokeStyle = col; g.lineWidth = 2; g.beginPath(); g.arc(p[0], p[1], 5 + k * 16, 0, 7); g.stroke(); g.globalAlpha = 1; }
+      g.fillStyle = col; g.beginPath(); g.arc(p[0], p[1], 5, 0, 7); g.fill();
+      g.fillStyle = C.ink; g.textAlign = LABEL_SIDE[i] > 0 ? 'left' : 'right'; g.fillText(CITIES[i], p[0] + LABEL_SIDE[i] * 10, p[1]);
+    });
+  }
+  requestAnimationFrame(drawMap);
+}
+
+/* ---------- quick chat: the boss, the mentor, the rival ---------- */
+const bossName = () => state.rank <= 1 ? 'Supervisor' : state.rank <= 3 ? 'IT Director' : state.rank === 4 ? 'CFO' : 'Rival CEO';
+const warnName = () => state.rank >= 5 ? 'Board Chair' : bossName();
+const NAME_AB = {'Supervisor':'SV','IT Director':'ID','CFO':'CF','Rival CEO':'RC','Board Chair':'BC','Mentor':'MT'};
+const LINES = {
+  start:['Morning. The coffee machine is down, so please don’t be the second thing that breaks today.',
+    'Reminder: “have you tried turning it off and on again” is not a resolution code.',
+    'I’ll be watching the queue. Not in a creepy way. In a management way.',
+    'Corporate is auditing ticket notes today. Maybe spell “password” right this time.',
+    'New day, same users, same passwords. Try to keep up.'],
+  streak:['Three clean in a row. Don’t let it go to your head, there’s no room up there.',
+    'Okay, that was actually good. I will deny saying this.',
+    'Look at you, following the runbook. Who are you and what did you do with my worst employee?'],
+  breach:['You just handed the keys to a stranger. Security is “thrilled”. I’m drafting an email with the word “concerning” in it.',
+    'The attacker would like to thank you personally. They sent a fruit basket.',
+    'I’m not mad. I’m writing it down, which is worse.'],
+  sla:['That user waited so long they started a podcast about it.',
+    'SLA means service level agreement, not “some lazy afternoon”.',
+    'That ticket aged like milk. Faster next time.'],
+  warn:['Four in a row. The printer has a better resolution rate than you, and it’s been jammed since March.',
+    'Four tickets, zero clean. Are you resolving them or just visiting?',
+    'I’ve seen better ticket work from the auto-reply.',
+    'Four straight misses. Even the office plant is judging you.'],
+  founderWarn:['Four sloppy tickets in a row. Investors have a word for that: “pattern”.',
+    'The board noticed. The board always notices.'],
+  perfect:['A perfect shift. I’ve told no one, because then they’d expect it every day.',
+    'Flawless. Suspicious, but flawless.',
+    'Every ticket clean. I’m taking a warning off your file. Don’t make it weird.']
+};
+const INTROS = {
+  1:'Technician now, huh? Same desk, more blame.',
+  2:'I’m your new IT Director. I like three things: uptime, silence, and people who don’t escalate password resets.',
+  3:'You manage people now. Try not to manage them the way I manage you.',
+  4:'Hi, I’m the CFO. Every ticket costs money. Every mistake costs more. I have a spreadsheet for both.',
+  5:'Saw your little startup. Cute. Apex Cloud will hit a billion before you finish your seed deck.',
+  6:'So you made it. Enjoy the view. I’m buying the building next door.'
+};
+const TIPS = {
+  social:'Before you touch that account, compare the employee ID digit by digit. Urgent callers love it when you skip that.',
+  createFake:'Read the sender domain letter by letter. Lookalikes swap one character.',
+  unlockAttack:'Check the failure count and source before unlocking. Dozens of tries from abroad is not a typo.',
+  mfaTrap:'Nobody legit asks you to switch MFA off. That request alone is a red flag.',
+  mailboxDeny:'No approval, no access. Doesn’t matter how “quick” it is.',
+  phishReport:'Where does the link really go? If it isn’t the company domain, it isn’t safe.',
+  phishClicked:'They typed their password into a phish. Move fast: purge it, then reset.'
+};
+const ASKS = [
+  {q:'Quick question. Did you take the last donut from the break room?', a:[['Guilty, and I’d do it again', 'Bold. I respect it. I’m also docking it from your bonus.', -1], ['It was the Contractor', 'Noted. The Contractor is now on thin ice.', 1]]},
+  {q:'I volunteered you to fix the CEO’s home printer this weekend. You’re welcome.', a:[['Happy to help', 'Great attitude. It’s an inkjet from 2009.', 2], ['That’s not in my job description', 'Neither is complaining, yet here we are.', -2]]},
+  {q:'Be honest. Is my password still “Summer2019!”?', a:[['I can’t see passwords. Please change it.', 'Fine. It’s “Summer2020!” now. Happy?', 2], ['No comment', 'I’ll take that as a yes.', 0]]},
+  {q:'The CEO wants to know why the Wi-Fi is “slow”. I said you’d explain it in one sentence.', a:[['Everyone is streaming in 4K', 'Short, honest, and nobody will like it. Perfect.', 1], ['It’s probably DNS', 'It’s always DNS. Good answer.', 2]]}
+];
+let chatQ = [], chatBusy = false;
+function say(from, text, opt){ chatQ.push({from, text, kind:(opt && opt.kind) || '', replies:(opt && opt.replies) || null}); pumpChat(); }
+function pumpChat(){
+  if (chatBusy || !chatQ.length) return;
+  if (!state || state.modals.length){ setTimeout(pumpChat, 1200); return; }
+  chatBusy = true;
+  const m = chatQ.shift(), root = $('#chatRoot');
+  const el = document.createElement('div'); el.className = 'chat-msg ' + m.kind; el.setAttribute('role', 'status');
+  el.innerHTML = `<span class="chat-av" aria-hidden="true">${NAME_AB[m.from] || '··'}</span><div class="chat-body"><b>${esc(m.from)}</b><p class="typing" aria-label="typing"><i></i><i></i><i></i></p></div>`;
+  root.appendChild(el);
+  while (root.children.length > 3){ const old = [...root.children].find(c => !c._replies) || root.firstChild; old.remove(); }
+  setTimeout(() => {
+    el.querySelector('.chat-body').innerHTML = `<b>${esc(m.from)}</b><p>${esc(m.text)}</p>${m.replies ? `<div class="chat-replies">${m.replies.map((r, i) => `<button type="button" data-ri="${i}">${esc(r.label)}</button>`).join('')}</div>` : ''}`;
+    el.insertAdjacentHTML('beforeend', '<button type="button" class="chat-x" aria-label="Dismiss message">×</button>');
+    sfx(m.kind === 'memo' ? 'bad' : 'blip');
+    state.chatLog.unshift({from:m.from, text:m.text, day:state.day, kind:m.kind}); state.chatLog = state.chatLog.slice(0, 30);
+    el._replies = m.replies;
+    if (!m.replies) el._t = setTimeout(() => el.remove(), m.kind === 'memo' ? 12000 : 8000);
+    chatBusy = false; setTimeout(pumpChat, 500);
+  }, reducedMotion() ? 200 : 1100);
+}
+function strike(){
+  state.strikes = (state.strikes || 0) + 1;
+  const n = state.strikes, who = warnName();
+  if (n === 1) say(who, rnd(state.rank >= 5 ? LINES.founderWarn : LINES.warn));
+  else if (n === 2){ state.rep = clamp(state.rep - 8, 0, 100); say(who, 'WRITTEN WARNING. Another four-ticket losing streak. This goes in your file. Yes, there is a file. Reputation −8.', {kind:'memo'}); }
+  else if (n === 3){
+    const dock = state.founder ? 0 : RANKS[state.rank].pay * 3;
+    if (state.founder) state.founder.valuation *= .95; else state.cash -= dock;
+    say(who, `FINAL WARNING. One more streak and we’re meeting with HR. ${state.founder ? 'Valuation −5%.' : `Bonus docked ${money(dock)}.`}`, {kind:'memo'});
+  } else { state.strikes = 0; state.modals.push({type:'pip', reason:'Four warnings in your file.'}); }
+}
+function afterResolve(t, L, inSla){
+  const sh = state.shift;
+  sh.score = (sh.score || 0) + (L === 0 ? 100 + (inSla ? 25 : 0) + (TRAPS.has(t.kind) ? 50 : 0) : 0) - (L === 3 ? 100 : 0);
+  if (L === 0){
+    state.badStreak = 0; sh.run = (sh.run || 0) + 1;
+    bumpCh('clean'); if (inSla) bumpCh('sla'); if (TRAPS.has(t.kind)) bumpCh('traps');
+    if (t.kind === 'create') bumpCh('create'); if (t.kind.startsWith('phish')) bumpCh('phish');
+    if (sh.run === 3 && !sh.praised){ sh.praised = true; say(warnName(), rnd(LINES.streak)); }
+    else if (!inSla && Math.random() < .3) say(warnName(), rnd(LINES.sla));
+  } else {
+    sh.run = 0; state.badStreak = (state.badStreak || 0) + 1;
+    if (L === 3) say(warnName(), rnd(LINES.breach));
+    if (state.badStreak >= 4){ state.badStreak = 0; strike(); }
+  }
+}
+function shiftOpeners(){
+  if (state.introPending){ say(state.rank >= 5 ? 'Rival CEO' : bossName(), INTROS[state.introPending] || ''); state.introPending = null; }
+  else if (state.rank < 5 && Math.random() < .25){
+    const q = rnd(ASKS), who = bossName();
+    say(who, q.q, {replies:q.a.map(([label, back, rep]) => ({label, fx(){ state.rep = clamp(state.rep + rep, 0, 100); say(who, back + (rep ? ` (Reputation ${rep > 0 ? '+' : ''}${rep})` : '')); }}))});
+  }
+  else if (Math.random() < .35) say(state.rank >= 5 ? 'Rival CEO' : bossName(), state.rank >= 5 ? rnd(['Our servers are faster than yours. Just thought you should know.','Heard your datacenter had an outage. Thoughts and prayers.','Apex Cloud just signed another client. Your client, actually.']) : rnd(LINES.start));
+  const seen = state.tipsSeen || (state.tipsSeen = []);
+  const k = state.shift.tickets.map(x => x.kind).find(x => TIPS[x] && !seen.includes(x));
+  if (k){ seen.push(k); say('Mentor', TIPS[k]); }
+}
+
+/* ---------- weekly competition ---------- */
+const WEEK_LEN = 5;
+const COWORKERS = ['Senior Tech','Night-shift Tech','New Hire','Contractor'];
+const FOUNDERS = ['Rival CEO','Garage Founder','Unicorn Founder','Serial Founder'];
+const CHALLENGES = [
+  {id:'clean',text:'Resolve 10 tickets cleanly',target:10,gems:20},
+  {id:'traps',text:'Catch 3 scams, phishes or attacks',target:3,gems:25},
+  {id:'sla',text:'Close 8 clean tickets within SLA',target:8,gems:20},
+  {id:'perfectShift',text:'Finish 2 perfect shifts',target:2,gems:30},
+  {id:'safeShift',text:'Work 3 shifts with no security incident',target:3,gems:15},
+  {id:'create',text:'Create 3 new-hire accounts perfectly',target:3,gems:20,minRank:1},
+  {id:'phish',text:'Handle 2 suspicious-email reports correctly',target:2,gems:20,minRank:1},
+  {id:'rack',text:'Install 5 racks',target:5,gems:25,founder:true},
+  {id:'incGood',text:'Make the best call on 3 incidents',target:3,gems:30,founder:true}
+];
+function newWeek(n){
+  const pool = CHALLENGES.filter(c => (!c.minRank || state.rank >= c.minRank) && (!c.founder || state.founder));
+  state.week = {n, day:0, score:0, rivals:(state.founder ? FOUNDERS : COWORKERS).map((name, i) => ({name, score:0, skill:[.92, .78, .6, .45][i]})),
+    ch:shuffle(pool).slice(0, 3).map(c => ({id:c.id, text:c.text, target:c.target, gems:c.gems, prog:0, done:false}))};
+}
+function bumpCh(id, n){
+  const w = state.week; if (!w) return;
+  for (const c of w.ch) if (c.id === id && !c.done){
+    c.prog = Math.min(c.target, c.prog + (n || 1));
+    if (c.prog >= c.target){ c.done = true; state.gems += c.gems; toast(`Weekly challenge done: ${c.text} (+${c.gems} gems)`); sfx('badge'); }
+  }
+}
+function shiftWrap(sum, s){
+  const score = Math.max(0, s.score || 0); sum.score = score;
+  if (sum.clean === sum.tickets){ bumpCh('perfectShift'); if (state.strikes > 0) state.strikes--; say(warnName(), rnd(LINES.perfect)); }
+  if (!sum.incidents) bumpCh('safeShift');
+  if (score > (state.best || 0)){ const first = !state.best; state.best = score; sum.best = true; if (!first) say('Mentor', `New personal best: ${score} points. Screenshot it before the ${warnName()} sees.`); }
+  const w = state.week; w.score += score; w.day++;
+  for (const r of w.rivals) r.score += Math.round(r.skill * sum.tickets * 130 * (.7 + Math.random() * .45));
+  if (w.day >= WEEK_LEN){
+    const table = [...w.rivals.map(r => ({name:r.name, score:r.score})), {name:'You', score:w.score, you:true}].sort((a, b) => b.score - a.score);
+    const place = table.findIndex(r => r.you) + 1;
+    const gems = [50, 25, 10, 0, 0][place - 1], cash = place === 1 && !state.founder ? RANKS[state.rank].pay * 10 : 0;
+    state.gems += gems; state.cash += cash;
+    state.modals.push({type:'week', n:w.n, table, place, gems, cash, label: state.founder ? 'Founder leaderboard' : 'Employee of the week'});
+    say(warnName(), place === 1 ? 'Top of the board this week. The plaque is cardboard, but it’s yours.' : place <= 3 ? `#${place} this week. Not bad. Not good either.` : `#${place} this week. The Contractor beat you, and they only work Tuesdays.`);
+    newWeek(w.n + 1);
+  }
+}
+function weekPanel(){
+  const w = state.week, table = [...w.rivals, {name:'You', score:w.score, you:true}].sort((a, b) => b.score - a.score);
+  return `<div class="week"><div class="row" style="justify-content:space-between"><p class="eyebrow">Week ${w.n} · day ${w.day + 1} of ${WEEK_LEN} · ${state.founder ? 'Founder leaderboard' : 'Employee of the week'}</p>
+    <div class="row">${state.best ? `<span class="pill gold">Personal best ${state.best} pts</span>` : ''}<span class="pill ${state.strikes ? 'bad' : 'ok'}">Warnings ${state.strikes || 0} of 3</span></div></div>
+    <div class="week-grid"><ol class="board">${table.map((r, i) => `<li class="${r.you ? 'you' : ''}"><span>${i + 1}</span><b>${esc(r.name)}</b><span>${r.score.toLocaleString()}</span></li>`).join('')}</ol>
+    <ul class="chal">${w.ch.map(c => `<li><div class="row" style="justify-content:space-between"><span>${esc(c.text)}</span><span class="pill ${c.done ? 'ok' : 'gold'}">${c.done ? 'Done' : '+' + c.gems + ' gems'}</span></div><div class="bar"><i style="width:${c.prog / c.target * 100}%"></i></div><span class="small muted">${c.prog} of ${c.target}</span></li>`).join('')}</ul></div>
+    <p class="small muted">Shift score: 100 per clean ticket, +25 within SLA, +50 per scam caught, −100 per security incident. The top three each week win gems. Four non-clean tickets in a row earns a warning.</p></div>`;
+}
+
+/* ---------- office ---------- */
+const OFFICE_TIERS = [
+  {name:'Cubicle',minRank:0,wall:'#DCE3EC',floor:'#AEB8C6',view:null},
+  {name:'Private office',minRank:2,wall:'#E8E1D3',floor:'#9C8466',view:'parking'},
+  {name:'Corner office',minRank:4,wall:'#E9EDF2',floor:'#6F7C8E',view:'city'},
+  {name:'Startup loft',minRank:5,wall:'#F1E2D6',floor:'#C49A6C',view:'harbor',brick:'#E2C9B6'},
+  {name:'Penthouse HQ',minRank:6,wall:'#EEF1F5',floor:'#D3D7DE',view:'skyline'}
+];
+const officeTier = () => OFFICE_TIERS.filter(t => state.rank >= t.minRank).pop();
+const DECOR = {
+  desk:{label:'Desk',items:[{id:'folding',name:'Folding table',cost:0,style:0},{id:'oak',name:'Oak desk',cost:600,style:3},{id:'standing',name:'Standing desk',cost:2500,style:6},{id:'glass',name:'Glass executive desk',cost:25000,style:12}]},
+  chair:{label:'Chair',items:[{id:'plastic',name:'Plastic chair',cost:0,style:0},{id:'mesh',name:'Mesh office chair',cost:300,style:2},{id:'gaming',name:'Gaming chair',cost:1200,style:4},{id:'leather',name:'Leather executive chair',cost:8000,style:8}]},
+  computer:{label:'Computer',items:[{id:'laptop',name:'Old laptop',cost:0,style:0},{id:'dual',name:'Dual monitors',cost:900,style:3},{id:'ultra',name:'Triple ultrawide',cost:5000,style:7}]},
+  plant:{label:'Plant',items:[{id:'none',name:'No plant',cost:0,style:0},{id:'succulent',name:'Succulent',cost:80,style:1},{id:'monstera',name:'Monstera',cost:400,style:3},{id:'bonsai',name:'Bonsai',gems:40,style:6}]},
+  art:{label:'Wall art',items:[{id:'none',name:'Bare wall',cost:0,style:0},{id:'poster',name:'“Hang in there” poster',cost:60,style:1},{id:'abstract',name:'Abstract canvas',cost:1500,style:4},{id:'record',name:'Gold record: 99.999% uptime',gems:80,style:8}]},
+  lamp:{label:'Lamp',items:[{id:'none',name:'No lamp',cost:0,style:0},{id:'desk',name:'Desk lamp',cost:120,style:1},{id:'neon',name:'Neon “root” sign',cost:900,style:4}]},
+  rug:{label:'Rug',items:[{id:'none',name:'Bare floor',cost:0,style:0},{id:'gray',name:'Gray rug',cost:200,style:1},{id:'persian',name:'Persian rug',cost:3000,style:5}]},
+  coffee:{label:'Coffee',items:[{id:'none',name:'No coffee',cost:0,style:0},{id:'kettle',name:'Kettle',cost:150,style:1},{id:'espresso',name:'Espresso bar',cost:4000,style:5}]},
+  rack:{label:'Server rack',minRank:2,items:[{id:'none',name:'No rack',cost:0,style:0},{id:'homelab',name:'Home-lab rack',cost:6000,style:6},{id:'gold',name:'Gold-trim rack',gems:150,style:12}]}
+};
+const SKINS = ['#F1D3B6','#D9A77C','#B0764B','#7C4A2B','#4E2E1C'];
+const OUTFIT_COL = {hoodie:'#56637F', blazer:'#1F3A7A', turtleneck:'#1B1B1F', gold:'#B07C14'};
+function initOffice(){
+  const eq = {}, owned = {};
+  for (const [slot, d] of Object.entries(DECOR)){ eq[slot] = d.items[0].id; owned[slot] = [d.items[0].id]; }
+  state.office = {eq, owned};
+}
+const decorItem = slot => DECOR[slot].items.find(i => i.id === state.office.eq[slot]) || DECOR[slot].items[0];
+const officeStyle = () => Object.keys(DECOR).reduce((n, slot) => n + (DECOR[slot].minRank > state.rank ? 0 : decorItem(slot).style), 0);
+const officePerk = () => Math.min(25, Math.round(officeStyle() * .5));
+const SKIN_SHADE = ['#D9B391','#BC8A5F','#93603A','#62391F','#3A2114'];
+const HAIR_STYLES = ['Short','Curly','Long','Bun','Buzz'];
+const HAIR_COLORS = ['#2A1E16','#6B4423','#D8B26E','#B23A2E','#9AA0A6'];
+function personBack(skin, shirt){
+  const shade = SKIN_SHADE[state.skin == null ? 1 : state.skin], hc = HAIR_COLORS[state.hairColor || 0], hs = state.hair || 0;
+  const blink = reducedMotion() ? '' : '<animate attributeName="ry" values="3;3;0.3;3" keyTimes="0;0.92;0.96;1" dur="4.5s" repeatCount="indefinite"/>';
+  const mood = state.rep >= 35 ? 'M411 222 q9 8 18 0' : state.rep >= 15 ? 'M413 224 q7 2 14 0' : 'M412 227 q8 -6 16 0';
+  let p = '';
+  // legs and shoes, mostly hidden behind the desk
+  p += `<rect x="396" y="286" width="20" height="42" rx="7" fill="#2A2F3A"/><rect x="424" y="286" width="20" height="42" rx="7" fill="#2A2F3A"/>`;
+  p += `<ellipse cx="404" cy="330" rx="14" ry="5" fill="#141414"/><ellipse cx="436" cy="330" rx="14" ry="5" fill="#141414"/>`;
+  // long hair falls behind the shoulders
+  if (hs === 2) p += `<path d="M396 206 q-6 30 -2 48 h52 q4 -18 -2 -48 z" fill="${hc}"/>`;
+  // torso, neck, outfit details
+  p += `<rect x="413" y="228" width="14" height="12" fill="${shade}"/>`;
+  p += `<rect x="388" y="236" width="64" height="58" rx="16" fill="${shirt}"/>`;
+  if (state.outfit === 'hoodie') p += `<path d="M404 238 q16 12 32 0" stroke="#3E4860" stroke-width="5" fill="none"/><path d="M414 244 v14 M426 244 v14" stroke="#E7EBF3" stroke-width="2" stroke-linecap="round"/><rect x="404" y="270" width="32" height="12" rx="4" fill="#4A5670"/>`;
+  if (state.outfit === 'blazer') p += `<path d="M412 237 l8 20 l8 -20 z" fill="#FFFFFF"/><path d="M420 244 l-3 6 l3 18 l3 -18 z" fill="#B9332A"/><path d="M412 237 l-6 14 l10 6 z M428 237 l6 14 l-10 6 z" fill="#16295C"/>`;
+  if (state.outfit === 'turtleneck') p += `<rect x="409" y="228" width="22" height="12" rx="5" fill="#2E2E35"/>`;
+  // ears, head, hair, face
+  p += `<ellipse cx="398" cy="214" rx="5" ry="6.5" fill="${skin}"/><ellipse cx="442" cy="214" rx="5" ry="6.5" fill="${skin}"/><ellipse cx="398.5" cy="214" rx="2" ry="3" fill="${shade}"/><ellipse cx="441.5" cy="214" rx="2" ry="3" fill="${shade}"/>`;
+  p += `<circle cx="420" cy="212" r="22" fill="${skin}"/>`;
+  if (hs === 0) p += `<path d="M398 207 a22 22 0 0 1 44 0 q-10 -8 -22 -8 t-22 8 z" fill="${hc}"/>`;
+  if (hs === 1) p += [[402,198],[410,192],[420,190],[430,192],[438,198],[399,207],[441,207]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="8" fill="${hc}"/>`).join('');
+  if (hs === 2) p += `<path d="M398 210 a22 22 0 0 1 44 0 q-6 -12 -22 -12 q-16 0 -22 12 z" fill="${hc}"/>`;
+  if (hs === 3) p += `<path d="M398 207 a22 22 0 0 1 44 0 q-10 -8 -22 -8 t-22 8 z" fill="${hc}"/><circle cx="420" cy="186" r="9" fill="${hc}"/>`;
+  if (hs === 4) p += `<path d="M399 205 a22 22 0 0 1 42 0 q-10 -5 -21 -5 t-21 5 z" fill="${hc}" opacity=".55"/>`;
+  p += `<path d="M406 204 q5 -3 10 0 M424 204 q5 -3 10 0" stroke="${hc}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`;
+  p += `<ellipse cx="411" cy="211" rx="2.6" ry="3" fill="#1A1A1A">${blink}</ellipse><ellipse cx="429" cy="211" rx="2.6" ry="3" fill="#1A1A1A">${blink}</ellipse>`;
+  p += `<circle cx="411.8" cy="210" r=".8" fill="#FFFFFF"/><circle cx="429.8" cy="210" r=".8" fill="#FFFFFF"/>`;
+  p += `<path d="M420 213 q-3 5 0 7" stroke="${shade}" stroke-width="1.6" fill="none" stroke-linecap="round"/>`;
+  p += `<path d="${mood}" stroke="#7A2E2E" stroke-width="2" fill="none" stroke-linecap="round"/>`;
+  if (state.outfit === 'gold') p += `<path d="M396 210 a24 24 0 0 1 48 0" stroke="#D9A441" stroke-width="4" fill="none"/><rect x="392" y="207" width="8" height="15" rx="3" fill="#D9A441"/><rect x="440" y="207" width="8" height="15" rx="3" fill="#D9A441"/><path d="M396 220 q4 8 12 8" stroke="#D9A441" stroke-width="2" fill="none"/>`;
+  return p;
+}
+function personFront(skin, shirt){
+  const shade = SKIN_SHADE[state.skin == null ? 1 : state.skin];
+  let p = `<rect x="390" y="270" width="60" height="7" rx="2" fill="#3A4459"/>`;
+  for (let i = 0; i < 6; i++) p += `<rect x="${394 + i * 9}" y="272" width="6" height="2" fill="#8A93A6"/>`;
+  // arms bend from the shoulders down to the keyboard
+  p += `<path d="M394 248 Q382 266 401 272" stroke="${shirt}" stroke-width="13" fill="none" stroke-linecap="round"/><path d="M446 248 Q458 266 439 272" stroke="${shirt}" stroke-width="13" fill="none" stroke-linecap="round"/>`;
+  // hands with fingers resting on the keys
+  for (const [cx, dir] of [[404, 1], [436, -1]]){
+    p += `<ellipse cx="${cx}" cy="271" rx="8" ry="5.5" fill="${skin}"/>`;
+    p += `<ellipse cx="${cx + dir * 7}" cy="273" rx="3" ry="2.2" fill="${skin}"/>`;
+    p += `<path d="M${cx - 4} 268 v5 M${cx} 267.5 v5.5 M${cx + 4} 268 v5" stroke="${shade}" stroke-width="1" stroke-linecap="round"/>`;
+  }
+  return p;
+}
+function characterSVG(){
+  const skin = SKINS[state.skin == null ? 1 : state.skin], shirt = OUTFIT_COL[state.outfit] || OUTFIT_COL.hoodie;
+  return `<svg viewBox="372 176 96 162" role="img" aria-label="Your character" xmlns="http://www.w3.org/2000/svg"><rect x="372" y="176" width="96" height="162" fill="none"/>${personBack(skin, shirt)}${personFront(skin, shirt)}</svg>`;
+}
+function officeSVG(){
+  const T = officeTier(), eq = state.office.eq, rackOk = state.rank >= 2;
+  const skin = SKINS[state.skin == null ? 1 : state.skin], shirt = OUTFIT_COL[state.outfit] || OUTFIT_COL.hoodie;
+  let s = (T.brick ? `<defs><pattern id="brickWall" width="60" height="26" patternUnits="userSpaceOnUse"><rect width="60" height="26" fill="${T.wall}"/><path d="M0 13 H60 M0 26 H60 M30 0 V13 M0 13 V26 M60 13 V26" stroke="${T.brick}" stroke-width="2"/></pattern></defs>` : "") + `<rect width="800" height="440" fill="${T.brick ? "url(#brickWall)" : T.wall}"/><rect y="330" width="800" height="110" fill="${T.floor}"/><rect y="326" width="800" height="6" fill="#000" opacity=".12"/>`;
+  if (!T.view){
+    s += `<rect x="0" y="0" width="800" height="14" fill="#F4F7FB"/><rect x="300" y="14" width="200" height="6" fill="#E4EAF2"/>
+      <rect x="20" y="120" width="760" height="210" fill="#B7C1CE"/><rect x="20" y="112" width="760" height="10" fill="#8E9AAB"/><rect x="20" y="120" width="14" height="210" fill="#8E9AAB"/><rect x="766" y="120" width="14" height="210" fill="#8E9AAB"/>
+      <rect x="560" y="150" width="70" height="50" fill="#F7E58A"/><rect x="640" y="160" width="60" height="45" fill="#A9D5F5"/><rect x="575" y="165" width="40" height="3" fill="#8A7A2A"/><rect x="575" y="175" width="30" height="3" fill="#8A7A2A"/>`;
+  } else {
+    const wx = 470, wy = 40, ww = 270, wh = 190;
+    let v = '';
+    if (T.view === 'parking') v = `<rect x="${wx}" y="${wy}" width="${ww}" height="${wh}" fill="#CFE3F3"/><rect x="${wx}" y="${wy + 130}" width="${ww}" height="60" fill="#8B939E"/><rect x="${wx + 30}" y="${wy + 145}" width="40" height="18" rx="5" fill="#C0616F"/><rect x="${wx + 110}" y="${wy + 150}" width="40" height="18" rx="5" fill="#4A7BB0"/><rect x="${wx + 190}" y="${wy + 145}" width="40" height="18" rx="5" fill="#EFE4CF"/><circle cx="${wx + 220}" cy="${wy + 40}" r="18" fill="#FFF3C4"/>`;
+    if (T.view === 'city') v = `<rect x="${wx}" y="${wy}" width="${ww}" height="${wh}" fill="#BFD9F2"/>` + [[0,90,50,'#7C8DA6'],[55,50,45,'#93A3B9'],[105,110,40,'#6B7C95'],[150,70,55,'#8797AE'],[210,30,60,'#73849C']].map(([x, y, w, c]) => `<rect x="${wx + x}" y="${wy + y}" width="${w}" height="${wh - y}" fill="${c}"/>`).join('');
+    if (T.view === 'harbor') v = `<rect x="${wx}" y="${wy}" width="${ww}" height="${wh}" fill="#F2C7A5"/><circle cx="${wx + 200}" cy="${wy + 90}" r="26" fill="#F6E3B4"/><rect x="${wx}" y="${wy + 120}" width="${ww}" height="70" fill="#4A7BA6"/><rect x="${wx + 30}" y="${wy + 60}" width="8" height="60" fill="#5B3A2A"/><rect x="${wx + 30}" y="${wy + 60}" width="60" height="6" fill="#5B3A2A"/><rect x="${wx + 120}" y="${wy + 108}" width="60" height="14" fill="#C0616F"/>`;
+    if (T.view === 'skyline'){
+      v = `<rect x="${wx}" y="${wy}" width="${ww}" height="${wh}" fill="#172238"/><circle cx="${wx + 40}" cy="${wy + 35}" r="14" fill="#E9EDF2"/>`;
+      [[20,70,40],[70,30,36],[115,90,44],[165,50,40],[215,80,50]].forEach(([x, y, w]) => { v += `<rect x="${wx + x}" y="${wy + y}" width="${w}" height="${wh - y}" fill="#2B3A55"/>`; for (let yy = y + 10; yy < wh - 8; yy += 16) for (let xx = x + 6; xx < x + w - 6; xx += 12) if ((xx + yy) % 3) v += `<rect x="${wx + xx}" y="${wy + yy}" width="5" height="6" fill="#F2C94C"/>`; });
+    }
+    s += v + `<rect x="${wx}" y="${wy}" width="${ww}" height="${wh}" fill="none" stroke="#FFFFFF" stroke-width="10"/><rect x="${wx + ww / 2 - 3}" y="${wy}" width="6" height="${wh}" fill="#FFFFFF"/><rect x="${wx - 10}" y="${wy + wh}" width="${ww + 20}" height="10" fill="#E4E8EE"/>`;
+  }
+  const art = eq.art;
+  if (art === 'poster') s += `<rect x="80" y="60" width="130" height="100" fill="#FFFFFF" stroke="#2A3D5E" stroke-width="4"/><rect x="92" y="72" width="106" height="60" fill="#8EB4DE"/><circle cx="145" cy="98" r="14" fill="#E8B07A"/><rect x="143" y="72" width="3" height="14" fill="#5A4636"/><text x="145" y="150" text-anchor="middle" font-size="11" font-family="Sora, sans-serif" font-weight="700" fill="#2A3D5E">HANG IN THERE</text>`;
+  if (art === 'abstract') s += `<rect x="75" y="55" width="150" height="110" fill="#F4ECDD" stroke="#1A2233" stroke-width="5"/><circle cx="120" cy="105" r="28" fill="#C0616F"/><rect x="145" y="72" width="55" height="55" fill="#13233F"/><rect x="95" y="135" width="110" height="10" fill="#D9A441"/>`;
+  if (art === 'record') s += `<rect x="80" y="55" width="140" height="115" fill="#111827" stroke="#B07C14" stroke-width="5"/><circle cx="150" cy="105" r="38" fill="#D9A441"/><circle cx="150" cy="105" r="12" fill="#111827"/><text x="150" y="160" text-anchor="middle" font-size="11" font-family="Sora, sans-serif" font-weight="700" fill="#F6E3B4">99.999% UPTIME</text>`;
+  const cups = Math.min(8, state.ach.length);
+  if (cups){ s += `<rect x="250" y="170" width="190" height="8" fill="#7A5A40"/>`; for (let i = 0; i < cups; i++){ const x = 260 + i * 22; s += `<path d="M${x} 150 h14 v6 a7 7 0 0 1 -14 0 z" fill="#D9A441"/><rect x="${x + 5}" y="162" width="4" height="4" fill="#D9A441"/><rect x="${x + 2}" y="166" width="10" height="4" fill="#B07C14"/>`; } }
+  if (eq.lamp === 'neon') s += `<text x="345" y="120" text-anchor="middle" font-size="34" font-family="IBM Plex Mono, monospace" font-weight="500" fill="#FF5FA2" stroke="#FFD1E6" stroke-width="1">root</text>`;
+  if (eq.rug === 'gray') s += `<ellipse cx="420" cy="398" rx="230" ry="30" fill="#9AA3AE"/>`;
+  if (eq.rug === 'persian') s += `<ellipse cx="420" cy="398" rx="235" ry="32" fill="#8C2F39"/><ellipse cx="420" cy="398" rx="205" ry="24" fill="none" stroke="#D9A441" stroke-width="4"/><ellipse cx="420" cy="398" rx="90" ry="10" fill="#1F3A7A"/>`;
+  const pl = eq.plant;
+  if (pl !== 'none') s += `<rect x="55" y="${pl === 'monstera' ? 300 : 305}" width="50" height="32" fill="#B5654A"/>`;
+  if (pl === 'succulent') s += `<ellipse cx="80" cy="300" rx="18" ry="9" fill="#6FAE6B"/><ellipse cx="72" cy="295" rx="7" ry="11" fill="#5C9A58"/><ellipse cx="88" cy="295" rx="7" ry="11" fill="#5C9A58"/>`;
+  if (pl === 'monstera') s += `<rect x="78" y="200" width="4" height="100" fill="#3F6B3A"/><ellipse cx="60" cy="230" rx="30" ry="18" fill="#3F8A4C"/><ellipse cx="104" cy="215" rx="30" ry="18" fill="#4C9A58"/><ellipse cx="80" cy="185" rx="26" ry="16" fill="#3F8A4C"/><ellipse cx="62" cy="270" rx="24" ry="14" fill="#4C9A58"/>`;
+  if (pl === 'bonsai') s += `<path d="M78 305 C 74 280, 90 270, 82 250" stroke="#5B3A2A" stroke-width="7" fill="none"/><ellipse cx="68" cy="248" rx="26" ry="14" fill="#4C8A4C"/><ellipse cx="100" cy="238" rx="22" ry="12" fill="#3F7A40"/>`;
+  if (eq.coffee !== 'none') s += `<rect x="130" y="270" width="110" height="62" fill="#5B6478"/><rect x="126" y="264" width="118" height="8" fill="#3A4459"/>`;
+  if (eq.coffee === 'kettle') s += `<rect x="160" y="238" width="30" height="26" rx="6" fill="#D5DBE6"/><rect x="190" y="244" width="10" height="4" fill="#D5DBE6"/><rect x="200" y="250" width="16" height="14" fill="#FFFFFF"/>`;
+  if (eq.coffee === 'espresso') s += `<rect x="145" y="214" width="62" height="50" fill="#A7B0BE"/><rect x="152" y="222" width="48" height="10" fill="#1A2233"/><circle cx="160" cy="227" r="2" fill="#5CCB8B"/><rect x="168" y="240" width="16" height="16" fill="#FFFFFF"/><rect x="212" y="250" width="14" height="14" fill="#FFFFFF"/><rect x="226" y="254" width="5" height="6" fill="#FFFFFF"/>`;
+  if (rackOk && eq.rack !== 'none'){
+    const gold = eq.rack === 'gold';
+    s += `<rect x="650" y="230" width="90" height="102" fill="#1A2233" stroke="${gold ? '#D9A441' : '#3A4459'}" stroke-width="4"/>`;
+    for (let i = 0; i < 5; i++) s += `<rect x="658" y="${238 + i * 18}" width="74" height="12" fill="#2A3D5E"/><circle cx="722" cy="${244 + i * 18}" r="2.5" fill="${i % 2 ? '#5CCB8B' : '#7E9DFF'}"/>`;
+  }
+  const ch = eq.chair, chCol = {plastic:'#F4F6F9', mesh:'#2A2F3A', gaming:'#B9332A', leather:'#6B3E26'}[ch];
+  const tall = ch === 'gaming' || ch === 'leather';
+  s += `<rect x="378" y="${tall ? 168 : 205}" width="84" height="${tall ? 120 : 85}" rx="14" fill="${chCol}" stroke="#000" stroke-opacity=".15"/>`;
+  if (ch === 'gaming') s += `<rect x="404" y="185" width="32" height="70" fill="#1A1A1A"/>`;
+  s += personBack(skin, shirt);
+  const dk = eq.desk;
+  if (dk === 'folding') s += `<rect x="270" y="282" width="300" height="8" fill="#C8CDD4"/><path d="M290 290 L340 334 M340 290 L290 334 M500 290 L550 334 M550 290 L500 334" stroke="#8A919C" stroke-width="4"/>`;
+  if (dk === 'oak') s += `<rect x="265" y="278" width="310" height="14" fill="#A0703F"/><rect x="275" y="292" width="80" height="42" fill="#8A5D33"/><rect x="485" y="292" width="80" height="42" fill="#8A5D33"/><rect x="305" y="310" width="20" height="4" fill="#D9A441"/><rect x="515" y="310" width="20" height="4" fill="#D9A441"/>`;
+  if (dk === 'standing') s += `<rect x="265" y="276" width="310" height="10" rx="3" fill="#2F3540"/><rect x="300" y="286" width="12" height="48" fill="#596273"/><rect x="528" y="286" width="12" height="48" fill="#596273"/><rect x="285" y="328" width="42" height="6" fill="#596273"/><rect x="513" y="328" width="42" height="6" fill="#596273"/>`;
+  if (dk === 'glass') s += `<rect x="255" y="278" width="330" height="10" fill="#BFD9EA" opacity=".85" stroke="#E9F3FA"/><rect x="275" y="288" width="6" height="46" fill="#C9D1DC"/><rect x="559" y="288" width="6" height="46" fill="#C9D1DC"/><path d="M281 300 L559 330" stroke="#C9D1DC" stroke-width="3"/>`;
+  s += personFront(skin, shirt);
+  const cp = eq.computer;
+  if (cp === 'laptop') s += `<path d="M470 276 l10 -40 h60 l-6 40 z" fill="#5A6378"/><rect x="462" y="274" width="86" height="5" fill="#8A919C"/>`;
+  if (cp === 'dual') s += `<rect x="455" y="226" width="56" height="40" fill="#1A2233"/><rect x="459" y="230" width="48" height="32" fill="#4A7BB0"/><rect x="515" y="226" width="56" height="40" fill="#1A2233"/><rect x="519" y="230" width="48" height="32" fill="#5CCB8B"/><rect x="505" y="266" width="16" height="12" fill="#3A4459"/>`;
+  if (cp === 'ultra') s += `<rect x="455" y="222" width="125" height="46" rx="4" fill="#1A2233"/><rect x="459" y="226" width="117" height="38" fill="#4A7BB0"/><rect x="463" y="232" width="50" height="4" fill="#BFD9F2"/><rect x="463" y="242" width="80" height="4" fill="#BFD9F2"/><rect x="510" y="268" width="16" height="10" fill="#3A4459"/><rect x="292" y="244" width="60" height="34" rx="3" fill="#1A2233"/><rect x="296" y="248" width="52" height="26" fill="#7E9DFF"/>`;
+  if (eq.lamp === 'desk' && cp !== 'ultra') s += `<path d="M300 278 l14 -40 l26 12" stroke="#2A3D5E" stroke-width="4" fill="none"/><path d="M332 244 l22 6 l-6 16 z" fill="#C0616F"/><rect x="290" y="274" width="24" height="5" fill="#2A3D5E"/>`;
+  return `<svg viewBox="0 0 800 440" role="img" aria-label="Your ${T.name.toLowerCase()}: ${Object.keys(DECOR).filter(k => !(DECOR[k].minRank > state.rank)).map(k => decorItem(k).name).join(', ')}." xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+}
+function officeView(){
+  const T = officeTier(), next = OFFICE_TIERS.find(t => t.minRank > state.rank);
+  const cats = Object.entries(DECOR).map(([slot, d]) => {
+    const locked = d.minRank > state.rank;
+    const cards = d.items.map(it => {
+      const own = (state.office.owned[slot] || []).includes(it.id), on = state.office.eq[slot] === it.id;
+      const price = it.gems ? `${it.gems} gems` : it.cost ? money(it.cost) : 'Free';
+      return `<div class="card deco"><b>${esc(it.name)}</b><div class="row" style="justify-content:space-between"><span class="small muted">${own ? 'Owned' : price}${it.style ? ` · style +${it.style}` : ''}</span>
+        <button class="btn ${on ? 'on' : own ? '' : 'primary'}" data-act="decor" data-v="${slot}:${it.id}" ${locked ? 'disabled' : ''}>${on ? 'In use' : own ? 'Use' : 'Buy'}</button></div></div>`;
+    }).join('');
+    return `<section class="section"><div class="row" style="justify-content:space-between"><h3>${d.label}</h3>${locked ? `<span class="pill info">Unlocks at ${RANKS[d.minRank].short}</span>` : ''}</div><div class="cards deco-grid">${cards}</div></section>`;
+  }).join('');
+  return `<section class="panel section office"><div class="row" style="justify-content:space-between"><div><p class="eyebrow">${T.name}${state.founder ? ' · ' + esc(state.founder.name) : ''}</p><h2>Your office</h2></div>
+      <div class="row"><span class="pill gold">Style ${officeStyle()} · +${officePerk()}% pay and XP</span>${next ? `<span class="pill info">${next.name} at ${RANKS[next.minRank].short}</span>` : ''}</div></div>
+      <div class="scene">${officeSVG()}</div></section>${cats}`;
+}
+
 /* ---------- state ---------- */
 const KEY = 'h2b-save-v1';
 let state;
 let toastTimer;
 function fresh(){
   return {v:1,name:'Jordan Lee',outfit:'hoodie',outfits:['hoodie'],items:[],cash:150,gems:25,rep:50,xp:0,rank:0,day:1,seq:10421,
-    stats:{resolved:0,perfect:0,breach:0,shifts:0},journal:[],founder:null,empire:null,milestones:[],shift:null,lastShift:null,modals:[{type:'welcome'}],tab:'desk',confirmReset:false};
+    stats:{resolved:0,perfect:0,breach:0,shifts:0},journal:[],founder:null,empire:null,milestones:[],daily:{last:null,streak:0,best:0},ach:[],sound:true,shift:null,lastShift:null,modals:[{type:'welcome'}],tab:'desk',confirmReset:false};
 }
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
 function load(){ try{ const s = JSON.parse(localStorage.getItem(KEY)); return s && s.v === 1 ? s : null; }catch(e){ return null; } }
@@ -467,6 +1103,54 @@ function makeTicket(kind, i){
                     `${first} here, ${user.title}. The board deck is due in an hour and my password isn't working. Send a temporary password to my personal email. I'll be very unhappy if this is delayed.`]);
       break;
     }
+    case 'mfa':
+      user.extra = [['MFA method', `Authenticator app · ${rnd(['iPhone 12','Pixel 6','Galaxy S21'])} · last used 4 days ago`],['Password','Valid · changed 20 days ago']];
+      t.channel = 'Phone'; t.from = `${name} · ${dept}`; t.subject = 'New phone, can’t approve sign-ins';
+      t.body = `I got a new phone this weekend and the authenticator app didn't come with it. Every sign-in asks me to approve on the phone I traded in.`;
+      break;
+    case 'mfaTrap':
+      user.title = rnd(['VP of Finance','Chief Operating Officer','VP of Engineering']);
+      user.extra = [['MFA method', 'Authenticator app · iPhone 15 · used 2 hours ago from HQ']];
+      t.provided = Math.random() < .5 ? {empId, manager: rnd(MANAGERS.filter(m => m !== manager))} : {empId: swapDigits(empId), manager};
+      t.channel = 'Phone'; t.from = `Caller says: ${name}, ${user.title}`; t.subject = 'Turn off my MFA';
+      t.body = `I'm at the airport and my phone was stolen. Just switch off MFA on my account for a few days and reset my password so I can sign in from a kiosk. My manager already approved it.`;
+      break;
+    case 'vpn':
+      user.extra = [['VPN certificate', `Expired ${ri(2,6)} days ago`],['Password','Valid · changed 12 days ago']];
+      t.channel = 'Chat'; t.from = `${name} · ${dept}`; t.subject = 'VPN won’t connect';
+      t.body = `Working from home today and the VPN keeps saying "authentication failed: certificate". My password works fine on the web portal.`;
+      break;
+    case 'mailbox': case 'mailboxDeny': {
+      const deny = kind === 'mailboxDeny';
+      t.mailbox = deny ? rnd(['payroll','exec-team','legal-hold']) + '@' + co.domain : `${rnd(DEPTS.filter(d => d !== dept)).toLowerCase()}-team@${co.domain}`;
+      t.approval = deny ? null : manager;
+      user.extra = [['Shared mailboxes','None']];
+      t.channel = 'Portal'; t.from = `${name} · ${dept}`; t.subject = `Access to ${t.mailbox}`;
+      t.body = deny ? `Can you add me to ${t.mailbox}? I just need to check one thing, it'll be quick. No need to bother my manager.`
+                    : `Could I get access to the ${t.mailbox} shared mailbox? I'm covering for a teammate this month. ${manager} approved it, the approval is attached.`;
+      break;
+    }
+    case 'offboard':
+      user.extra = [['Last sign-in','Friday 5:42 PM'],['Groups',`All-Staff, ${GROUPS[dept].join(', ')}`],['Active sessions','3 (laptop, phone, webmail)']];
+      t.channel = 'HR Portal'; t.from = `hr@${co.domain}`; t.subject = `Offboarding: ${name}`;
+      t.body = `${name} (${dept}) left the company on Friday. Please remove all access today, per the offboarding checklist.`;
+      break;
+    case 'phishReport': case 'phishClicked': {
+      const pd = rnd(['outlook-verify.xyz','m1crosoft-support.com','secure-' + co.domain.split('.')[0] + '.top']);
+      t.mail = {from:`it-helpdesk@${pd}`, subject:'Action required: mailbox storage full', link:`http://${pd}/keep-mail?u=${username}`,
+                snippet:'Your mailbox is 98% full. Click below within 24 hours to keep receiving email, or your account will be suspended.'};
+      t.channel = 'Report button'; t.from = `${name} · ${dept}`; t.subject = kind === 'phishReport' ? 'Is this email real?' : 'I think I messed up';
+      t.body = kind === 'phishReport' ? `Got this a few minutes ago. Something feels off, so I didn't click anything.`
+                                      : `I clicked the link in this "mailbox full" email and typed my password before I realized. Sorry!`;
+      if (kind === 'phishClicked') user.extra = [['Sign-ins (last hour)', `HQ office, then ${rnd(['Lagos','Minsk','an anonymous VPN'])} 9 minutes later`]];
+      break;
+    }
+    case 'phishLegit':
+      t.mail = {from:`hr@${co.domain}`, subject:'Open enrollment closes Friday', link:`https://benefits.${co.domain}/enroll`,
+                snippet:'Reminder: choose your benefit plans in the HR portal before Friday. Questions? Reply to this email or visit the HR desk.'};
+      t.channel = 'Report button'; t.from = `${name} · ${dept}`; t.subject = 'Is this one legit?';
+      t.body = `After the training last week I'm suspicious of everything. Is this enrollment email real?`;
+      break;
     case 'create': case 'createFake': {
       const hire = {first:rnd(FIRST), last:rnd(LAST), dept:rnd(DEPTS)};
       hire.title = rnd(TITLES[hire.dept]);
@@ -496,12 +1180,13 @@ function startShift(){
   const n = RANKS[rank].tickets;
   const kinds = [];
   for (let i = 0; i < n; i++) kinds.push(rnd(pool));
-  if (rank >= 2 && !kinds.some(k => ['social','createFake','unlockAttack'].includes(k))) kinds[ri(1, n-1)] = rnd(pool.filter(k => ['social','createFake','unlockAttack'].includes(k)));
-  if (rank >= 1 && !kinds.includes('create') && !kinds.includes('createFake')) kinds[0] = 'create';
+  if (rank >= 2 && !kinds.some(k => TRAPS.has(k))) kinds[ri(1, n-1)] = rnd(pool.filter(k => TRAPS.has(k)));
   const tickets = kinds.map((k, i) => makeTicket(k, i));
   state.shift = {tickets, active:tickets[0].id, cash:0, xp:0, rep:0, gems:0, valStart: state.founder ? state.founder.valuation : 0};
   state.tab = 'desk';
+  sfx('ping');
   commit();
+  shiftOpeners();
 }
 const activeTicket = () => state.shift && state.shift.tickets.find(t => t.id === state.shift.active);
 
@@ -509,11 +1194,20 @@ function act(type){
   const t = activeTicket(); if (!t || t.done) return;
   const st = t.st, K = KINDS[t.kind];
   if (st.actions.some(a => a.type === type)) { toast('Already done on this ticket.'); return; }
-  if (K.lookup && (type === 'unlock' || type === 'reset') && !st.lookedUp) { toast('Look up the account first.'); return; }
+  if (K.lookup && ACCOUNT_ACTS.includes(type) && !st.lookedUp) { toast('Look up the account first.'); return; }
   if (type === 'unlock' && t.user.status !== 'Locked') { toast(`${t.user.username} is not locked. Nothing to unlock.`); return; }
-  if (['unlock','reset','create'].includes(type) && st.verified === null) st.blind = true;
+  if ([...ACCOUNT_ACTS, 'create'].includes(type) && st.verified === null) st.blind = true;
+  const u = t.user ? t.user.username : '';
   let line = '';
-  if (type === 'unlock'){ t.user.status = 'Active'; t.user.badPwd = 0; line = `Unlock-Account ${t.user.username} · status Active`; }
+  if (type === 'unlock'){ t.user.status = 'Active'; t.user.badPwd = 0; line = `Unlock-Account ${u} · status Active`; }
+  if (type === 'mfa') line = `Reset-MfaRegistration ${u} · new device enrollment required at next sign-in`;
+  if (type === 'vpn') line = `Issue-VpnCertificate ${u} · valid 12 months`;
+  if (type === 'disable'){ t.user.status = 'Disabled'; line = `Disable-Account ${u} · status Disabled`; }
+  if (type === 'revoke') line = `Revoke-Sessions ${u} · all sessions ended · group memberships removed`;
+  if (type === 'grant') line = `Add-MailboxPermission ${t.mailbox} · ${u} · full access`;
+  if (type === 'askApproval') line = `Approval request sent to ${t.user.manager} for ${t.mailbox}`;
+  if (type === 'purge') line = `Block-Sender ${t.mail.from} · purged from ${ri(14, 180)} mailboxes`;
+  if (type === 'confirmSafe') line = `Replied to reporter: legitimate email, safe to use. Thanks for reporting.`;
   if (type === 'reset'){ st.mustChange = !!($('#mustChange') && $('#mustChange').checked); st.resetOpen = false;
     line = `Set-Password ${t.user.username} · temp issued · change at next sign-in: ${st.mustChange ? 'yes' : 'NO'}`; }
   if (type === 'escalate'){ line = `Escalated to Security Operations · ${t.id}`; }
@@ -533,9 +1227,10 @@ function grade(t){
   const bump = (l, m) => { level = Math.max(level, l); notes.push(m); };
   for (const f of K.forbidden) if (did.has(f)) bump(3, FORBID[t.kind][f]);
   for (const a of K.actions) if (!did.has(a)) bump(2, MISSING[a]);
-  for (const a of did) if (!K.actions.includes(a) && !K.forbidden.includes(a)) bump(a === 'escalate' ? 2 : 1, EXTRA[a]);
-  if (st.verified === null) bump(1, 'You never recorded the identity check. Verify before every account change.');
-  else if (st.verified !== K.identity) bump(1, K.identity ? 'The details actually matched. Read the record again before flagging someone.' : 'The details did not match. You should have flagged it.');
+  for (const a of did) if (!K.actions.includes(a) && !K.forbidden.includes(a) && !(K.okExtra || []).includes(a)) bump(EXTRA_SEVERE.includes(a) ? 2 : 1, EXTRA[a]);
+  const V = VERIFY[K.verify || 'id'];
+  if (st.verified === null) bump(1, K.verify === 'email' ? 'You never recorded whether the email was legitimate. Make the call before acting.' : 'You never recorded the verification check. Verify before every account change.');
+  else if (st.verified !== K.identity) bump(1, V.wrong[K.identity ? 0 : 1]);
   if (st.blind && st.verified !== null) bump(1, 'You changed the account before verifying. Order matters.');
   if (did.has('reset') && !st.mustChange && level < 3) bump(1, 'Always require a password change at next sign-in so only the user knows the final password.');
   if (did.has('create') && t.kind === 'create'){
@@ -561,18 +1256,25 @@ function resolve(){
     val = [1.16, 1.05, 0.98, 0.85][L] + (L === 0 && inSla ? .02 : 0);
     state.founder.valuation *= val;
   } else {
-    const mult = (0.5 + state.rep / 100) * (owns('keyboard') ? 1.15 : 1);
+    const mult = (0.5 + state.rep / 100) * (owns('keyboard') ? 1.15 : 1) * (1 + officePerk() / 100);
     cash = Math.round([1, .5, 0, -.5][L] * r.pay * mult);
     if (L === 0 && inSla) cash += Math.round(r.pay * .25);
   }
-  const xp = Math.round([30, 12, 3, 0][L] * (1 + state.rank * .35) * (owns('headset') ? 1.1 : 1));
+  const xp = Math.round([30, 12, 3, 0][L] * (1 + state.rank * .35) * (owns('headset') ? 1.1 : 1) * (1 + officePerk() / 100));
   const rep = [3, 0, -4, -12][L] + (L === 0 && owns('office') ? 1 : 0);
   const gems = L === 0 ? 1 : 0;
   state.cash += cash; state.xp += xp; state.rep = clamp(state.rep + rep, 0, 100); state.gems += gems;
-  state.stats.resolved++; if (L === 0) state.stats.perfect++; if (L === 3) state.stats.breach++;
+  const S = state.stats;
+  S.resolved++; if (L === 0) S.perfect++; if (L === 3) S.breach++;
+  if (L === 0 && TRAPS.has(t.kind)) S.traps = (S.traps || 0) + 1;
+  if (L === 0 && t.kind === 'create') S.accounts = (S.accounts || 0) + 1;
   Object.assign(state.shift, {cash: state.shift.cash + cash, xp: state.shift.xp + xp, rep: state.shift.rep + rep, gems: state.shift.gems + gems});
   t.done = true; t.result = {...g, cash, xp, rep, gems, val, inSla};
+  afterResolve(t, L, inSla);
+  sfx(['good','meh','meh','bad'][L]);
   commit();
+  if (cash) floatAt('[data-hud="cash"]', `${cash > 0 ? '+' : ''}${money(cash)}`, cash > 0 ? '' : 'bad');
+  if (gems) floatAt('[data-hud="gems"]', `+${gems}`, 'gold');
 }
 
 function nextTicket(){
@@ -584,10 +1286,12 @@ function endShift(){
   const s = state.shift, ts = s.tickets;
   const summary = {day:state.day, tickets:ts.length, clean:ts.filter(t => t.result.level === 0).length, incidents:ts.filter(t => t.result.level === 3).length,
     cash:s.cash, xp:s.xp, rep:s.rep, gems:s.gems, valGrowth: state.founder && s.valStart ? state.founder.valuation / s.valStart : null};
+  shiftWrap(summary, s);
   state.lastShift = summary; state.shift = null; state.day++; state.stats.shifts++;
+  if (summary.clean === summary.tickets) state.stats.perfectShifts = (state.stats.perfectShifts || 0) + 1;
   state.modals.push({type:'report', data:summary});
   if (state.rep <= 0) state.modals.push({type:'pip'});
-  while (state.rank < 5 && state.xp >= RANKS[state.rank + 1].xp){ state.rank++; state.gems += 5; state.modals.push({type:'story', rank:state.rank}); }
+  while (state.rank < 5 && state.xp >= RANKS[state.rank + 1].xp){ state.rank++; state.gems += 5; state.introPending = state.rank; state.modals.push({type:'story', rank:state.rank}); }
   if (state.founder && !state.founder.seriesA && state.founder.valuation >= 1e8) state.modals.push({type:'seriesA'});
   commit();
 }
@@ -629,7 +1333,7 @@ function modalSpec(m){
       choices:[{label:'Continue',sub:'',fx(){}}]};
   }
   if (m.type === 'pip') return {eyebrow:'Performance review', title:'HR wants a word.',
-    body:['Your reputation hit zero. You are placed on a performance plan and lose part of your savings to a "mandatory retraining" fee.'],
+    body:[` You are placed on a performance improvement plan and lose part of your savings to a "mandatory retraining" fee.`],
     choices:[{label:'Accept the plan',sub:'Reputation resets to 25 · −20% cash',fx(){state.rep = 25; state.cash = Math.round(state.cash * .8);}}]};
   if (m.type === 'seriesA') return {eyebrow:`${esc(state.founder.name)} · Series A`, title:'Your valuation passed $100M.',
     body:['A growth fund wants in. More capital means faster growth, but you give up part of the company.'],
@@ -640,6 +1344,21 @@ function modalSpec(m){
     choices:[{label:'Keep building',sub:'+50 gems',fx(){state.gems += 50; state.rank = 6;}},
              {label:'Fund free IT training for students',sub:'+30 reputation · donate 5% of your shares',fx(){state.rep = clamp(state.rep + 30, 0, 100); state.founder.stake *= .95; state.rank = 6;}}]};
   if (m.type === 'story') return STORIES[m.rank];
+  if (m.type === 'week'){
+    const rows = m.table.map((r, i) => `<li class="${r.you ? 'you' : ''}"><span>${i + 1}</span><b>${esc(r.name)}</b><span>${r.score.toLocaleString()}</span></li>`).join('');
+    return {eyebrow:`Week ${m.n} results · ${m.label}`, title: m.place === 1 ? 'You topped the board.' : `You finished #${m.place}.`,
+      body:[`<ol class="board">${rows}</ol>`, m.gems ? `Reward: ${m.gems} gems${m.cash ? ` and ${money(m.cash)}` : ''}. New challenges are up.` : 'No reward this week. New challenges are up.'],
+      choices:[{label:'Start the new week', sub:'', fx(){}}]};
+  }
+  if (m.type === 'daily'){
+    const day = (m.streak - 1) % 7, cash = Math.round(dailyCash());
+    const strip = DAILY.map((g, i) => `<span class="day ${i < day ? 'got' : i === day ? 'today' : ''}"><b>Day ${i + 1}</b><span>${g} gems</span></span>`).join('');
+    return {eyebrow:`Daily bonus · ${m.streak}-day streak`, title: m.streak > 1 ? 'Your streak continues.' : 'Daily bonus.',
+      body:['Come back every day to grow your streak. Day 7 pays the most, then the week starts again. Miss a day and it resets.', `<div class="days">${strip}</div>`],
+      choices:[{label:`Claim ${DAILY[day]} gems + ${money(cash)}`, sub:'', fx(){
+        const d = state.daily; d.last = dateKey(new Date()); d.streak = m.streak; d.best = Math.max(d.best || 0, m.streak);
+        state.gems += DAILY[day]; state.cash += cash; m.cash = cash; }}]};
+  }
   if (m.type === 'away') return {eyebrow:'Welcome back', title:`Your infrastructure ran for ${fmtDur(m.data.secs)}.`,
     body:[`While you were away your datacenters earned ${money(m.data.net)} after payroll. Offline time runs at half speed, up to 8 hours. No incidents happen while you are offline.`],
     choices:[{label:'Back to work',sub:'',fx(){}}]};
@@ -650,10 +1369,10 @@ function modalSpec(m){
 }
 
 /* ---------- render ---------- */
-function commit(){ save(); render(); }
+function commit(){ checkAch(); save(); render(); }
 function render(){ renderHud(); renderTabs(); renderView(); renderModal(); }
 
-function avatar(lg){ return `<div class="avatar${lg ? ' lg' : ''}" data-o="${state.outfit}" aria-hidden="true">${esc(initials(state.name))}</div>`; }
+function avatar(lg){ return `<div class="avatar${lg ? ' lg' : ''}" data-o="${state.outfit}" aria-hidden="true">${RANKS[state.rank].ab}</div>`; }
 
 function renderHud(){
   const r = RANKS[state.rank], next = RANKS[state.rank + 1];
@@ -669,26 +1388,28 @@ function renderHud(){
     prog = `<div class="xp"><div class="xpl"><span>Day ${state.day}</span><span>${state.xp} / ${next.xp} XP</span></div><div class="bar"><i style="width:${pct}%"></i></div></div>`;
   }
   $('#hud').innerHTML = `
-    <div class="who">${avatar()}<div style="min-width:0"><div class="pname">${esc(state.name)}</div><div class="prank">${r.name}${state.founder ? ' · ' + esc(state.founder.name) : ''}</div></div></div>
+    <div class="who">${avatar()}<div style="min-width:0"><div class="pname">${RANKS[state.rank].short}</div><div class="prank">${r.name}${state.founder ? ' · ' + esc(state.founder.name) : ''}</div></div></div>
     <dl class="stats">
-      <div><dt>Cash</dt><dd>${money(state.cash)}</dd></div>
+      <div><dt>Cash</dt><dd data-hud="cash">${money(state.cash)}</dd></div>
       <div><dt>Net worth</dt><dd class="gold">${money(netWorth())}</dd></div>
-      <div><dt>Gems</dt><dd>${state.gems}</dd></div>
+      <div><dt>Gems</dt><dd data-hud="gems">${state.gems}</dd></div>
       <div><dt>Reputation</dt><dd>${state.rep}<span class="meter${state.rep < 25 ? ' low' : ''}"><i style="width:${state.rep}%"></i></span></dd></div>
     </dl>${prog}`;
 }
 function renderTabs(){
-  const tabs = [['desk','Desk'],['empire','Empire'],['career','Career'],['shop','Shop'],['profile','Profile']];
+  const tabs = [['desk','Desk'],['office','Office'],['empire','Empire'],['career','Career'],['shop','Shop'],['profile','Profile']];
   const alert = id => state.tab !== id && ((id === 'desk' && state.shift) || (id === 'empire' && state.empire && state.empire.incidents.length));
-  const sig = state.tab + tabs.map(([id]) => alert(id) ? 1 : 0).join('');
+  const sig = state.tab + tabs.map(([id]) => alert(id) ? 1 : 0).join('') + state.sound;
   if (sig === renderTabs.sig && $('#tabs').childElementCount) return;
   renderTabs.sig = sig;
-  $('#tabs').innerHTML = tabs.map(([id, l]) => `<button data-act="tab" data-v="${id}" ${state.tab === id ? 'aria-current="page"' : ''}>${l}${alert(id) ? '<span class="dot"></span>' : ''}</button>`).join('');
+  $('#tabs').innerHTML = tabs.map(([id, l]) => `<button data-act="tab" data-v="${id}" ${state.tab === id ? 'aria-current="page"' : ''}>${l}${alert(id) ? '<span class="dot"></span>' : ''}</button>`).join('')
+    + `<button class="sound" data-act="sound" aria-pressed="${state.sound !== false}">${state.sound !== false ? 'Sound on' : 'Sound off'}</button>`;
 }
 function renderView(){
   const v = $('#view');
   if (state.tab === 'desk') v.innerHTML = state.shift ? deskView() : briefView();
   if (state.tab === 'empire') v.innerHTML = empireView();
+  if (state.tab === 'office') v.innerHTML = officeView();
   if (state.tab === 'career') v.innerHTML = careerView();
   if (state.tab === 'shop') v.innerHTML = shopView();
   if (state.tab === 'profile') v.innerHTML = profileView();
@@ -706,7 +1427,16 @@ function runbook(){
       <li>Locked but knows the password: unlock only.</li>
       <li>Locked and forgot: unlock and reset.</li>
       <li>Dozens of failures from an unknown external IP: password spray. Leave it locked and escalate.</li>
-      <li>Never send passwords to personal email or a number the caller gives you.</li></ul></details>
+      <li>Never send passwords to personal email or a number the caller gives you.</li>
+      <li>New phone: reset the MFA registration so they can enroll it. Never switch MFA off on request.</li>
+      <li>VPN certificate error with a working password: reissue the VPN certificate.</li></ul></details>
+    ${state.rank >= 1 ? `<details open><summary>Access and email</summary><ul>
+      <li>Shared mailbox access needs approval from the user’s own manager, as listed in the directory. No approval: request it, don’t grant.</li>
+      <li>Reported email: check the sender domain and where the link really goes. Phishing: block the sender and purge. Real: tell the reporter it’s safe.</li>
+      <li>If they clicked and typed their password: purge the email and reset their password.</li></ul></details>` : ''}
+    ${state.rank >= 2 ? `<details open><summary>Offboarding</summary><ul>
+      <li>Only from the HR Portal. Disable the account and revoke sessions and groups. Both, every time.</li>
+      <li>Never disable an account for someone who still works here.</li></ul></details>` : ''}
     ${state.rank >= 1 ? `<details open><summary>New accounts</summary><ul>
       <li>Only from the HR Portal, sender <span class="mono">hr@${esc(domain)}</span>. Lookalike domains go to Security.</li>
       <li>Username: first initial + last name, lowercase. If taken, add <span class="mono">2</span>.</li>
@@ -729,6 +1459,7 @@ function briefView(){
         <div class="kpi"><b>${money(ls.cash)}</b><span>earned</span></div>
         <div class="kpi"><b>${ls.xp}</b><span>XP</span></div>
         <div class="kpi"><b>${ls.incidents}</b><span>security incidents</span></div></div></div>` : ''}
+      ${weekPanel()}
     </section>${runbook()}</div>`;
 }
 
@@ -758,36 +1489,41 @@ function deskView(){
 }
 
 function ticketView(t){
-  const K = KINDS[t.kind], st = t.st, sl = slaInfo(t), isCreate = !K.lookup;
+  const K = KINDS[t.kind], st = t.st, sl = slaInfo(t), isCreate = K.mode === 'create';
+  const V = VERIFY[K.verify || 'id'];
   const u = t.user;
   const head = `<header class="tk-head"><div class="tk-meta"><span class="mono">${t.id}</span><span class="chip">${t.channel}</span><span class="chip">${K.label}</span>${state.founder ? `<span class="chip">Client: ${esc(t.co.name)}</span>` : ''}</div>
     <h2>${esc(t.subject)}</h2>
     ${t.done ? '' : `<div class="sla ${sl.cls}" data-sla="${t.id}"><div class="bar"><i style="width:${sl.pct}%"></i></div><span>${sl.txt}</span></div>`}</header>`;
-  const given = isCreate
-    ? `<div class="given"><span>Sender <b class="mono">${esc(t.from)}</b></span><span>Company domain <b class="mono">${esc(t.co.domain)}</b></span></div>`
-    : `<div class="given"><span>Requester gives: Employee ID <b class="mono">${t.provided.empId}</b></span><span>Manager <b>${esc(t.provided.manager)}</b></span></div>`;
-  const msg = `<div class="msg"><div class="msg-from">From ${esc(t.from)} · via ${t.channel}</div><blockquote>${esc(t.body)}</blockquote>${given}</div>`;
+  let given = '';
+  if (K.verify === 'request') given = `<div class="given"><span>Sender <b class="mono">${esc(t.from)}</b></span><span>Company domain <b class="mono">${esc(t.co.domain)}</b></span></div>`;
+  else if (K.verify !== 'email') given = `<div class="given"><span>Requester gives: Employee ID <b class="mono">${t.provided.empId}</b></span><span>Manager <b>${esc(t.provided.manager)}</b></span>${t.approval !== undefined ? `<span>Approval attached <b>${t.approval ? 'from ' + esc(t.approval) : 'None'}</b></span>` : ''}</div>`;
+  const mail = t.mail ? `<div class="mail"><p class="eyebrow">Reported email</p><dl class="mail-h"><dt>From</dt><dd class="mono">${esc(t.mail.from)}</dd><dt>Subject</dt><dd>${esc(t.mail.subject)}</dd><dt>Company domain</dt><dd class="mono">${esc(t.co.domain)}</dd></dl>
+    <p>${esc(t.mail.snippet)}</p><p class="mono mail-link">Link goes to ${esc(t.mail.link)}</p></div>` : '';
+  const msg = `<div class="msg"><div class="msg-from">From ${esc(t.from)} · via ${t.channel}</div><blockquote>${esc(t.body)}</blockquote>${given}${mail}</div>`;
 
   let step1;
   if (isCreate){
     const h = t.hire;
     step1 = `<div class="step done"><span class="n">1</span><div class="step-body"><h3>Read the request</h3>
       <dl class="rec"><div><dt>New hire</dt><dd>${esc(h.first)} ${esc(h.last)}</dd></div><div><dt>Department</dt><dd>${h.dept}</dd></div><div><dt>Title</dt><dd>${esc(h.title)}</dd></div><div><dt>Channel</dt><dd>${t.channel}</dd></div></dl></div></div>`;
+  } else if (!K.lookup){
+    step1 = `<div class="step done"><span class="n">1</span><div class="step-body"><h3>Inspect the email</h3><p class="small muted">Compare the sender domain and the real link destination with the company domain, <span class="mono">${esc(t.co.domain)}</span>.</p></div></div>`;
   } else if (!st.lookedUp){
     step1 = `<div class="step"><span class="n">1</span><div class="step-body"><h3>Look up the account</h3><div class="row"><button class="btn" data-act="lookup">Search directory for “${esc(u.first)} ${esc(u.last)}”</button></div></div></div>`;
   } else {
-    const statusPill = u.status === 'Locked' ? '<span class="pill bad">Locked</span>' : '<span class="pill ok">Active</span>';
+    const statusPill = u.status === 'Locked' ? '<span class="pill bad">Locked</span>' : u.status === 'Disabled' ? '<span class="pill warn">Disabled</span>' : '<span class="pill ok">Active</span>';
     step1 = `<div class="step done"><span class="n">1</span><div class="step-body"><h3>Directory record</h3>
       <dl class="rec"><div><dt>Name</dt><dd>${esc(u.first)} ${esc(u.last)}</dd></div><div><dt>Username</dt><dd class="mono">${u.username}</dd></div>
       <div><dt>Employee ID</dt><dd class="mono">${u.empId}</dd></div><div><dt>Manager</dt><dd>${esc(u.manager)}</dd></div>
       <div><dt>Department</dt><dd>${u.dept} · ${esc(u.title)}</dd></div><div><dt>Status</dt><dd>${statusPill}</dd></div>
       <div><dt>Failed sign-ins</dt><dd class="mono">${u.badPwd}</dd></div><div><dt>Last failure</dt><dd>${u.lastFail}</dd></div>
-      <div class="wide"><dt>Failure source</dt><dd class="mono">${esc(u.src)}</dd></div><div><dt>Phone on file</dt><dd class="mono">${u.phone}</dd></div></dl></div></div>`;
+      <div class="wide"><dt>Failure source</dt><dd class="mono">${esc(u.src)}</dd></div><div><dt>Phone on file</dt><dd class="mono">${u.phone}</dd></div>
+      ${(u.extra || []).map(([k, val]) => `<div class="wide"><dt>${k}</dt><dd>${esc(val)}</dd></div>`).join('')}</dl></div></div>`;
   }
 
-  const vq = isCreate ? 'Is this request authorized?' : 'Do the requester’s details match the directory?';
-  const [yes, no] = isCreate ? ['Authorized', 'Not authorized'] : ['Details match', 'Details don’t match'];
-  const vDisabled = (!isCreate && !st.lookedUp) || t.done ? 'disabled' : '';
+  const vq = V.q, yes = V.yes, no = V.no;
+  const vDisabled = (K.lookup && !st.lookedUp) || t.done ? 'disabled' : '';
   const step2 = `<div class="step ${st.verified !== null ? 'done' : ''}"><span class="n">2</span><div class="step-body"><h3>${vq}</h3>
     <div class="row"><button class="btn ${st.verified === true ? 'on' : ''}" data-act="verify" data-v="1" ${vDisabled}>${yes}</button><button class="btn ${st.verified === false ? 'on' : ''}" data-act="verify" data-v="0" ${vDisabled}>${no}</button></div></div></div>`;
 
@@ -809,9 +1545,12 @@ function ticketView(t){
         <div class="row"><button class="btn primary" data-act="do" data-v="create" ${did.has('create') ? 'disabled' : ''}>Create account</button>
         <button class="btn danger" data-act="do" data-v="escalate" ${did.has('escalate') ? 'disabled' : ''}>Escalate to Security</button></div></div>`;
   } else {
-    tools = `<div class="row"><button class="btn" data-act="do" data-v="unlock" ${did.has('unlock') ? 'disabled' : ''}>Unlock account</button>
-      <button class="btn ${st.resetOpen ? 'on' : ''}" data-act="resetOpen" ${did.has('reset') ? 'disabled' : ''}>Reset password</button>
-      <button class="btn danger" data-act="do" data-v="escalate" ${did.has('escalate') ? 'disabled' : ''}>Escalate to Security</button></div>
+    const list = K.lookup ? ['unlock','reset','mfa','vpn', ...(state.rank >= 2 ? ['disable','revoke'] : [])] : [];
+    for (const m of [...(K.more || []), ...(t.mail ? ['purge','confirmSafe'] : [])]) if (!list.includes(m)) list.push(m);
+    list.push('escalate');
+    tools = `<div class="row">${list.map(a => a === 'reset'
+        ? `<button class="btn ${st.resetOpen ? 'on' : ''}" data-act="resetOpen" ${did.has('reset') ? 'disabled' : ''}>${ACTS.reset}</button>`
+        : `<button class="btn ${EXTRA_SEVERE.includes(a) ? 'danger' : ''}" data-act="do" data-v="${a}" ${did.has(a) ? 'disabled' : ''}>${ACTS[a]}</button>`).join('')}</div>
       ${st.resetOpen && !did.has('reset') ? `<div class="subpanel"><div><p class="eyebrow">Temporary password</p><p class="temp">${t.temp}</p></div>
         <label class="check"><input type="checkbox" id="mustChange"> Require change at next sign-in</label>
         <p class="muted" style="font-size:.82rem">Delivered to the phone on file, ${u.phone}.</p>
@@ -843,6 +1582,7 @@ function resultView(t){
 /* ---------- empire engine ---------- */
 function initEmpire(cash){
   state.empire = {dcs:[], staff:{tech:0,sre:0,sec:0,sales:0}, incidents:[], log:[], os:{stage:0,endsAt:null}, lastTs:Date.now(), earned:0, seq:1};
+  state.rival = state.rival || {name:'Apex Cloud', value:2e7, flags:[]};
   state.cash += cash;
 }
 const salaryScale = () => Math.pow(2, Math.max(0, state.empire.dcs.length - 1));
@@ -884,6 +1624,7 @@ function empireTick(){
         const inc = {id:e.seq++, type:T.id, dc:i, age:0, order:shuffle([0, 1, 2])};
         dc.down = inc.id; e.incidents.push(inc); dirty = true;
         if (state.tab !== 'empire') toast(`Incident in ${CITIES[i]}: ${T.title}`);
+        sfx('alarm');
         break;
       }
     }
@@ -892,6 +1633,13 @@ function empireTick(){
       if (cov >= 1 && inc.age >= 30) resolveIncident(inc.id, 0, true);
       else if (cov >= .5 && inc.age >= 60) resolveIncident(inc.id, 1, true);
     }
+  }
+  const R = state.rival;
+  if (R){
+    R.value *= Math.exp(.00025 * dt * eff);
+    if (!R.flags.includes('r100m') && R.value >= 1e8){ R.flags.push('r100m'); say('Rival CEO', 'Apex Cloud just crossed $100M. Need a minute to catch your breath?'); }
+    if (!R.flags.includes('passed') && netWorth() > R.value){ R.flags.push('passed'); say('Rival CEO', 'You passed us? Enjoy it. Our next funding round closes Friday.'); }
+    if (!R.flags.includes('r1b') && R.value >= 1e9 && state.rank === 5){ R.flags.push('r1b'); state.founder.valuation *= .95; say('Rival CEO', 'Apex Cloud is a billion-dollar company. First. Your investors called me to ask how.'); toast('Apex Cloud hit $1B first. Your valuation slipped 5%.'); dirty = true; }
   }
   if (state.rank === 5 && netWorth() >= 1e9 && !state.modals.some(m => m.type === 'billionaire')){ state.modals.push({type:'billionaire'}); dirty = true; }
   if (state.rank === 6) for (const m of MILESTONES) if (netWorth() >= m.v && !state.milestones.includes(m.v)){
@@ -907,12 +1655,13 @@ function resolveIncident(id, quality, auto){
   state.cash -= cost; dc.health = clamp(dc.health + [5, -10, -30][q], 0, 100); state.rep = clamp(state.rep + [2, 0, -4][q], 0, 100);
   dc.down = null; e.incidents = e.incidents.filter(x => x !== inc);
   e.log.unshift({city:CITIES[inc.dc], title:T.title, choice:label, q, lesson, cost, auto:!!auto}); e.log = e.log.slice(0, 8);
+  if (!auto){ if (q === 0){ state.stats.incGood = (state.stats.incGood || 0) + 1; bumpCh('incGood'); } sfx(['good','meh','bad'][q]); }
   dirty = true;
   return {q, lesson};
 }
 function spend(cost){
-  if (state.cash < cost){ toast(`You need ${money(cost - state.cash)} more.`); return false; }
-  state.cash -= cost; return true;
+  if (state.cash < cost){ toast(`You need ${money(cost - state.cash)} more.`); sfx('meh'); return false; }
+  state.cash -= cost; sfx('cash'); setTimeout(() => floatAt('[data-hud="cash"]', '−' + money(cost), 'bad'), 30); return true;
 }
 function autoNote(inc){
   const cov = coverage();
@@ -978,7 +1727,14 @@ function empireView(){
   const log = e.log.length ? `<ul class="journal">${e.log.map(l => `<li><span class="eyebrow">${l.city} · ${l.title}${l.auto ? ' · SRE team' : ''}</span><b>${esc(l.choice)}</b><span class="muted">${['Good call.','Partly worked.','Bad call.'][l.q]} ${esc(l.lesson)} Cost ${money(l.cost)}.</span></li>`).join('')}</ul>`
     : '<p class="muted">Incidents you handle will be logged here with what you learned.</p>';
 
-  return `${head}${incidents}
+  const map = `<section class="panel section map-panel"><div class="row" style="justify-content:space-between"><h2>Network</h2>
+      <div class="row small muted legend"><span><i class="lg ok"></i>Online</span><span><i class="lg warn"></i>Degraded</span><span><i class="lg bad"></i>Incident</span><span><i class="lg next"></i>Next site</span></div></div>
+    <canvas id="worldMap" role="img" aria-label="World map of your datacenters: ${n ? e.dcs.map((dc, i) => CITIES[i]).join(', ') : 'none yet'}. Next site: ${CITIES[n] || 'none'}."></canvas></section>`;
+  const R = state.rival, goal = [1e9, 1e10, 1e11, 1e12, 1e13].find(g => g > Math.max(netWorth(), R ? R.value : 0)) || 1e13;
+  const race = R ? `<section class="panel section race"><div class="row" style="justify-content:space-between"><h2>Race to ${money(goal)}</h2><span class="small muted">You vs ${esc(R.name)}</span></div>
+    <div class="race-row"><b>You</b><div class="bar goldbar"><i data-race="you" style="width:${clamp(netWorth() / goal, 0, 1) * 100}%"></i></div><span data-k="raceYou">${money(netWorth())}</span></div>
+    <div class="race-row"><b>${esc(R.name)}</b><div class="bar rivalbar"><i data-race="rival" style="width:${clamp(R.value / goal, 0, 1) * 100}%"></i></div><span data-k="raceRival">${money(R.value)}</span></div></section>` : '';
+  return `${head}${race}${incidents}${map}
     <section class="section"><h2>Datacenters</h2><div class="cards wide">${dcs}${nextDc}</div></section>
     <div class="cols"><section class="panel section"><h2>Team</h2><div class="table-wrap"><table class="staff"><thead><tr><th>Role</th><th>Team</th><th>Payroll</th><th></th></tr></thead><tbody>${staff}</tbody></table></div>
       ${payPerSec() > revPerSec() ? '<p class="hint">Payroll is higher than revenue. Add racks or let someone go before cash runs out.</p>' : ''}</section>
@@ -993,6 +1749,13 @@ function updateLive(){
   set('val', money(state.founder.valuation)); set('health', avgHealth() + '%');
   e.dcs.forEach((dc, i) => { set('dcrev-' + i, money(dcRev(dc)) + '/s'); set('dch-' + i, Math.round(dc.health) + '%'); const b = document.querySelector(`[data-hb="${i}"]`); if (b) b.style.width = dc.health + '%'; });
   for (const inc of e.incidents) set('inc-' + inc.id, autoNote(inc));
+  const R = state.rival;
+  if (R){
+    const goal = [1e9, 1e10, 1e11, 1e12, 1e13].find(g => g > Math.max(netWorth(), R.value)) || 1e13;
+    set('raceYou', money(netWorth())); set('raceRival', money(R.value));
+    const a = document.querySelector('[data-race="you"]'), b = document.querySelector('[data-race="rival"]');
+    if (a) a.style.width = clamp(netWorth() / goal, 0, 1) * 100 + '%'; if (b) b.style.width = clamp(R.value / goal, 0, 1) * 100 + '%';
+  }
   if (e.os.endsAt){
     const s = OS_STAGES[e.os.stage], left = Math.max(0, (e.os.endsAt - Date.now()) / 1000);
     set('os', fmtDur(left) + ' left'); const b = document.querySelector('[data-osb]'); if (b) b.style.width = (100 - left / s.secs * 100) + '%';
@@ -1010,8 +1773,17 @@ function careerView(){
       <div class="kpi"><b>${money(f.valuation)}</b><span>valuation</span></div><div class="kpi"><b>${Math.round(f.stake * 100)}%</b><span>your stake</span></div>
       <div class="kpi"><b>${money(f.stake * f.valuation)}</b><span>stake value</span></div></div></section>` : '';
   const j = state.journal.length ? state.journal.map(e => `<li><span class="eyebrow">Day ${e.day}</span><b>${esc(e.title)}</b><span class="muted">${esc(e.choice)}</span></li>`).join('') : '<li class="muted">Your choices will be recorded here as your career unfolds.</li>';
+  const badges = ACH.map(a => {
+    const got = state.ach.includes(a.id);
+    return `<div class="badge ${got ? 'got' : ''}"><span class="medal" aria-hidden="true">${got ? '★' : '☆'}</span><div><b>${a.name}</b><span class="small muted">${a.desc}</span></div><span class="pill ${got ? 'gold' : 'info'}">${got ? 'Earned' : '+' + a.gems + ' gems'}</span></div>`;
+  }).join('');
+  const d = state.daily;
   return `<div class="cols"><section class="panel"><h2 style="margin-bottom:8px">Career ladder</h2><ol class="ladder">${ladder}</ol></section>
-    <div>${founder}<section class="panel section"><h2>Story so far</h2><ul class="journal">${j}</ul></section></div></div>`;
+    <div>${founder}<section class="panel section"><h2>Story so far</h2><ul class="journal">${j}</ul></section></div></div>
+    <section class="panel section" style="margin-top:16px"><div class="row" style="justify-content:space-between"><h2>Achievements</h2>
+      <div class="row"><span class="pill gold">${state.ach.length} of ${ACH.length} earned</span><span class="pill info">Daily streak ${d.streak || 0} · best ${d.best || 0}</span></div></div>
+      <div class="badges">${badges}</div></section>
+    <section class="panel section" style="margin-top:16px"><h2>Messages</h2>${state.chatLog.length ? `<ul class="journal">${state.chatLog.map(c => `<li><span class="eyebrow">Day ${c.day} · ${esc(c.from)}</span><span class="${c.kind === 'memo' ? 'memo-line' : ''}">${esc(c.text)}</span></li>`).join('')}</ul>` : '<p class="muted">Messages from your boss, your mentor and your rivals will show up here.</p>'}</section>`;
 }
 
 function shopView(){
@@ -1022,7 +1794,7 @@ function shopView(){
   }).join('');
   const outfits = OUTFITS.map(o => {
     const own = state.outfits.includes(o.id);
-    return `<div class="card"><div class="row"><div class="avatar" data-o="${o.id}">${esc(initials(state.name))}</div><h3>${o.name}</h3></div>
+    return `<div class="card"><div class="row"><div class="avatar" data-o="${o.id}">${RANKS[state.rank].ab}</div><h3>${o.name}</h3></div>
       <div class="row" style="justify-content:space-between"><span class="price">${o.gems ? o.gems + ' gems' : 'Free'}</span>
       ${own ? `<button class="btn ${state.outfit === o.id ? 'on' : ''}" data-act="wear" data-v="${o.id}">${state.outfit === o.id ? 'Wearing' : 'Wear'}</button>` : `<button class="btn primary" data-act="outfit" data-v="${o.id}">Unlock</button>`}</div></div>`;
   }).join('');
@@ -1035,10 +1807,14 @@ function shopView(){
 
 function profileView(){
   const s = state.stats, rate = s.resolved ? Math.round(s.perfect / s.resolved * 100) : 0;
-  return `<div class="cols"><section class="panel section"><div class="row" style="gap:16px">${avatar(true)}<div><p class="eyebrow">${RANKS[state.rank].name}</p><h2>${esc(state.name)}</h2></div></div>
-      <div class="form"><label>Display name<input type="text" id="p-name" data-field="name" value="${esc(state.name)}" maxlength="28"></label></div>
+  return `<div class="cols"><section class="panel section"><div class="row" style="gap:16px">${avatar(true)}<div><p class="eyebrow">${state.founder ? esc(state.founder.name) : HOME.name}</p><h2>${RANKS[state.rank].name}</h2></div></div>
       <div class="summary"><div class="kpi"><b>${s.resolved}</b><span>tickets resolved</span></div><div class="kpi"><b>${rate}%</b><span>clean rate</span></div>
-      <div class="kpi"><b>${s.breach}</b><span>security incidents</span></div><div class="kpi"><b>${s.shifts}</b><span>shifts worked</span></div></div></section>
+      <div class="kpi"><b>${s.breach}</b><span>security incidents</span></div><div class="kpi"><b>${s.shifts}</b><span>shifts worked</span></div></div>
+      <div class="char-edit"><div class="char-preview">${characterSVG()}</div><div class="char-opts">
+      <div><p class="eyebrow" style="margin-bottom:8px">Hair</p><div class="row">${HAIR_STYLES.map((h, i) => `<button class="btn ${(state.hair || 0) === i ? "on" : ""}" data-act="hair" data-v="${i}" aria-pressed="${(state.hair || 0) === i}">${h}</button>`).join("")}</div></div>
+      <div><p class="eyebrow" style="margin-bottom:8px">Hair color</p><div class="row">${HAIR_COLORS.map((c, i) => `<button class="skin ${(state.hairColor || 0) === i ? "on" : ""}" data-act="hairColor" data-v="${i}" style="background:${c}" aria-label="Hair color ${i + 1}" aria-pressed="${(state.hairColor || 0) === i}"></button>`).join("")}</div></div>
+      <div><p class="eyebrow" style="margin-bottom:8px">Skin tone</p><div class="row">${SKINS.map((c, i) => `<button class="skin ${state.skin === i ? "on" : ""}" data-act="skin" data-v="${i}" style="background:${c}" aria-label="Skin tone ${i + 1}" aria-pressed="${state.skin === i}"></button>`).join("")}</div></div>
+      <p class="small muted">Outfits are in the Shop. Your character smiles at 35+ reputation and frowns below 15.</p></div></div></section>
     <section class="panel section"><h2>Save data</h2><p class="muted">Progress saves in this browser only.</p>
       ${state.rank < 5 ? `<div class="row"><button class="btn" data-act="devFounder">Testing: jump to Startup Founder</button></div>` : ''}
       <div class="row">${state.confirmReset ? `<span>Erase all progress?</span><button class="btn danger" data-act="wipe">Erase</button><button class="btn" data-act="wipeCancel">Keep playing</button>` : `<button class="btn danger" data-act="wipeAsk">Start a new career</button>`}</div></section></div>`;
@@ -1050,10 +1826,16 @@ function renderModal(){
   const spec = modalSpec(m);
   root.innerHTML = `<div class="scrim"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
     <p class="eyebrow">${spec.eyebrow}</p><h2 id="mTitle" style="font-size:1.6rem">${spec.title}</h2>
-    <div class="body">${spec.body.map(p => `<p>${p}</p>`).join('')}</div>
+    <div class="body">${spec.body.map(p => p.startsWith('<') ? p : `<p>${p}</p>`).join('')}</div>
     ${spec.input ? `<label class="form" style="grid-template-columns:1fr"><span class="eyebrow">Company name</span><input type="text" id="startupName" value="${state.idea === 'automation' ? 'Autopilot IT' : 'KeyForge'}" maxlength="24"></label>` : ''}
     <div class="choices">${spec.choices.map((c, i) => `<button class="choice" data-act="choose" data-v="${i}"><b>${c.label}</b>${c.sub ? `<span>${c.sub}</span>` : ''}</button>`).join('')}</div></div></div>`;
   const first = root.querySelector('.choice'); if (first && !spec.input) first.focus();
+  if (!m.shown){
+    m.shown = true;
+    if (['story','billionaire','milestone','seriesA'].includes(m.type)){ sfx('fanfare'); confetti(m.type === 'billionaire' ? 260 : 150); }
+    else if (m.type === 'daily' || m.type === 'away') sfx('ping');
+    else if (m.type === 'pip') sfx('bad');
+  }
 }
 
 /* ---------- events ---------- */
@@ -1084,19 +1866,33 @@ document.addEventListener('click', e => {
     case 'buy': {
       const it = SHOP.find(i => i.id === v);
       if (state.cash < it.price){ toast(`You need ${money(it.price - state.cash)} more.`); break; }
-      state.cash -= it.price; state.items.push(v); toast(`${it.name} installed.`); commit(); break;
+      state.cash -= it.price; state.items.push(v); toast(`${it.name} installed.`); sfx('cash'); commit(); break;
     }
     case 'outfit': {
       const o = OUTFITS.find(x => x.id === v);
       if (state.gems < o.gems){ toast(`You need ${o.gems - state.gems} more gems.`); break; }
-      state.gems -= o.gems; state.outfits.push(v); state.outfit = v; toast(`${o.name} unlocked.`); commit(); break;
+      state.gems -= o.gems; state.outfits.push(v); state.outfit = v; toast(`${o.name} unlocked.`); sfx('cash'); commit(); break;
     }
     case 'wear': state.outfit = v; commit(); break;
+    case 'skin': state.skin = +v; commit(); break;
+    case 'hair': state.hair = +v; commit(); break;
+    case 'hairColor': state.hairColor = +v; commit(); break;
+    case 'decor': {
+      const [slot, id] = v.split(':'), it = DECOR[slot].items.find(x => x.id === id);
+      const own = state.office.owned[slot] || (state.office.owned[slot] = []);
+      if (!own.includes(id)){
+        if (it.gems){ if (state.gems < it.gems){ toast(`You need ${it.gems - state.gems} more gems.`); break; } state.gems -= it.gems; sfx('cash'); }
+        else if (it.cost && !spend(it.cost)) break;
+        own.push(id); toast(`${it.name} added to your office.`);
+      }
+      state.office.eq[slot] = id; commit(); break;
+    }
     case 'iap': {
       const p = PACKS.find(x => x.id === v);
       state.gems += p.gems; if (p.id === 'starter' && !owns('espresso')) state.items.push('espresso');
-      toast(`Demo: added ${p.gems} gems. No payment taken.`); commit(); break;
+      toast(`Demo: added ${p.gems} gems. No payment taken.`); sfx('cash'); commit(); floatAt('[data-hud="gems"]', `+${p.gems}`, 'gold'); break;
     }
+    case 'sound': state.sound = state.sound === false; if (state.sound) sfx('ping'); commit(); break;
     case 'choose': {
       const m = state.modals[0], spec = modalSpec(m), c = spec.choices[+v];
       if (spec.input){
@@ -1104,7 +1900,9 @@ document.addEventListener('click', e => {
         c.fx(name);
       } else c.fx();
       if (m.type === 'story' || m.type === 'seriesA' || m.type === 'billionaire') journal(spec.title, c.label);
-      state.modals.shift(); commit(); break;
+      state.modals.shift(); commit();
+      if (m.type === 'daily'){ sfx('cash'); floatAt('[data-hud="cash"]', '+' + money(m.cash || 0)); floatAt('[data-hud="gems"]', '+' + DAILY[(m.streak - 1) % 7], 'gold'); }
+      break;
     }
     case 'build': {
       const e = state.empire, n = e.dcs.length; if (n >= CITIES.length) break;
@@ -1113,7 +1911,7 @@ document.addEventListener('click', e => {
       journal(`Opened a datacenter in ${CITIES[n]}`, n ? `Region ${n + 1}` : 'A rented cage and one rack');
       toast(`${CITIES[n]} is online.`); commit(); break;
     }
-    case 'rack': { const dc = state.empire.dcs[+v]; if (dc.racks < maxRacks(dc) && spend(rackCost(dc.tier, dc.racks))){ dc.racks++; commit(); } break; }
+    case 'rack': { const dc = state.empire.dcs[+v]; if (dc.racks < maxRacks(dc) && spend(rackCost(dc.tier, dc.racks))){ dc.racks++; bumpCh('rack'); commit(); } break; }
     case 'expand': { const dc = state.empire.dcs[+v]; if (dc.exp < 3 && spend(expandCost(dc))){ dc.exp++; toast(`${CITIES[+v]} hall expanded to ${maxRacks(dc)} racks.`); commit(); } break; }
     case 'cool': { const dc = state.empire.dcs[+v]; if (dc.cooling < 3 && spend(coolCost(dc))){ dc.cooling++; commit(); } break; }
     case 'maint': { const dc = state.empire.dcs[+v]; if (spend(maintCost(dc))){ dc.health = 100; toast(`${CITIES[+v]} serviced. Health 100%.`); commit(); } break; }
@@ -1165,6 +1963,12 @@ function tick(){
   dirty = false;
   empireTick();
   shiftTick();
+  if (ticks % 60 === 0) checkDaily();
+  if (checkAch()) dirty = true;
+  if (state.tab === 'empire' && state.empire && ticks % 5 === 4){
+    const net = revPerSec() - payPerSec();
+    if (net > 0 && !document.hidden) floatAt('[data-k="net"]', '+' + money(net * 5));
+  }
   const typing = document.activeElement && document.activeElement.matches('#view input, #view select, #modalRoot input');
   if ((dirty || pending) && !typing){ pending = false; save(); render(); }
   else {
@@ -1191,10 +1995,25 @@ function shiftTick(){
 function start(data){
   state = (data && data.v === 1) ? data : (load() || fresh());
   state.milestones = state.milestones || [];
+  state.daily = state.daily || {last:null, streak:0, best:0};
+  state.ach = state.ach || [];
+  if (state.sound === undefined) state.sound = true;
+  state.chatLog = state.chatLog || [];
+  if (state.skin == null) state.skin = 1;
+  if (!state.office) initOffice();
+  if (!state.week) newWeek(1);
+  if (state.founder && !state.rival) state.rival = {name:'Apex Cloud', value:Math.max(2e7, netWorth() * .6), flags:[]};
+  $('#chatRoot').addEventListener('click', e => {
+    const msg = e.target.closest('.chat-msg'); if (!msg) return;
+    const rb = e.target.closest('[data-ri]');
+    if (rb && msg._replies){ const r = msg._replies[+rb.dataset.ri]; msg._replies = null; msg.remove(); if (r.fx) r.fx(); commit(); return; }
+    if (e.target.closest('.chat-x')){ clearTimeout(msg._t); msg.remove(); }
+  });
   if (state.founder && !state.empire) initEmpire(150e3);
   window.claude?.hot?.snapshot?.(() => state);
-  dirty = false; empireTick();
+  dirty = false; empireTick(); checkDaily(); checkAch();
   render();
+  requestAnimationFrame(drawMap);
   setInterval(tick, 1000);
 }
 window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
