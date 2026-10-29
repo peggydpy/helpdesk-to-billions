@@ -205,7 +205,7 @@ label.check{display:flex;gap:8px;align-items:center;font-size:.9rem}
 .race-row span{text-align:right;font-weight:600}
 .bar.rivalbar i{background:var(--bad)}
 .skin{width:36px;height:36px;border-radius:50%;border:2px solid var(--line);padding:0}
-.char-edit{display:grid;grid-template-columns:140px minmax(0,1fr);gap:20px;align-items:start}
+.char-edit{display:grid;grid-template-columns:190px minmax(0,1fr);gap:20px;align-items:start}
 .char-preview{background:var(--sunk);border:1px solid var(--line);border-radius:12px;padding:10px}
 .char-preview svg{display:block;width:100%;height:auto}
 .char-opts{display:grid;gap:14px;min-width:0}
@@ -284,6 +284,69 @@ table.staff .btn{font-size:.78rem;padding:.4rem .6rem;white-space:nowrap}
   .queue ol{grid-auto-flow:column;grid-auto-columns:minmax(170px,1fr);overflow-x:auto;padding-bottom:4px}
   .brief{padding:20px}
   .panel{padding:14px}
+}
+
+/* ---------- Cinematic skin: photo office behind everything, dark glass panels, teal accents ---------- */
+html:root:root{
+  --bg:#0A0F1A; --surface:#141B2B; --sunk:#0F1626; --ink:#E9EEF6; --muted:#9BA6BC; --line:#26314A;
+  --signal:#3DD6C6; --signal-ink:#06201D; --signal-soft:rgba(61,214,198,.14);
+  --gold:#E8B85A; --gold-soft:rgba(232,184,90,.14);
+  --ok:#5CCB8B; --ok-soft:rgba(92,203,139,.14); --warn:#F0A848; --warn-soft:rgba(240,168,72,.14); --bad:#F2776C; --bad-soft:rgba(242,119,108,.14);
+  --teal:#3DD6C6; --glass:rgba(12,17,29,.80); --glass-line:rgba(255,255,255,.08);
+  --shadow:0 1px 2px rgba(0,0,0,.35),0 14px 40px rgba(0,0,0,.35); color-scheme:dark;
+}
+html:root body{background:transparent}
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(6,9,16,.55) 0%,rgba(6,9,16,.72) 55%,rgba(6,9,16,.9) 100%),var(--scene,none) center/cover no-repeat,var(--bg);transition:background-image .6s}
+.panel,.card,.modal{background:var(--glass);border-color:var(--glass-line);backdrop-filter:blur(12px) saturate(1.15);-webkit-backdrop-filter:blur(12px) saturate(1.15)}
+.hud{background:rgba(5,8,15,.78);backdrop-filter:blur(16px) saturate(1.2);-webkit-backdrop-filter:blur(16px) saturate(1.2);border:1px solid rgba(61,214,198,.22);border-top:0;border-radius:0 0 16px 16px;padding:12px 18px;box-shadow:0 12px 32px rgba(0,0,0,.4);margin-inline:-6px}
+.hud .stats dt{color:rgba(233,238,246,.55)}
+.hud .stats dd{color:#fff}
+.hud .stats .gold{color:var(--gold)}
+.hud .bar{background:rgba(255,255,255,.1)} .hud .bar i{background:linear-gradient(90deg,#1FA99B,var(--teal))} .hud .bar.goldbar i{background:linear-gradient(90deg,#B5862E,var(--gold))}
+.tabs{padding-block:14px}
+.tabs button{color:rgba(233,238,246,.7);background:rgba(5,8,15,.45);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.tabs button[aria-current="page"]{background:var(--teal);color:#06201D}
+.office .scene.photo{aspect-ratio:16/8;background:center/cover no-repeat;position:relative;display:flex;align-items:flex-end;padding:14px}
+.office .scene.photo span{background:rgba(5,8,15,.75);border:1px solid rgba(61,214,198,.35);border-radius:999px;padding:4px 12px;font-size:.82rem;font-weight:600}
+
+/* Dialogue stage: NPC portrait centre, line box + mood under it, reply cards around */
+.stage{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(230px,340px) minmax(0,1fr);grid-template-areas:"l npc r" "line line line" "b b b";column-gap:28px;align-items:center;min-height:min(78vh,700px);padding:24px 8px 28px}
+.npc{grid-area:npc;position:relative;align-self:end}
+.npc{padding-top:20px;background:radial-gradient(58% 50% at 50% 40%,rgba(255,255,255,.16),rgba(255,255,255,0) 72%)}
+.npc svg{display:block;width:100%;height:auto;filter:drop-shadow(0 16px 26px rgba(0,0,0,.45))}
+/* living characters: chest breathes, head moves a touch (eyes blink in the SVG) */
+.p3 .p3-body{transform-box:fill-box;transform-origin:50% 100%;animation:breathe 4.6s ease-in-out infinite}
+.p3 .p3-head{transform-box:fill-box;transform-origin:50% 92%;animation:sway 8s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.015,1.01) translateY(-1px)}}
+@keyframes sway{0%,100%{transform:rotate(0)}30%{transform:rotate(-1deg)}70%{transform:rotate(.8deg)}}
+.office .scene.photo .desk-svg{position:absolute;inset:0;width:100%;height:100%}
+.office .scene.photo span{position:relative;z-index:1}
+.avatar3d{width:96px;height:96px;border-radius:50%;overflow:hidden;flex:none;background:radial-gradient(circle at 50% 35%,rgba(61,214,198,.35),rgba(10,15,26,.9));box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--teal)}
+.avatar3d svg{width:100%;height:auto;margin-top:6px}
+.char-preview{background:radial-gradient(70% 60% at 50% 35%,rgba(61,214,198,.22),rgba(10,15,26,.6))}
+.npc-tag{position:absolute;left:50%;top:12px;transform:translateX(-50%);white-space:nowrap;background:rgba(5,8,15,.72);border:1px solid var(--glass-line);border-radius:999px;padding:3px 12px;font-size:.78rem;color:rgba(233,238,246,.85)}
+.line{grid-area:line;justify-self:center;position:relative;width:min(640px,100%);margin-top:-64px;background:rgba(5,9,16,.84);border:1px solid rgba(61,214,198,.55);border-left:4px solid var(--teal);border-radius:14px;padding:50px 22px 18px;box-shadow:0 18px 40px rgba(0,0,0,.45),0 0 0 1px rgba(61,214,198,.08) inset;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);text-align:center;animation:chatIn .35s ease-out}
+.line b{display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin-bottom:6px}
+.line p{font-family:var(--f-display);font-size:clamp(1.1rem,2.2vw,1.45rem);font-weight:700;color:#fff;line-height:1.3}
+.line .req{margin-top:12px;font-family:var(--f-body);font-size:.95rem;font-weight:400;color:rgba(233,238,246,.8);text-align:left;border-top:1px solid rgba(255,255,255,.1);padding-top:12px}
+.mood{position:absolute;left:50%;top:0;transform:translate(-50%,-50%);width:54px;height:54px;border-radius:50%;display:grid;place-items:center;font-size:1.6rem;background:#0B1220;border:3px solid var(--mood,var(--teal));box-shadow:0 0 0 6px rgba(5,9,16,.6),0 0 22px color-mix(in srgb,var(--mood,var(--teal)) 55%,transparent)}
+.mood small{position:absolute;top:100%;margin-top:4px;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mood,var(--teal));font-weight:700;white-space:nowrap}
+.reply{background:#fff;color:#111827;border:0;border-radius:18px;padding:14px 18px;font-weight:600;font-size:.98rem;text-align:left;box-shadow:0 10px 26px rgba(0,0,0,.4);max-width:270px;transition:transform .15s,box-shadow .15s;animation:chatIn .4s ease-out backwards}
+.reply:hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(0,0,0,.5),0 0 0 3px var(--teal)}
+.reply small{display:block;margin-top:4px;font-size:.74rem;font-weight:500;color:#5A6378}
+.reply.l{grid-area:l;justify-self:end} .reply.r{grid-area:r;justify-self:start}
+.reply-row{grid-area:b;display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:22px}
+.reply.go{background:var(--teal);color:#06201D}
+.stage .skip{position:absolute;right:8px;top:8px;border:1px solid var(--glass-line);background:rgba(5,8,15,.6);color:rgba(233,238,246,.75);border-radius:999px;padding:.35rem .8rem;font-size:.8rem}
+.stage .qcount{position:absolute;left:8px;top:8px;font-size:.78rem;color:rgba(233,238,246,.7);background:rgba(5,8,15,.6);border-radius:999px;padding:.35rem .8rem;border:1px solid var(--glass-line)}
+@media (max-width:760px){
+  .stage{display:flex;flex-direction:column;align-items:stretch;gap:12px;min-height:0;padding-top:48px}
+  .npc{order:0;width:min(250px,70%);align-self:center}
+  .line{order:1;margin-top:-40px}
+  .reply.l{order:2} .reply.r{order:3}
+  .reply-row{order:4;flex-direction:column;align-items:stretch;margin-top:0}
+  .reply{max-width:none}
+  .hud{margin-inline:-16px;border-radius:0 0 14px 14px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -456,7 +519,7 @@ const SHOP = [
   {id:'office',name:'Corner office',price:20000,effect:'+1 extra reputation on every clean resolution.'}
 ];
 const OUTFITS = [
-  {id:'hoodie',name:'Help desk hoodie',gems:0},
+  {id:'hoodie',name:'Blue blazer',gems:0},
   {id:'blazer',name:'Navy blazer',gems:20},
   {id:'turtleneck',name:'Black turtleneck',gems:60},
   {id:'gold',name:'Gold-trim headset',gems:120}
@@ -877,7 +940,7 @@ const officeTier = () => OFFICE_TIERS.filter(t => state.rank >= t.minRank).pop()
 const DECOR = {
   desk:{label:'Desk',items:[{id:'folding',name:'Folding table',cost:0,style:0},{id:'oak',name:'Oak desk',cost:600,style:3},{id:'standing',name:'Standing desk',cost:2500,style:6},{id:'glass',name:'Glass executive desk',cost:25000,style:12}]},
   chair:{label:'Chair',items:[{id:'plastic',name:'Plastic chair',cost:0,style:0},{id:'mesh',name:'Mesh office chair',cost:300,style:2},{id:'gaming',name:'Gaming chair',cost:1200,style:4},{id:'leather',name:'Leather executive chair',cost:8000,style:8}]},
-  computer:{label:'Computer',items:[{id:'laptop',name:'Old laptop',cost:0,style:0},{id:'dual',name:'Dual monitors',cost:900,style:3},{id:'ultra',name:'Triple ultrawide',cost:5000,style:7}]},
+  computer:{label:'Computer',items:[{id:'laptop',name:'MacBook + two monitors',cost:0,style:0},{id:'dual',name:'Bigger 4K monitors',cost:900,style:3},{id:'ultra',name:'Ultrawide monitors',cost:5000,style:7}]},
   plant:{label:'Plant',items:[{id:'none',name:'No plant',cost:0,style:0},{id:'succulent',name:'Succulent',cost:80,style:1},{id:'monstera',name:'Monstera',cost:400,style:3},{id:'bonsai',name:'Bonsai',gems:40,style:6}]},
   art:{label:'Wall art',items:[{id:'none',name:'Bare wall',cost:0,style:0},{id:'poster',name:'“Hang in there” poster',cost:60,style:1},{id:'abstract',name:'Abstract canvas',cost:1500,style:4},{id:'record',name:'Gold record: 99.999% uptime',gems:80,style:8}]},
   lamp:{label:'Lamp',items:[{id:'none',name:'No lamp',cost:0,style:0},{id:'desk',name:'Desk lamp',cost:120,style:1},{id:'neon',name:'Neon “root” sign',cost:900,style:4}]},
@@ -885,7 +948,7 @@ const DECOR = {
   coffee:{label:'Coffee',items:[{id:'none',name:'No coffee',cost:0,style:0},{id:'kettle',name:'Kettle',cost:150,style:1},{id:'espresso',name:'Espresso bar',cost:4000,style:5}]},
   rack:{label:'Server rack',minRank:2,items:[{id:'none',name:'No rack',cost:0,style:0},{id:'homelab',name:'Home-lab rack',cost:6000,style:6},{id:'gold',name:'Gold-trim rack',gems:150,style:12}]}
 };
-const SKINS = ['#F1D3B6','#D9A77C','#B0764B','#7C4A2B','#4E2E1C'];
+const SKINS = ['#D9A77C','#B0764B','#8A5634','#6B3F24','#4A2A17'];
 const OUTFIT_COL = {hoodie:'#56637F', blazer:'#1F3A7A', turtleneck:'#1B1B1F', gold:'#B07C14'};
 function initOffice(){
   const eq = {}, owned = {};
@@ -895,122 +958,181 @@ function initOffice(){
 const decorItem = slot => DECOR[slot].items.find(i => i.id === state.office.eq[slot]) || DECOR[slot].items[0];
 const officeStyle = () => Object.keys(DECOR).reduce((n, slot) => n + (DECOR[slot].minRank > state.rank ? 0 : decorItem(slot).style), 0);
 const officePerk = () => Math.min(25, Math.round(officeStyle() * .5));
-const SKIN_SHADE = ['#D9B391','#BC8A5F','#93603A','#62391F','#3A2114'];
-const HAIR_STYLES = ['Short','Curly','Long','Bun','Buzz'];
+const HAIR_STYLES = ['Short','Curly','Long','Bun','Afro'];
+const HAIR_KEYS = ['short','curly','long','bun','afro'];
 const HAIR_COLORS = ['#2A1E16','#6B4423','#D8B26E','#B23A2E','#9AA0A6'];
-function personBack(skin, shirt){
-  const shade = SKIN_SHADE[state.skin == null ? 1 : state.skin], hc = HAIR_COLORS[state.hairColor || 0], hs = state.hair || 0;
-  const blink = reducedMotion() ? '' : '<animate attributeName="ry" values="3;3;0.3;3" keyTimes="0;0.92;0.96;1" dur="4.5s" repeatCount="indefinite"/>';
-  const mood = state.rep >= 35 ? 'M411 222 q9 8 18 0' : state.rep >= 15 ? 'M413 224 q7 2 14 0' : 'M412 227 q8 -6 16 0';
-  let p = '';
-  // legs and shoes, mostly hidden behind the desk
-  p += `<rect x="396" y="286" width="20" height="42" rx="7" fill="#2A2F3A"/><rect x="424" y="286" width="20" height="42" rx="7" fill="#2A2F3A"/>`;
-  p += `<ellipse cx="404" cy="330" rx="14" ry="5" fill="#141414"/><ellipse cx="436" cy="330" rx="14" ry="5" fill="#141414"/>`;
-  // long hair falls behind the shoulders
-  if (hs === 2) p += `<path d="M396 206 q-6 30 -2 48 h52 q4 -18 -2 -48 z" fill="${hc}"/>`;
-  // torso, neck, outfit details
-  p += `<rect x="413" y="228" width="14" height="12" fill="${shade}"/>`;
-  p += `<rect x="388" y="236" width="64" height="58" rx="16" fill="${shirt}"/>`;
-  if (state.outfit === 'hoodie') p += `<path d="M404 238 q16 12 32 0" stroke="#3E4860" stroke-width="5" fill="none"/><path d="M414 244 v14 M426 244 v14" stroke="#E7EBF3" stroke-width="2" stroke-linecap="round"/><rect x="404" y="270" width="32" height="12" rx="4" fill="#4A5670"/>`;
-  if (state.outfit === 'blazer') p += `<path d="M412 237 l8 20 l8 -20 z" fill="#FFFFFF"/><path d="M420 244 l-3 6 l3 18 l3 -18 z" fill="#B9332A"/><path d="M412 237 l-6 14 l10 6 z M428 237 l6 14 l-10 6 z" fill="#16295C"/>`;
-  if (state.outfit === 'turtleneck') p += `<rect x="409" y="228" width="22" height="12" rx="5" fill="#2E2E35"/>`;
-  // ears, head, hair, face
-  p += `<ellipse cx="398" cy="214" rx="5" ry="6.5" fill="${skin}"/><ellipse cx="442" cy="214" rx="5" ry="6.5" fill="${skin}"/><ellipse cx="398.5" cy="214" rx="2" ry="3" fill="${shade}"/><ellipse cx="441.5" cy="214" rx="2" ry="3" fill="${shade}"/>`;
-  p += `<circle cx="420" cy="212" r="22" fill="${skin}"/>`;
-  if (hs === 0) p += `<path d="M398 207 a22 22 0 0 1 44 0 q-10 -8 -22 -8 t-22 8 z" fill="${hc}"/>`;
-  if (hs === 1) p += [[402,198],[410,192],[420,190],[430,192],[438,198],[399,207],[441,207]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="8" fill="${hc}"/>`).join('');
-  if (hs === 2) p += `<path d="M398 210 a22 22 0 0 1 44 0 q-6 -12 -22 -12 q-16 0 -22 12 z" fill="${hc}"/>`;
-  if (hs === 3) p += `<path d="M398 207 a22 22 0 0 1 44 0 q-10 -8 -22 -8 t-22 8 z" fill="${hc}"/><circle cx="420" cy="186" r="9" fill="${hc}"/>`;
-  if (hs === 4) p += `<path d="M399 205 a22 22 0 0 1 42 0 q-10 -5 -21 -5 t-21 5 z" fill="${hc}" opacity=".55"/>`;
-  p += `<path d="M406 204 q5 -3 10 0 M424 204 q5 -3 10 0" stroke="${hc}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`;
-  p += `<ellipse cx="411" cy="211" rx="2.6" ry="3" fill="#1A1A1A">${blink}</ellipse><ellipse cx="429" cy="211" rx="2.6" ry="3" fill="#1A1A1A">${blink}</ellipse>`;
-  p += `<circle cx="411.8" cy="210" r=".8" fill="#FFFFFF"/><circle cx="429.8" cy="210" r=".8" fill="#FFFFFF"/>`;
-  p += `<path d="M420 213 q-3 5 0 7" stroke="${shade}" stroke-width="1.6" fill="none" stroke-linecap="round"/>`;
-  p += `<path d="${mood}" stroke="#7A2E2E" stroke-width="2" fill="none" stroke-linecap="round"/>`;
-  if (state.outfit === 'gold') p += `<path d="M396 210 a24 24 0 0 1 48 0" stroke="#D9A441" stroke-width="4" fill="none"/><rect x="392" y="207" width="8" height="15" rx="3" fill="#D9A441"/><rect x="440" y="207" width="8" height="15" rx="3" fill="#D9A441"/><path d="M396 220 q4 8 12 8" stroke="#D9A441" stroke-width="2" fill="none"/>`;
-  return p;
+
+/* ---------- people: clean flat corporate-illustration characters that breathe, blink and emote ---------- */
+// Mix a hex colour toward white (f > 0) or black (f < 0).
+function tint(hex, f){
+  const n = parseInt(hex.slice(1), 16), c = [n >> 16, n >> 8 & 255, n & 255].map(v => Math.round(f > 0 ? v + (255 - v) * f : v * (1 + f)));
+  return '#' + c.map(v => v.toString(16).padStart(2, '0')).join('');
 }
-function personFront(skin, shirt){
-  const shade = SKIN_SHADE[state.skin == null ? 1 : state.skin];
-  let p = `<rect x="390" y="270" width="60" height="7" rx="2" fill="#3A4459"/>`;
-  for (let i = 0; i < 6; i++) p += `<rect x="${394 + i * 9}" y="272" width="6" height="2" fill="#8A93A6"/>`;
-  // arms bend from the shoulders down to the keyboard
-  p += `<path d="M394 248 Q382 266 401 272" stroke="${shirt}" stroke-width="13" fill="none" stroke-linecap="round"/><path d="M446 248 Q458 266 439 272" stroke="${shirt}" stroke-width="13" fill="none" stroke-linecap="round"/>`;
-  // hands with fingers resting on the keys
-  for (const [cx, dir] of [[404, 1], [436, -1]]){
-    p += `<ellipse cx="${cx}" cy="271" rx="8" ry="5.5" fill="${skin}"/>`;
-    p += `<ellipse cx="${cx + dir * 7}" cy="273" rx="3" ry="2.2" fill="${skin}"/>`;
-    p += `<path d="M${cx - 4} 268 v5 M${cx} 267.5 v5.5 M${cx + 4} 268 v5" stroke="${shade}" stroke-width="1" stroke-linecap="round"/>`;
+let p3seq = 0;
+const BROWS = {
+  calm:['M81 77 Q88 73 95 76','M105 76 Q112 73 119 77'],
+  worried:['M81 76 Q88 74 95 71','M105 71 Q112 74 119 76'],
+  cross:['M81 72 Q88 74 95 78','M105 78 Q112 74 119 72'],
+  sly:['M81 76 Q88 72 95 75','M105 78 Q112 76 119 77']
+};
+const FACES = {
+  happy:{brow:'calm', mouth:'smile'}, relieved:{brow:'calm', mouth:'soft'}, neutral:{brow:'calm', mouth:'soft'},
+  anxious:{brow:'worried', mouth:'worry'}, impatient:{brow:'cross', mouth:'flat'}, annoyed:{brow:'cross', mouth:'frown'}, smug:{brow:'sly', mouth:'smirk'}
+};
+function mouthSVG(kind, lip){
+  if (kind === 'smile') return `<path d="M90 103 Q100 114 110 103Z" fill="#6E2525"/><path d="M91.6 103.6 Q100 106.4 108.4 103.6 L107.6 105.6 Q100 107.8 92.4 105.6Z" fill="#FFFFFF"/>`;
+  const d = {soft:'M92 105 Q100 110 108 105', flat:'M93 107 Q100 108 107 107', worry:'M93 109 Q100 104 107 109', frown:'M92 110 Q100 103 108 110', smirk:'M92 107 Q102 110 109 102'}[kind];
+  return `<path d="${d}" stroke="${lip}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
+}
+function hairBack(style, c){
+  if (style === 'afro') return `<ellipse cx="100" cy="62" rx="46" ry="40" fill="${c}"/>`;
+  if (style === 'long') return `<path d="M66 84 C62 46 84 32 100 32 C118 32 140 46 134 84 L140 172 Q100 182 60 172Z" fill="${c}"/>`;
+  return '';
+}
+function hairFront(style, c){
+  const cap = `<path d="M69 80 C68 52 84 37 100 37 C116 37 132 52 131 80 C126 62 114 54 100 54 C86 54 74 62 69 80Z" fill="${c}"/>`;
+  switch (style){
+    // swept-up quiff with short sides, like the reference illustration
+    case 'short': return `<path d="M69 84 C66 58 78 42 100 41 C122 42 134 58 131 84 C129 72 126 64 121 60 C108 63 92 63 79 60 C74 64 71 72 69 84Z" fill="${c}"/><path d="M73 60 C68 36 88 18 110 20 C126 22 136 34 133 52 C129 43 121 39 111 41 C117 47 119 53 117 60 C104 54 88 54 73 60Z" fill="${c}"/><path d="M84 36 C95 26 113 25 124 32" stroke="${tint(c, .3)}" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/>`;
+    case 'fade': return `<path d="M70 76 C70 52 84 41 100 41 C116 41 130 52 130 76 C125 62 114 55 100 55 C86 55 75 62 70 76Z" fill="${c}"/>`;
+    case 'curly': return [[73,66,9],[79,53,10],[91,45,11],[106,44,11],[119,50,10],[127,63,9],[86,57,9],[100,53,10],[114,57,9]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${c}"/>`).join('');
+    case 'afro': return `<path d="M70 80 C70 56 84 46 100 46 C116 46 130 56 130 80 C124 66 112 60 100 60 C88 60 76 66 70 80Z" fill="${c}"/>`;
+    case 'long': return `<path d="M69 88 C66 50 86 34 104 35 C124 36 136 54 131 90 C126 66 114 54 98 56 C86 60 76 70 69 88Z" fill="${c}"/>`;
+    case 'bun': return cap + `<circle cx="100" cy="33" r="12" fill="${c}"/>`;
   }
-  return p;
+  return cap;
 }
-function characterSVG(){
-  const skin = SKINS[state.skin == null ? 1 : state.skin], shirt = OUTFIT_COL[state.outfit] || OUTFIT_COL.hoodie;
-  return `<svg viewBox="372 176 96 162" role="img" aria-label="Your character" xmlns="http://www.w3.org/2000/svg"><rect x="372" y="176" width="96" height="162" fill="none"/>${personBack(skin, shirt)}${personFront(skin, shirt)}</svg>`;
+// Shirt, lapels, tie etc. Same coordinates for the waist-up and full-length figures.
+function outfitTop(o, full){
+  const hem = full ? 300 : 250; // the waist-up figure stops at 250, so the shirt must too
+  const shade = tint(o.col, -.2);
+  if (o.kind === 'suit'){
+    // open blazer: shirt and the full tie show down the middle, lapels fold back on each side
+    let s = `<path d="M85 160 L115 160 L113 ${hem} L87 ${hem}Z" fill="${o.col2}"/><path d="M87 210 L87 ${hem} M113 210 L113 ${hem}" stroke="${tint(o.col, -.3)}" stroke-width="2"/><path d="M86 160 L96 172 L100 162Z M114 160 L104 172 L100 162Z" fill="${tint(o.col2, -.1)}"/>`;
+    if (o.tie) s += `<path d="M97 165 h6 l3 6 -3 4 4 58 -7 10 -7 -10 4 -58 -3 -4z" fill="${o.tie}"/><path d="M96 190 l8 -5 M95.5 202 l9 -5 M95.2 214 l9.6 -5 M95 226 l10 -5" stroke="${tint(o.tie, .35)}" stroke-width="1.6"/>`;
+    return s + `<path d="M85 160 L94 196 L87 212 L70 172Z M115 160 L106 196 L113 212 L130 172Z" fill="${shade}"/>`;
+  }
+  if (o.kind === 'hoodie') return `<path d="M74 166 Q100 192 126 166" stroke="${shade}" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M93 182 v24 M107 182 v24" stroke="#EEF1F5" stroke-width="2.4" stroke-linecap="round"/>`;
+  if (o.kind === 'turtleneck') return `<rect x="86" y="148" width="28" height="20" rx="8" fill="${tint(o.col, .1)}"/>`;
+  return `<path d="M86 160 L98 175 L100 162Z M114 160 L102 175 L100 162Z" fill="${o.col2}"/><path d="M80 164 Q100 180 120 164" stroke="${shade}" stroke-width="5" fill="none"/>`;
 }
-function officeSVG(){
-  const T = officeTier(), eq = state.office.eq, rackOk = state.rank >= 2;
-  const skin = SKINS[state.skin == null ? 1 : state.skin], shirt = OUTFIT_COL[state.outfit] || OUTFIT_COL.hoodie;
-  let s = (T.brick ? `<defs><pattern id="brickWall" width="60" height="26" patternUnits="userSpaceOnUse"><rect width="60" height="26" fill="${T.wall}"/><path d="M0 13 H60 M0 26 H60 M30 0 V13 M0 13 V26 M60 13 V26" stroke="${T.brick}" stroke-width="2"/></pattern></defs>` : "") + `<rect width="800" height="440" fill="${T.brick ? "url(#brickWall)" : T.wall}"/><rect y="330" width="800" height="110" fill="${T.floor}"/><rect y="326" width="800" height="6" fill="#000" opacity=".12"/>`;
-  if (!T.view){
-    s += `<rect x="0" y="0" width="800" height="14" fill="#F4F7FB"/><rect x="300" y="14" width="200" height="6" fill="#E4EAF2"/>
-      <rect x="20" y="120" width="760" height="210" fill="#B7C1CE"/><rect x="20" y="112" width="760" height="10" fill="#8E9AAB"/><rect x="20" y="120" width="14" height="210" fill="#8E9AAB"/><rect x="766" y="120" width="14" height="210" fill="#8E9AAB"/>
-      <rect x="560" y="150" width="70" height="50" fill="#F7E58A"/><rect x="640" y="160" width="60" height="45" fill="#A9D5F5"/><rect x="575" y="165" width="40" height="3" fill="#8A7A2A"/><rect x="575" y="175" width="30" height="3" fill="#8A7A2A"/>`;
+function headSVG(p){
+  const sk = p.skin, sh = tint(sk, -.14), face = FACES[p.mood] || FACES.neutral, lip = tint(sk, -.45);
+  const [b1, b2] = BROWS[face.brow], blink = (3.8 + (p3seq % 5) * .55).toFixed(2), bc = tint(p.hairCol, -.1);
+  // eye whites, brown iris, pupil, catch-light; a skin-coloured lid closes over it to blink
+  const eye = cx => `<ellipse cx="${cx}" cy="87" rx="5.6" ry="4.6" fill="#FFFFFF"/><circle cx="${cx + .6}" cy="87.4" r="3.3" fill="#5A3A22"/><circle cx="${cx + .6}" cy="87.4" r="1.7" fill="#140C08"/><circle cx="${cx + 1.7}" cy="86.2" r="1" fill="#FFF"/>
+    <ellipse cx="${cx}" cy="86.6" rx="6.2" ry="0" fill="${sk}"><animate attributeName="ry" values="0;0;5.4;0" keyTimes="0;.94;.97;1" dur="${blink}s" repeatCount="indefinite"/></ellipse>
+    <path d="M${cx - 6} 85.6 Q${cx} 81 ${cx + 6} 85.6" stroke="#1A120D" stroke-width="1.7" fill="none" stroke-linecap="round"/>`;
+  let h = `<ellipse cx="68" cy="89" rx="6" ry="9" fill="${sh}"/><ellipse cx="132" cy="89" rx="6" ry="9" fill="${sh}"/>`;
+  if (p.earrings) h += `<circle cx="68" cy="100" r="2.6" fill="#E2B04A"/><circle cx="132" cy="100" r="2.6" fill="#E2B04A"/>`;
+  h += `<path d="M70 78 C70 52 84 40 100 40 C116 40 130 52 130 78 L130 92 C130 112 116 126 100 126 C84 126 70 112 70 92Z" fill="${sk}"/>`;
+  h += `<path d="M100 126 C116 126 130 112 130 92 L130 78 C130 66 126 56 120 50 C125 66 124 98 100 126Z" fill="${sh}" opacity=".7"/>`;
+  if (p.beard) h += `<path d="M75 96 C77 116 88 127 100 127 C112 127 123 116 125 96 C120 108 112 115 100 115 C88 115 80 108 75 96Z" fill="${p.hairCol}"/><path d="M90 100 Q100 96 110 100 Q100 103 90 100Z" fill="${p.hairCol}"/>`;
+  h += hairFront(p.hair, p.hairCol);
+  h += `<path d="${b1}" stroke="${bc}" stroke-width="3" fill="none" stroke-linecap="round"/><path d="${b2}" stroke="${bc}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+  h += eye(88) + eye(112);
+  h += `<path d="M100 89 Q97 98 95 101 Q100 103 105 101" stroke="${tint(sk, -.3)}" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+  h += mouthSVG(face.mouth, lip);
+  if (p.glasses) h += `<g fill="#FFFFFF" fill-opacity=".12" stroke="#16181D" stroke-width="2.8"><rect x="76" y="78" width="23" height="17" rx="6"/><rect x="101" y="78" width="23" height="17" rx="6"/></g><path d="M99 85 h2 M76 84 l-6 -2 M124 84 l6 -2" stroke="#16181D" stroke-width="2.4"/>`;
+  return h;
+}
+// p: {skin, hair, hairCol, outfit:{kind,col,col2,tie,pants}, mood, glasses, earrings, beard}; full = head-to-toe standing.
+function personParts(p, full){
+  p3seq++;
+  // short, solid neck: the head sits low on the shoulders like a corporate illustration
+  const o = p.outfit, neck = `<rect x="87" y="128" width="26" height="36" rx="7" fill="${tint(p.skin, -.1)}"/><path d="M87 140 Q100 150 113 140 V150 Q100 156 87 150Z" fill="${tint(p.skin, -.28)}" opacity=".6"/>`;
+  let body;
+  if (!full){
+    body = `<path d="M28 250 C28 184 58 162 100 160 C142 162 172 184 172 250Z" fill="${o.col}"/><path d="M100 160 C142 162 172 184 172 250 L134 250 C136 210 122 178 100 160Z" fill="${tint(o.col, -.1)}"/>` + outfitTop(o);
   } else {
-    const wx = 470, wy = 40, ww = 270, wh = 190;
-    let v = '';
-    if (T.view === 'parking') v = `<rect x="${wx}" y="${wy}" width="${ww}" height="${wh}" fill="#CFE3F3"/><rect x="${wx}" y="${wy + 130}" width="${ww}" height="60" fill="#8B939E"/><rect x="${wx + 30}" y="${wy + 145}" width="40" height="18" rx="5" fill="#C0616F"/><rect x="${wx + 110}" y="${wy + 150}" width="40" height="18" rx="5" fill="#4A7BB0"/><rect x="${wx + 190}" y="${wy + 145}" width="40" height="18" rx="5" fill="#EFE4CF"/><circle cx="${wx + 220}" cy="${wy + 40}" r="18" fill="#FFF3C4"/>`;
-    if (T.view === 'city') v = `<rect x="${wx}" y="${wy}" width="${ww}" height="${wh}" fill="#BFD9F2"/>` + [[0,90,50,'#7C8DA6'],[55,50,45,'#93A3B9'],[105,110,40,'#6B7C95'],[150,70,55,'#8797AE'],[210,30,60,'#73849C']].map(([x, y, w, c]) => `<rect x="${wx + x}" y="${wy + y}" width="${w}" height="${wh - y}" fill="${c}"/>`).join('');
-    if (T.view === 'harbor') v = `<rect x="${wx}" y="${wy}" width="${ww}" height="${wh}" fill="#F2C7A5"/><circle cx="${wx + 200}" cy="${wy + 90}" r="26" fill="#F6E3B4"/><rect x="${wx}" y="${wy + 120}" width="${ww}" height="70" fill="#4A7BA6"/><rect x="${wx + 30}" y="${wy + 60}" width="8" height="60" fill="#5B3A2A"/><rect x="${wx + 30}" y="${wy + 60}" width="60" height="6" fill="#5B3A2A"/><rect x="${wx + 120}" y="${wy + 108}" width="60" height="14" fill="#C0616F"/>`;
-    if (T.view === 'skyline'){
-      v = `<rect x="${wx}" y="${wy}" width="${ww}" height="${wh}" fill="#172238"/><circle cx="${wx + 40}" cy="${wy + 35}" r="14" fill="#E9EDF2"/>`;
-      [[20,70,40],[70,30,36],[115,90,44],[165,50,40],[215,80,50]].forEach(([x, y, w]) => { v += `<rect x="${wx + x}" y="${wy + y}" width="${w}" height="${wh - y}" fill="#2B3A55"/>`; for (let yy = y + 10; yy < wh - 8; yy += 16) for (let xx = x + 6; xx < x + w - 6; xx += 12) if ((xx + yy) % 3) v += `<rect x="${wx + xx}" y="${wy + yy}" width="5" height="6" fill="#F2C94C"/>`; });
-    }
-    s += v + `<rect x="${wx}" y="${wy}" width="${ww}" height="${wh}" fill="none" stroke="#FFFFFF" stroke-width="10"/><rect x="${wx + ww / 2 - 3}" y="${wy}" width="6" height="${wh}" fill="#FFFFFF"/><rect x="${wx - 10}" y="${wy + wh}" width="${ww + 20}" height="10" fill="#E4E8EE"/>`;
+    // trousers sit at the waist (one piece with an inseam), creased legs, brown leather shoes
+    const pants = o.pants || tint(o.col, -.35), shoe = '#6B4226';
+    body = `<path d="M60 280 L140 280 L132 432 L104 432 L100 322 L96 432 L68 432Z" fill="${pants}"/><path d="M100 280 L140 280 L132 432 L104 432 L100 322Z" fill="${tint(pants, -.1)}"/>`
+      + `<path d="M81 300 L82 430 M119 300 L118 430" stroke="${tint(pants, -.18)}" stroke-width="1.6"/>`
+      + `<path d="M66 430 h31 v7 q0 7 -7 7 h-28 q-7 0 -4 -8Z" fill="${shoe}"/><path d="M103 430 h31 q5 0 7 8 q2 6 -5 6 h-28 q-5 0 -5 -6Z" fill="${tint(shoe, -.12)}"/>`
+      + `<path d="M64 441 h33 M103 441 h37" stroke="#2A1A10" stroke-width="3"/><path d="M72 433 q8 -2 16 0 M109 433 q8 -2 16 0" stroke="#FFF" stroke-opacity=".25" stroke-width="2" fill="none"/>`
+      + `<path d="M58 174 C66 164 84 160 100 160 C116 160 134 164 142 174 L148 298 L52 298Z" fill="${o.col}"/><path d="M100 160 C116 160 134 164 142 174 L148 298 L118 298 C122 240 116 190 100 160Z" fill="${tint(o.col, -.1)}"/>`
+      + outfitTop(o, true)
+      // shirt tucks in at the belt; trousers (not shirt) show below it
+      + (o.kind === 'suit' ? `<rect x="87" y="286" width="26" height="14" fill="${pants}"/><rect x="87" y="282" width="26" height="8" fill="#3B2A20"/><rect x="96" y="281" width="8" height="10" rx="1.5" fill="none" stroke="#C9A24A" stroke-width="1.8"/><circle cx="82" cy="244" r="2.4" fill="${tint(o.col, -.35)}"/><path d="M60 236 h16 M124 236 h16" stroke="${tint(o.col, -.3)}" stroke-width="2"/>` : '')
+      + `<path d="M58 174 C46 182 42 226 46 280 L64 282 C64 242 66 206 72 188Z" fill="${tint(o.col, -.06)}"/><path d="M142 174 C154 182 158 226 154 280 L136 282 C136 242 134 206 128 188Z" fill="${tint(o.col, -.16)}"/>`
+      + `<rect x="47" y="274" width="17" height="6" rx="2" fill="${o.col2 || tint(o.col, .2)}"/><rect x="136" y="274" width="17" height="6" rx="2" fill="${o.col2 || tint(o.col, .2)}"/>`
+      + `<path d="M48 279 h15 v12 q0 10 -7.5 10 q-7.5 0 -7.5 -10Z" fill="${p.skin}"/><path d="M137 279 h15 v12 q0 10 -7.5 10 q-7.5 0 -7.5 -10Z" fill="${tint(p.skin, -.1)}"/>`;
   }
-  const art = eq.art;
-  if (art === 'poster') s += `<rect x="80" y="60" width="130" height="100" fill="#FFFFFF" stroke="#2A3D5E" stroke-width="4"/><rect x="92" y="72" width="106" height="60" fill="#8EB4DE"/><circle cx="145" cy="98" r="14" fill="#E8B07A"/><rect x="143" y="72" width="3" height="14" fill="#5A4636"/><text x="145" y="150" text-anchor="middle" font-size="11" font-family="Sora, sans-serif" font-weight="700" fill="#2A3D5E">HANG IN THERE</text>`;
-  if (art === 'abstract') s += `<rect x="75" y="55" width="150" height="110" fill="#F4ECDD" stroke="#1A2233" stroke-width="5"/><circle cx="120" cy="105" r="28" fill="#C0616F"/><rect x="145" y="72" width="55" height="55" fill="#13233F"/><rect x="95" y="135" width="110" height="10" fill="#D9A441"/>`;
-  if (art === 'record') s += `<rect x="80" y="55" width="140" height="115" fill="#111827" stroke="#B07C14" stroke-width="5"/><circle cx="150" cy="105" r="38" fill="#D9A441"/><circle cx="150" cy="105" r="12" fill="#111827"/><text x="150" y="160" text-anchor="middle" font-size="11" font-family="Sora, sans-serif" font-weight="700" fill="#F6E3B4">99.999% UPTIME</text>`;
-  const cups = Math.min(8, state.ach.length);
-  if (cups){ s += `<rect x="250" y="170" width="190" height="8" fill="#7A5A40"/>`; for (let i = 0; i < cups; i++){ const x = 260 + i * 22; s += `<path d="M${x} 150 h14 v6 a7 7 0 0 1 -14 0 z" fill="#D9A441"/><rect x="${x + 5}" y="162" width="4" height="4" fill="#D9A441"/><rect x="${x + 2}" y="166" width="10" height="4" fill="#B07C14"/>`; } }
-  if (eq.lamp === 'neon') s += `<text x="345" y="120" text-anchor="middle" font-size="34" font-family="IBM Plex Mono, monospace" font-weight="500" fill="#FF5FA2" stroke="#FFD1E6" stroke-width="1">root</text>`;
-  if (eq.rug === 'gray') s += `<ellipse cx="420" cy="398" rx="230" ry="30" fill="#9AA3AE"/>`;
-  if (eq.rug === 'persian') s += `<ellipse cx="420" cy="398" rx="235" ry="32" fill="#8C2F39"/><ellipse cx="420" cy="398" rx="205" ry="24" fill="none" stroke="#D9A441" stroke-width="4"/><ellipse cx="420" cy="398" rx="90" ry="10" fill="#1F3A7A"/>`;
-  const pl = eq.plant;
-  if (pl !== 'none') s += `<rect x="55" y="${pl === 'monstera' ? 300 : 305}" width="50" height="32" fill="#B5654A"/>`;
-  if (pl === 'succulent') s += `<ellipse cx="80" cy="300" rx="18" ry="9" fill="#6FAE6B"/><ellipse cx="72" cy="295" rx="7" ry="11" fill="#5C9A58"/><ellipse cx="88" cy="295" rx="7" ry="11" fill="#5C9A58"/>`;
-  if (pl === 'monstera') s += `<rect x="78" y="200" width="4" height="100" fill="#3F6B3A"/><ellipse cx="60" cy="230" rx="30" ry="18" fill="#3F8A4C"/><ellipse cx="104" cy="215" rx="30" ry="18" fill="#4C9A58"/><ellipse cx="80" cy="185" rx="26" ry="16" fill="#3F8A4C"/><ellipse cx="62" cy="270" rx="24" ry="14" fill="#4C9A58"/>`;
-  if (pl === 'bonsai') s += `<path d="M78 305 C 74 280, 90 270, 82 250" stroke="#5B3A2A" stroke-width="7" fill="none"/><ellipse cx="68" cy="248" rx="26" ry="14" fill="#4C8A4C"/><ellipse cx="100" cy="238" rx="22" ry="12" fill="#3F7A40"/>`;
-  if (eq.coffee !== 'none') s += `<rect x="130" y="270" width="110" height="62" fill="#5B6478"/><rect x="126" y="264" width="118" height="8" fill="#3A4459"/>`;
-  if (eq.coffee === 'kettle') s += `<rect x="160" y="238" width="30" height="26" rx="6" fill="#D5DBE6"/><rect x="190" y="244" width="10" height="4" fill="#D5DBE6"/><rect x="200" y="250" width="16" height="14" fill="#FFFFFF"/>`;
-  if (eq.coffee === 'espresso') s += `<rect x="145" y="214" width="62" height="50" fill="#A7B0BE"/><rect x="152" y="222" width="48" height="10" fill="#1A2233"/><circle cx="160" cy="227" r="2" fill="#5CCB8B"/><rect x="168" y="240" width="16" height="16" fill="#FFFFFF"/><rect x="212" y="250" width="14" height="14" fill="#FFFFFF"/><rect x="226" y="254" width="5" height="6" fill="#FFFFFF"/>`;
-  if (rackOk && eq.rack !== 'none'){
-    const gold = eq.rack === 'gold';
-    s += `<rect x="650" y="230" width="90" height="102" fill="#1A2233" stroke="${gold ? '#D9A441' : '#3A4459'}" stroke-width="4"/>`;
-    for (let i = 0; i < 5; i++) s += `<rect x="658" y="${238 + i * 18}" width="74" height="12" fill="#2A3D5E"/><circle cx="722" cy="${244 + i * 18}" r="2.5" fill="${i % 2 ? '#5CCB8B' : '#7E9DFF'}"/>`;
-  }
-  const ch = eq.chair, chCol = {plastic:'#F4F6F9', mesh:'#2A2F3A', gaming:'#B9332A', leather:'#6B3E26'}[ch];
-  const tall = ch === 'gaming' || ch === 'leather';
-  s += `<rect x="378" y="${tall ? 168 : 205}" width="84" height="${tall ? 120 : 85}" rx="14" fill="${chCol}" stroke="#000" stroke-opacity=".15"/>`;
-  if (ch === 'gaming') s += `<rect x="404" y="185" width="32" height="70" fill="#1A1A1A"/>`;
-  s += personBack(skin, shirt);
-  const dk = eq.desk;
-  if (dk === 'folding') s += `<rect x="270" y="282" width="300" height="8" fill="#C8CDD4"/><path d="M290 290 L340 334 M340 290 L290 334 M500 290 L550 334 M550 290 L500 334" stroke="#8A919C" stroke-width="4"/>`;
-  if (dk === 'oak') s += `<rect x="265" y="278" width="310" height="14" fill="#A0703F"/><rect x="275" y="292" width="80" height="42" fill="#8A5D33"/><rect x="485" y="292" width="80" height="42" fill="#8A5D33"/><rect x="305" y="310" width="20" height="4" fill="#D9A441"/><rect x="515" y="310" width="20" height="4" fill="#D9A441"/>`;
-  if (dk === 'standing') s += `<rect x="265" y="276" width="310" height="10" rx="3" fill="#2F3540"/><rect x="300" y="286" width="12" height="48" fill="#596273"/><rect x="528" y="286" width="12" height="48" fill="#596273"/><rect x="285" y="328" width="42" height="6" fill="#596273"/><rect x="513" y="328" width="42" height="6" fill="#596273"/>`;
-  if (dk === 'glass') s += `<rect x="255" y="278" width="330" height="10" fill="#BFD9EA" opacity=".85" stroke="#E9F3FA"/><rect x="275" y="288" width="6" height="46" fill="#C9D1DC"/><rect x="559" y="288" width="6" height="46" fill="#C9D1DC"/><path d="M281 300 L559 330" stroke="#C9D1DC" stroke-width="3"/>`;
-  s += personFront(skin, shirt);
-  const cp = eq.computer;
-  if (cp === 'laptop') s += `<path d="M470 276 l10 -40 h60 l-6 40 z" fill="#5A6378"/><rect x="462" y="274" width="86" height="5" fill="#8A919C"/>`;
-  if (cp === 'dual') s += `<rect x="455" y="226" width="56" height="40" fill="#1A2233"/><rect x="459" y="230" width="48" height="32" fill="#4A7BB0"/><rect x="515" y="226" width="56" height="40" fill="#1A2233"/><rect x="519" y="230" width="48" height="32" fill="#5CCB8B"/><rect x="505" y="266" width="16" height="12" fill="#3A4459"/>`;
-  if (cp === 'ultra') s += `<rect x="455" y="222" width="125" height="46" rx="4" fill="#1A2233"/><rect x="459" y="226" width="117" height="38" fill="#4A7BB0"/><rect x="463" y="232" width="50" height="4" fill="#BFD9F2"/><rect x="463" y="242" width="80" height="4" fill="#BFD9F2"/><rect x="510" y="268" width="16" height="10" fill="#3A4459"/><rect x="292" y="244" width="60" height="34" rx="3" fill="#1A2233"/><rect x="296" y="248" width="52" height="26" fill="#7E9DFF"/>`;
-  if (eq.lamp === 'desk' && cp !== 'ultra') s += `<path d="M300 278 l14 -40 l26 12" stroke="#2A3D5E" stroke-width="4" fill="none"/><path d="M332 244 l22 6 l-6 16 z" fill="#C0616F"/><rect x="290" y="274" width="24" height="5" fill="#2A3D5E"/>`;
-  return `<svg viewBox="0 0 800 440" role="img" aria-label="Your ${T.name.toLowerCase()}: ${Object.keys(DECOR).filter(k => !(DECOR[k].minRank > state.rank)).map(k => decorItem(k).name).join(', ')}." xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+  return `<g class="p3-body"><g transform="translate(0 20)">${hairBack(p.hair, p.hairCol)}</g>${body}${neck}<g transform="translate(0 20)"><g class="p3-head">${headSVG(p)}</g></g></g>`;
 }
-function officeView(){
-  const T = officeTier(), next = OFFICE_TIERS.find(t => t.minRank > state.rank);
-  const cats = Object.entries(DECOR).map(([slot, d]) => {
+function personSVG(p, label, full){
+  return `<svg class="p3" viewBox="0 0 200 ${full ? 460 : 250}" role="img" aria-label="${esc(label || 'Character')}" xmlns="http://www.w3.org/2000/svg">${personParts(p, full)}</svg>`;
+}
+
+// The five coworkers who walk up to your desk. Names are chosen per character so face and name always match.
+const CAST = [
+  {skin:'#A86B43', hair:'short', hairCol:'#1E1612', glasses:true, outfit:{kind:'suit', col:'#3E5C7A', col2:'#CFE3F0', tie:'#1F2A44'}, names:['Ravi','Omar','Kenji','Wei']},
+  {skin:'#5E3820', hair:'bun', hairCol:'#141010', earrings:true, outfit:{kind:'suit', col:'#7A2E3A', col2:'#F4F1EC'}, names:['Aisha','Amara','Grace','Hannah']},
+  {skin:'#4A2A17', hair:'fade', hairCol:'#141010', beard:true, outfit:{kind:'suit', col:'#30363F', col2:'#F4F6FA', tie:'#7A2E3A'}, names:['Marcus','Jamal','Noah','Lucas']},
+  {skin:'#C68A5A', hair:'long', hairCol:'#2A1C14', earrings:true, outfit:{kind:'suit', col:'#1F6F8B', col2:'#F2E8D5'}, names:['Priya','Sofia','Elena','Fatima']},
+  {skin:'#8D5531', hair:'curly', hairCol:'#1E1612', glasses:true, outfit:{kind:'sweater', col:'#4B5563', col2:'#DCE7F5'}, names:['Tomás','Diego','Mateo']}
+];
+
+// You: built from the Profile choices.
+// The starter outfit is the reference look: gray-blue suit, light blue shirt, navy striped tie.
+const PLAYER_OUTFITS = {hoodie:{kind:'suit', col:'#3A6298', col2:'#D6E9F5', tie:'#1F2A44', pants:'#C8AE7E'}, blazer:{kind:'suit', col:'#1F3A7A', col2:'#F4F6FA', tie:'#7A2E3A', pants:'#16295C'},
+  turtleneck:{kind:'turtleneck', col:'#26262C', pants:'#3A3F4A'}, gold:{kind:'suit', col:'#B07C14', col2:'#1B1B1F', pants:'#1B1B1F'}};
+const playerLook = () => ({skin:SKINS[state.skin == null ? 2 : state.skin] || SKINS[2], hair:HAIR_KEYS[state.hair || 0] || 'short', hairCol:HAIR_COLORS[state.hairColor || 0],
+  glasses:state.glasses !== false, outfit:PLAYER_OUTFITS[state.outfit] || PLAYER_OUTFITS.hoodie, mood:state.rep >= 35 ? 'happy' : state.rep >= 15 ? 'neutral' : 'annoyed'});
+function characterSVG(full){ return personSVG(playerLook(), 'Your character', full); }
+
+// Office tab: you, seated in your chair at whatever desk and computer you have equipped, over the office photo.
+function deskSceneSVG(){
+  const eq = state.office.eq, look = playerLook();
+  const chair = {plastic:'#D9DEE6', mesh:'#2A2F3A', gaming:'#B9332A', leather:'#5C3521'}[eq.chair] || '#2A2F3A';
+  const tall = eq.chair === 'gaming' || eq.chair === 'leather';
+  let s = `<defs><radialGradient id="vig" cx=".5" cy=".55" r=".75"><stop offset=".6" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".45"/></radialGradient></defs><rect width="800" height="450" fill="url(#vig)"/>`;
+  if (eq.lamp === 'neon') s += `<text x="150" y="110" text-anchor="middle" font-size="44" font-family="IBM Plex Mono, monospace" fill="#FF5FA2" style="filter:drop-shadow(0 0 10px #FF5FA2)">root</text>`;
+  // office chair: backrest, headrest on tall chairs, armrests
+  s += `<rect x="${tall ? 300 : 308}" y="${tall ? 96 : 140}" width="${tall ? 200 : 184}" height="${tall ? 270 : 226}" rx="30" fill="${chair}"/><rect x="${tall ? 300 : 308}" y="${tall ? 96 : 140}" width="${tall ? 100 : 92}" height="${tall ? 270 : 226}" rx="30" fill="#FFF" opacity=".06"/>`;
+  if (eq.chair === 'gaming') s += `<rect x="378" y="110" width="44" height="200" rx="10" fill="#151518"/>`;
+  s += `<rect x="262" y="302" width="56" height="13" rx="6" fill="${tint(chair, -.25)}"/><rect x="482" y="302" width="56" height="13" rx="6" fill="${tint(chair, -.25)}"/><rect x="284" y="315" width="10" height="40" fill="${tint(chair, -.35)}"/><rect x="506" y="315" width="10" height="40" fill="${tint(chair, -.35)}"/>`;
+  s += `<g transform="translate(285 92) scale(1.15)">${personParts(look, false)}</g>`;
+  const top = 352;
+  if (eq.desk === 'oak') s += `<rect x="120" y="${top}" width="560" height="16" rx="3" fill="#A87442"/><rect x="140" y="${top + 16}" width="520" height="90" fill="#6A4628"/><path d="M140 ${top + 17} h520" stroke="#000" stroke-opacity=".25" stroke-width="3"/>`;
+  else if (eq.desk === 'standing') s += `<rect x="130" y="${top}" width="540" height="12" rx="4" fill="#2F3540"/><rect x="190" y="${top + 12}" width="16" height="90" fill="#59606E"/><rect x="594" y="${top + 12}" width="16" height="90" fill="#59606E"/>`;
+  else if (eq.desk === 'glass') s += `<rect x="110" y="${top}" width="580" height="12" rx="2" fill="#CFE6F4" fill-opacity=".6" stroke="#EAF6FF" stroke-opacity=".8"/><rect x="150" y="${top + 12}" width="8" height="90" fill="#C9D1DC"/><rect x="642" y="${top + 12}" width="8" height="90" fill="#C9D1DC"/>`;
+  else s += `<rect x="170" y="${top}" width="460" height="9" rx="2" fill="#C8CDD4"/><path d="M200 ${top + 9} L270 450 M270 ${top + 9} L200 450 M530 ${top + 9} L600 450 M600 ${top + 9} L530 450" stroke="#8A919C" stroke-width="6"/>`;
+  // forearms resting on the desk, hands on the keyboard
+  // arms: elbows at your sides, forearms lying flat on the desk toward the keyboard
+  const sl = tint(look.outfit.col, -.08), sr = tint(look.outfit.col, -.18), cuff = look.outfit.col2 || tint(look.outfit.col, .2);
+  s += `<rect x="352" y="344" width="96" height="9" rx="3" fill="#2B2F38"/>`;
+  s += `<path d="M326 343 L364 349" stroke="${sl}" stroke-width="20" fill="none" stroke-linecap="round"/><path d="M474 343 L436 349" stroke="${sr}" stroke-width="20" fill="none" stroke-linecap="round"/>`;
+  s += `<path d="M362 341 l5 1 -2 15 -5 -1z" fill="${cuff}"/><path d="M438 341 l-5 1 2 15 5 -1z" fill="${cuff}"/>`;
+  s += `<ellipse cx="376" cy="349" rx="11" ry="7" fill="${look.skin}"/><ellipse cx="424" cy="349" rx="11" ry="7" fill="${tint(look.skin, -.1)}"/>`;
+  // Three-screen setup: a monitor each side (angled in a touch) plus a silver MacBook-style laptop.
+  // Bigger computer upgrades just make the monitors bigger and brighter.
+  const big = {laptop:0, dual:14, ultra:30}[eq.computer] || 0;
+  const screen = (x, y, w, h, kind) => {
+    let c = `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#0E1726"/>`;
+    if (kind === 'code') for (let i = 0; i < 7; i++) c += `<rect x="${x + 8 + (i % 3) * 8}" y="${y + 8 + i * (h - 14) / 7}" width="${[60, 42, 74, 30, 56, 48, 66][i] * w / 150}" height="4" rx="2" fill="${['#3DD6C6','#7E9DFF','#E8B85A','#C792EA','#3DD6C6','#7E9DFF','#F2776C'][i]}" opacity=".85"/>`;
+    if (kind === 'chart'){ c += `<path d="M${x + 8} ${y + h - 10} L${x + w * .3} ${y + h * .55} L${x + w * .5} ${y + h * .65} L${x + w * .75} ${y + h * .3} L${x + w - 8} ${y + h * .2}" stroke="#3DD6C6" stroke-width="3" fill="none"/>`; for (let i = 0; i < 5; i++) c += `<rect x="${x + 10 + i * (w - 20) / 5}" y="${y + h - 8 - (10 + i * 5)}" width="${(w - 20) / 5 - 6}" height="${10 + i * 5}" fill="#7E9DFF" opacity=".35"/>`; }
+    if (kind === 'queue') for (let i = 0; i < 4; i++) c += `<rect x="${x + 6}" y="${y + 6 + i * (h - 8) / 4}" width="${w - 12}" height="${(h - 8) / 4 - 5}" rx="3" fill="#1B2740"/><circle cx="${x + 14}" cy="${y + 6 + i * (h - 8) / 4 + ((h - 8) / 4 - 5) / 2}" r="3" fill="${['#5CCB8B','#F0A848','#5CCB8B','#F2776C'][i]}"/>`;
+    return c;
+  };
+  const monitor = (x, w, kind) => { const h = Math.round(w * .6), y = top - 32 - h;
+    return `<rect x="${x + w / 2 - 5}" y="${y + h}" width="10" height="${top - y - h}" fill="#9AA1AC"/><ellipse cx="${x + w / 2}" cy="${top - 1}" rx="26" ry="4" fill="#8A919C"/>`
+      + `<rect x="${x - 5}" y="${y - 5}" width="${w + 10}" height="${h + 10}" rx="6" fill="#1A1D23"/>` + screen(x, y, w, h, kind)
+      + `<path d="M${x} ${y} L${x + w * .35} ${y} L${x} ${y + h * .5}Z" fill="#FFF" opacity=".06"/>`; };
+  s += monitor(118 - big, 160 + big, 'chart') + monitor(522, 160 + big, 'queue');
+  // laptop: open, screen facing out, sitting on the desk to your right
+  s += `<path d="M498 ${top - 2} L512 ${top - 66} H610 L620 ${top - 2}Z" fill="#C9CED6"/><path d="M505 ${top - 6} L517 ${top - 61} H605 L614 ${top - 6}Z" fill="#0E1726"/>`
+    + screen(520, top - 58, 82, 48, 'code') + `<rect x="488" y="${top - 3}" width="142" height="6" rx="3" fill="#B7BDC7"/>`;
+  if (eq.lamp === 'desk') s += `<path d="M200 ${top} l-10 -52 l-30 14" stroke="#2A3D5E" stroke-width="5" fill="none"/><path d="M164 300 l-28 4 l8 18z" fill="#E8B85A"/><rect x="186" y="${top - 5}" width="28" height="5" rx="2" fill="#2A3D5E"/>`;
+  if (eq.plant !== 'none') s += `<path d="M708 446 h46 l-6 -40 h-34z" fill="#B5654A"/>` + ({succulent:`<ellipse cx="731" cy="404" rx="24" ry="11" fill="#6FAE6B"/>`, monstera:`<ellipse cx="712" cy="372" rx="28" ry="16" fill="#3F8A4C"/><ellipse cx="752" cy="358" rx="28" ry="16" fill="#4C9A58"/><ellipse cx="730" cy="338" rx="24" ry="14" fill="#3F8A4C"/>`, bonsai:`<path d="M731 408 C721 380 743 374 735 352" stroke="#5B3A2A" stroke-width="7" fill="none"/><ellipse cx="719" cy="352" rx="26" ry="13" fill="#4C8A4C"/><ellipse cx="753" cy="342" rx="22" ry="12" fill="#3F7A40"/>`}[eq.plant] || '');
+  if (eq.coffee !== 'none') s += `<rect x="458" y="${top - 24}" width="18" height="22" rx="4" fill="#F2F2F2"/><path d="M476 ${top - 18} q9 2 0 11" stroke="#F2F2F2" stroke-width="3" fill="none"/>`;
+  return `<svg class="p3 desk-svg" viewBox="0 0 800 450" preserveAspectRatio="xMidYMax meet" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+}
+
+// Furniture lives in the Shop; the scene itself sits at the top of the Office tab.
+function decorShop(){
+  return Object.entries(DECOR).map(([slot, d]) => {
     const locked = d.minRank > state.rank;
     const cards = d.items.map(it => {
       const own = (state.office.owned[slot] || []).includes(it.id), on = state.office.eq[slot] === it.id;
@@ -1020,9 +1142,103 @@ function officeView(){
     }).join('');
     return `<section class="section"><div class="row" style="justify-content:space-between"><h3>${d.label}</h3>${locked ? `<span class="pill info">Unlocks at ${RANKS[d.minRank].short}</span>` : ''}</div><div class="cards deco-grid">${cards}</div></section>`;
   }).join('');
+}
+function officeScene(){
+  const T = officeTier(), next = OFFICE_TIERS.find(t => t.minRank > state.rank);
   return `<section class="panel section office"><div class="row" style="justify-content:space-between"><div><p class="eyebrow">${T.name}${state.founder ? ' · ' + esc(state.founder.name) : ''}</p><h2>Your office</h2></div>
-      <div class="row"><span class="pill gold">Style ${officeStyle()} · +${officePerk()}% pay and XP</span>${next ? `<span class="pill info">${next.name} at ${RANKS[next.minRank].short}</span>` : ''}</div></div>
-      <div class="scene">${officeSVG()}</div></section>${cats}`;
+      <div class="row"><span class="pill gold">Style ${officeStyle()} · +${officePerk()}% pay and XP</span>${next ? `<span class="pill info">${next.name} at ${RANKS[next.minRank].short}</span>` : ''}<button class="btn" data-act="tab" data-v="shop">Upgrade office</button></div></div>
+      <div class="scene photo" style="background-image:${sceneUrl()}" role="img" aria-label="You at your ${esc(decorItem('desk').name.toLowerCase())}">${deskSceneSVG()}<span>${esc(decorItem('desk').name)}</span></div></section>`;
+}
+
+/* ---------- cinematic scenes (photos hotlinked from Unsplash; credits in README) ---------- */
+const UNSPLASH = (id, q) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&${q}`;
+// The desk you have equipped picks the office photo behind the whole game.
+const OFFICE_BG = {folding:'1785917835430-f1617b7d68ff', oak:'1772475385509-93fd87a2d4ba', standing:'1497366811353-6870744d04b2', glass:'1779700210487-a01758a3c55a'};
+const sceneUrl = () => `url('${UNSPLASH(OFFICE_BG[state.office.eq.desk] || OFFICE_BG.folding, 'w=1920&q=70')}')`;
+const MOODS = {
+  anxious:{icon:'😟', label:'Anxious', col:'#F0A848'}, neutral:{icon:'😐', label:'Neutral', col:'#9BA6BC'},
+  impatient:{icon:'😤', label:'Impatient', col:'#F2776C'}, relieved:{icon:'😌', label:'Relieved', col:'#3DD6C6'},
+  happy:{icon:'😄', label:'Happy', col:'#5CCB8B'}, annoyed:{icon:'😠', label:'Annoyed', col:'#F2776C'}, smug:{icon:'😏', label:'Smug', col:'#E8B85A'}
+};
+// Walk-up channels get the requester in person; paper channels get a coworker bringing it over.
+const PAPER = ['Email','HR Portal'];
+const OPENERS = {
+  urgent:['Good to see you, I need urgent help!','Oh, thank goodness you’re here. Something’s really wrong.','Hey! Please tell me you have a minute. I’m stuck.'],
+  calm:['Hi, sorry to bother you. Quick IT question?','Hey, do you have a second? Something’s acting up.','Morning! Got time for a small problem?'],
+  pushy:['Listen, I’m in a hurry and I need this done right now.','I don’t have time for process today. Can you just fix it?','My boss is waiting on me. This needs to happen in the next five minutes.'],
+  paper:['This one just came in through the {ch}. Want to take it?','Dropping this off. It came in through the {ch}.','{ch} request for you. Looks like it needs your eyes.']
+};
+const START_MOOD = {urgent:'anxious', calm:'neutral', pushy:'impatient', paper:'neutral'};
+// Each reply: label, small hint, mood it leaves the NPC in, what they say back, and the effect.
+const REPLIES = {
+  urgent:[
+    {t:'What’s the problem?', mood:'neutral', say:'Okay. Here’s what happened.', rep:0, xp:2},
+    {t:'How can I help you?', mood:'relieved', say:'Thank you. I really appreciate it.', rep:1, xp:3},
+    {t:'I’ll help with everything, tell me what happened.', mood:'happy', say:'You’re a lifesaver. Okay, so…', rep:2, xp:3, tip:true},
+    {t:'I’m slammed. Make it quick.', mood:'annoyed', say:'Wow. Fine.', rep:-2, xp:0}
+  ],
+  calm:[
+    {t:'What’s the problem?', mood:'neutral', say:'Sure, here it is.', rep:0, xp:2},
+    {t:'How can I help you?', mood:'happy', say:'Thanks! It’s probably simple.', rep:2, xp:3, tip:true},
+    {t:'I’ll help with everything, tell me what happened.', mood:'relieved', say:'Great, here’s the story.', rep:1, xp:2},
+    {t:'Can it wait? I’m busy.', mood:'annoyed', say:'I guess I’ll just stand here, then.', rep:-2, xp:0}
+  ],
+  pushy:[
+    {t:'What’s the problem?', mood:'neutral', say:'Fine. Here.', rep:0, xp:3},
+    {t:'Happy to help. I’ll still need to follow the process.', mood:'annoyed', say:'Ugh. Okay, whatever. Here.', rep:1, xp:4},
+    {t:'I’ll do whatever you need, tell me what happened.', mood:'smug', say:'Perfect. That’s what I like to hear.', rep:-2, xp:0, lesson:'Promising everything to someone who’s pushing you is how social engineering works. Verify first.'},
+    {t:'Slow down. Pressure doesn’t speed me up.', mood:'impatient', say:'Fine. Just read it.', rep:0, xp:3}
+  ],
+  paper:[
+    {t:'Thanks, I’ll take it from here.', mood:'happy', say:'Appreciate you.', rep:1, xp:2},
+    {t:'Anything odd about it?', mood:'neutral', say:'Not sure. Check it against the runbook.', rep:0, xp:3},
+    {t:'Drop it on the pile.', mood:'annoyed', say:'Okay… it’s on the pile.', rep:-1, xp:0}
+  ]
+};
+const hashStr = s => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
+function npcFor(t){
+  if (t.npc) return t.npc;
+  const paper = PAPER.includes(t.channel);
+  const tone = paper ? 'paper' : (TRAPS.has(t.kind) ? Math.random() < .5 : Math.random() < .15) ? 'pushy' : rnd(['urgent','calm']);
+  // Paper tickets are brought over by a coworker; everyone else is the requester themselves.
+  const cast = paper || t.cast == null ? hashStr(t.id + t.channel) % CAST.length : t.cast;
+  const name = paper ? `${rnd(CAST[cast].names)}, service desk coordinator` : t.user && t.cast != null ? `${t.user.first} ${t.user.last} · ${t.user.dept}` : t.user ? `${t.user.dept} · ${t.user.title}` : t.from;
+  return t.npc = {tone, name, cast, line:rnd(OPENERS[tone]).replace('{ch}', t.channel), mood:START_MOOD[tone], pick:null};
+}
+// Tickets already being worked (or from older saves) skip the scene.
+const needsScene = t => t && !t.done && !t.met && !(t.st && t.st.actions && t.st.actions.length);
+function sceneTip(){ return state.founder ? 250 : Math.max(5, Math.round(RANKS[state.rank].pay * .15)); }
+function sceneView(t){
+  const n = npcFor(t), m = MOODS[n.mood], s = state.shift, left = s.tickets.filter(x => !x.done).length;
+  const opts = REPLIES[n.tone];
+  let line, cards;
+  if (n.pick == null){
+    line = `<b>${esc(n.name)}</b><p>“${esc(n.line)}”</p>`;
+    const card = (o, i, cls) => `<button class="reply ${cls}" data-act="reply" data-v="${i}" style="animation-delay:${.15 + i * .08}s">${esc(o.t)}</button>`;
+    cards = card(opts[0], 0, 'l') + card(opts[1], 1, 'r') + `<div class="reply-row">${opts.slice(2).map((o, i) => card(o, i + 2, '')).join('')}</div>`;
+  } else {
+    const o = opts[n.pick];
+    line = `<b>${esc(n.name)}</b><p>“${esc(o.say)}”</p><div class="req"><span class="eyebrow">${esc(t.channel)} · ${esc(t.subject)}</span><br>${esc(t.body || '')}</div>${o.lesson ? `<p class="hint" style="margin-top:12px;font:inherit;font-size:.88rem;text-align:left">${esc(o.lesson)}</p>` : ''}`;
+    cards = `<div class="reply-row"><button class="reply go" data-act="meet">Pull up the ticket</button></div>`;
+  }
+  return `<section class="stage" aria-label="Conversation with ${esc(n.name)}">
+    <span class="qcount">${t.id} · ${left} open</span><button class="skip" data-act="meet">Skip to ticket</button>
+    <div class="npc">${personSVG({...CAST[n.cast == null ? hashStr(t.id) % CAST.length : n.cast], mood:n.mood}, n.name)}<span class="npc-tag">${esc(t.channel)}</span></div>
+    <div class="line" role="status"><div class="mood" style="--mood:${m.col}" title="Mood: ${m.label}">${m.icon}<small>${m.label}</small></div>${line}</div>
+    ${cards}</section>`;
+}
+function sceneReply(i){
+  const t = activeTicket(); if (!t) return;
+  const n = npcFor(t); if (n.pick != null) return;
+  const o = REPLIES[n.tone][i]; if (!o) return;
+  n.pick = i; n.mood = o.mood;
+  const cash = o.tip ? sceneTip() : 0;
+  state.rep = clamp(state.rep + o.rep, 0, 100); state.xp += o.xp; state.cash += cash;
+  Object.assign(state.shift, {cash: state.shift.cash + cash, xp: state.shift.xp + o.xp, rep: state.shift.rep + o.rep});
+  sfx(o.rep < 0 ? 'meh' : 'ping');
+  commit();
+  if (cash) floatAt('[data-hud="cash"]', `+${money(cash)} tip`);
+  if (o.rep) floatAt('.mood', `${o.rep > 0 ? '+' : ''}${o.rep} rep`, o.rep > 0 ? '' : 'bad');
 }
 
 /* ---------- state ---------- */
@@ -1060,12 +1276,12 @@ const fmtTime = () => `${ri(7,8)}:${String(ri(0,59)).padStart(2,'0')} AM`;
 
 function makeTicket(kind, i){
   const co = company();
-  const first = rnd(FIRST), last = rnd(LAST), dept = rnd(DEPTS);
+  const cast = ri(0, CAST.length - 1), first = rnd(CAST[cast].names), last = rnd(LAST), dept = rnd(DEPTS);
   const username = (first[0] + last).toLowerCase().normalize('NFD').replace(/[^a-z]/g, '');
   const empId = 'E-' + ri(10000, 99999);
   const manager = rnd(MANAGERS);
   const user = {first,last,username,empId,manager,dept,title:rnd(TITLES[dept]),status:'Active',badPwd:0,lastFail:'None',src:'None',phone:'ext. ' + ri(2000,7999)};
-  const t = {id:'INC-' + (state.seq++), kind, co, user, age:0, sla:100 + i*55 + (owns('espresso') ? 30 : 0), done:false, result:null,
+  const t = {id:'INC-' + (state.seq++), kind, co, user, cast, age:0, sla:100 + i*55 + (owns('espresso') ? 30 : 0), done:false, result:null,
     provided:{empId, manager}, temp:`${rnd(WORDS)}-${rnd(WORDS)}-${ri(1000,9999)}`,
     st:{lookedUp:owns('monitor') && KINDS[kind].lookup, verified:null, actions:[], mustChange:false, blind:false, resetOpen:false, hint:false, avail:null,
         form:{username:'',dept:'',groups:[],license:''}}};
@@ -1370,7 +1586,11 @@ function modalSpec(m){
 
 /* ---------- render ---------- */
 function commit(){ checkAch(); save(); render(); }
-function render(){ renderHud(); renderTabs(); renderView(); renderModal(); }
+function render(){ renderScene(); renderHud(); renderTabs(); renderView(); renderModal(); }
+function renderScene(){
+  const u = sceneUrl(); if (u === renderScene.u) return;
+  renderScene.u = u; document.body.style.setProperty('--scene', u);
+}
 
 function avatar(lg){ return `<div class="avatar${lg ? ' lg' : ''}" data-o="${state.outfit}" aria-hidden="true">${RANKS[state.rank].ab}</div>`; }
 
@@ -1397,7 +1617,7 @@ function renderHud(){
     </dl>${prog}`;
 }
 function renderTabs(){
-  const tabs = [['desk','Desk'],['office','Office'],['empire','Empire'],['career','Career'],['shop','Shop'],['profile','Profile']];
+  const tabs = [['desk','Office'],['empire','Empire'],['career','Career'],['shop','Shop'],['profile','Profile']];
   const alert = id => state.tab !== id && ((id === 'desk' && state.shift) || (id === 'empire' && state.empire && state.empire.incidents.length));
   const sig = state.tab + tabs.map(([id]) => alert(id) ? 1 : 0).join('') + state.sound;
   if (sig === renderTabs.sig && $('#tabs').childElementCount) return;
@@ -1409,7 +1629,6 @@ function renderView(){
   const v = $('#view');
   if (state.tab === 'desk') v.innerHTML = state.shift ? deskView() : briefView();
   if (state.tab === 'empire') v.innerHTML = empireView();
-  if (state.tab === 'office') v.innerHTML = officeView();
   if (state.tab === 'career') v.innerHTML = careerView();
   if (state.tab === 'shop') v.innerHTML = shopView();
   if (state.tab === 'profile') v.innerHTML = profileView();
@@ -1448,7 +1667,7 @@ function runbook(){
 function briefView(){
   const r = RANKS[state.rank], ls = state.lastShift;
   const intro = state.founder ? `${esc(state.founder.name)} handles help desk tickets for client companies.` : `Brightline Logistics, ${HOME.domain}.`;
-  return `<div class="brief-grid"><section class="panel brief">
+  return `${officeScene()}<div class="brief-grid"><section class="panel brief">
       <p class="eyebrow">Day ${state.day} · ${r.name}</p>
       <h1>${state.stats.shifts === 0 ? 'Your first shift starts at 9:00.' : state.rank === 6 ? 'Another day at the top.' : 'The queue is filling up.'}</h1>
       <p class="lede">${intro} ${r.blurb} Expect ${r.tickets} tickets today.</p>
@@ -1474,6 +1693,7 @@ const GRADE_PILL = ['ok','warn','bad','bad'];
 
 function deskView(){
   const s = state.shift, t = activeTicket();
+  if (needsScene(t)) return sceneView(t);
   const open = s.tickets.filter(x => !x.done).length;
   const q = s.tickets.map(x => {
     const name = x.user ? `${x.user.first} ${x.user.last}` : x.from;
@@ -1800,21 +2020,23 @@ function shopView(){
   }).join('');
   const packs = PACKS.map(p => `<div class="card"><h3>${p.label}</h3><p class="muted" style="font-size:.88rem">${p.gems} gems${p.extra ? '. ' + p.extra + '.' : ''}</p>
       <div class="row" style="justify-content:space-between"><span class="price">${p.price}</span><button class="btn gold" data-act="iap" data-v="${p.id}">Add (demo)</button></div></div>`).join('');
-  return `<section class="section"><h2>Desk upgrades</h2><div class="cards">${items}</div></section>
+  return `<section class="section"><h2>Office furniture</h2><p class="muted small">Better furniture raises your office style: more pay and XP per ticket, and a nicer office on the Office tab.</p></section>${decorShop()}
+    <section class="section"><h2>Work gear</h2><div class="cards">${items}</div></section>
     <section class="section"><h2>Style</h2><div class="cards">${outfits}</div></section>
     <section class="section"><h2>Gem packs</h2><p class="notice">Demo store. No payment is taken. Tapping a pack adds the gems so you can test the in-app economy. Gems also come from clean tickets (1 each) and promotions (5 each).</p><div class="cards">${packs}</div></section>`;
 }
 
 function profileView(){
   const s = state.stats, rate = s.resolved ? Math.round(s.perfect / s.resolved * 100) : 0;
-  return `<div class="cols"><section class="panel section"><div class="row" style="gap:16px">${avatar(true)}<div><p class="eyebrow">${state.founder ? esc(state.founder.name) : HOME.name}</p><h2>${RANKS[state.rank].name}</h2></div></div>
+  return `<div class="cols"><section class="panel section"><div class="row" style="gap:16px"><div class="avatar3d" aria-hidden="true">${characterSVG()}</div><div><p class="eyebrow">${state.founder ? esc(state.founder.name) : HOME.name}</p><h2>${RANKS[state.rank].name}</h2></div></div>
       <div class="summary"><div class="kpi"><b>${s.resolved}</b><span>tickets resolved</span></div><div class="kpi"><b>${rate}%</b><span>clean rate</span></div>
       <div class="kpi"><b>${s.breach}</b><span>security incidents</span></div><div class="kpi"><b>${s.shifts}</b><span>shifts worked</span></div></div>
-      <div class="char-edit"><div class="char-preview">${characterSVG()}</div><div class="char-opts">
+      <div class="char-edit"><div class="char-preview">${characterSVG(true)}</div><div class="char-opts">
       <div><p class="eyebrow" style="margin-bottom:8px">Hair</p><div class="row">${HAIR_STYLES.map((h, i) => `<button class="btn ${(state.hair || 0) === i ? "on" : ""}" data-act="hair" data-v="${i}" aria-pressed="${(state.hair || 0) === i}">${h}</button>`).join("")}</div></div>
       <div><p class="eyebrow" style="margin-bottom:8px">Hair color</p><div class="row">${HAIR_COLORS.map((c, i) => `<button class="skin ${(state.hairColor || 0) === i ? "on" : ""}" data-act="hairColor" data-v="${i}" style="background:${c}" aria-label="Hair color ${i + 1}" aria-pressed="${(state.hairColor || 0) === i}"></button>`).join("")}</div></div>
       <div><p class="eyebrow" style="margin-bottom:8px">Skin tone</p><div class="row">${SKINS.map((c, i) => `<button class="skin ${state.skin === i ? "on" : ""}" data-act="skin" data-v="${i}" style="background:${c}" aria-label="Skin tone ${i + 1}" aria-pressed="${state.skin === i}"></button>`).join("")}</div></div>
-      <p class="small muted">Outfits are in the Shop. Your character smiles at 35+ reputation and frowns below 15.</p></div></div></section>
+      <div><p class="eyebrow" style="margin-bottom:8px">Glasses</p><div class="row">${['On','Off'].map((l, i) => `<button class="btn ${(state.glasses !== false) === !i ? "on" : ""}" data-act="glasses" data-v="${i ? 0 : 1}" aria-pressed="${(state.glasses !== false) === !i}">${l}</button>`).join("")}</div></div>
+      <p class="small muted">Outfits are in the Shop. Your character smiles at 35+ reputation and frowns below 15, and sits at your desk in the Office tab.</p></div></div></section>
     <section class="panel section"><h2>Save data</h2><p class="muted">Progress saves in this browser only.</p>
       ${state.rank < 5 ? `<div class="row"><button class="btn" data-act="devFounder">Testing: jump to Startup Founder</button></div>` : ''}
       <div class="row">${state.confirmReset ? `<span>Erase all progress?</span><button class="btn danger" data-act="wipe">Erase</button><button class="btn" data-act="wipeCancel">Keep playing</button>` : `<button class="btn danger" data-act="wipeAsk">Start a new career</button>`}</div></section></div>`;
@@ -1860,6 +2082,8 @@ document.addEventListener('click', e => {
     case 'hint':
       if (state.gems < 1){ toast('You are out of gems. Earn more with clean tickets.'); break; }
       state.gems--; t.st.hint = true; commit(); break;
+    case 'reply': sceneReply(+v); break;
+    case 'meet': if (t){ t.met = true; commit(); window.scrollTo({top:0}); } break;
     case 'resolve': resolve(); break;
     case 'next': nextTicket(); break;
     case 'end': endShift(); break;
@@ -1877,6 +2101,7 @@ document.addEventListener('click', e => {
     case 'skin': state.skin = +v; commit(); break;
     case 'hair': state.hair = +v; commit(); break;
     case 'hairColor': state.hairColor = +v; commit(); break;
+    case 'glasses': state.glasses = v === '1'; commit(); break;
     case 'decor': {
       const [slot, id] = v.split(':'), it = DECOR[slot].items.find(x => x.id === id);
       const own = state.office.owned[slot] || (state.office.owned[slot] = []);
@@ -1980,7 +2205,8 @@ function tick(){
 }
 function shiftTick(){
   if (!state.shift || state.modals.length || document.hidden) return;
-  for (const t of state.shift.tickets) if (!t.done) t.age++;
+  // The SLA clock waits while you're still talking to the person at your desk.
+  for (const t of state.shift.tickets) if (!t.done && !(t.id === state.shift.active && needsScene(t))) t.age++;
   for (const t of state.shift.tickets){
     if (t.done) continue;
     const sl = slaInfo(t);
@@ -1999,7 +2225,12 @@ function start(data){
   state.ach = state.ach || [];
   if (state.sound === undefined) state.sound = true;
   state.chatLog = state.chatLog || [];
-  if (state.skin == null) state.skin = 1;
+  // The lightest tone was removed, so saved choices shift down one.
+  if (state.skinV !== 2){ if (state.skin != null) state.skin = Math.max(0, state.skin - 1); state.skinV = 2; }
+  if (state.skin == null) state.skin = 2;
+  if (state.tab === 'office') state.tab = 'desk'; // Desk and Office are one tab now
+  // Buzz, Locs and Braids were removed: Afro keeps its look, the others fall back to Short.
+  if (state.hairV !== 2){ state.hair = ({5:4})[state.hair] ?? (state.hair >= 4 ? 0 : state.hair || 0); state.hairV = 2; }
   if (!state.office) initOffice();
   if (!state.week) newWeek(1);
   if (state.founder && !state.rival) state.rival = {name:'Apex Cloud', value:Math.max(2e7, netWorth() * .6), flags:[]};
