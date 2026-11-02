@@ -967,8 +967,8 @@ function initOffice(){
 const decorItem = slot => DECOR[slot].items.find(i => i.id === state.office.eq[slot]) || DECOR[slot].items[0];
 const officeStyle = () => Object.keys(DECOR).reduce((n, slot) => n + (DECOR[slot].minRank > state.rank ? 0 : decorItem(slot).style), 0);
 const officePerk = () => Math.min(25, Math.round(officeStyle() * .5));
-const HAIR_STYLES = ['Short','Afro'];
-const HAIR_KEYS = ['short','afro'];
+const HAIR_STYLES = ['Short','Afro','Fade'];
+const HAIR_KEYS = ['short','afro','edge'];
 const HAIR_COLORS = ['#2A1E16','#6B4423','#D8B26E','#B23A2E','#9AA0A6'];
 
 /* ---------- people: clean flat corporate-illustration characters that breathe, blink and emote ---------- */
@@ -1018,10 +1018,12 @@ function hairFront(style, c){
     case 'short': return `<path d="M69 84 C66 58 78 42 100 41 C122 42 134 58 131 84 C129 72 126 64 121 60 C108 63 92 63 79 60 C74 64 71 72 69 84Z" fill="${c}"/><path d="M73 60 C68 36 88 18 110 20 C126 22 136 34 133 52 C129 43 121 39 111 41 C117 47 119 53 117 60 C104 54 88 54 73 60Z" fill="${c}"/><path d="M84 36 C95 26 113 25 124 32" stroke="${tint(c, .3)}" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/>`;
     case 'fade': return `<path d="M70 76 C70 52 84 41 100 41 C116 41 130 52 130 76 C125 62 114 55 100 55 C86 55 75 62 70 76Z" fill="${c}"/>`;
     // low cut fade: close-cropped top hugging the head, crisp edge-up hairline, sides fading down to skin
-    case 'edge': return `<defs><linearGradient id="lowfade" gradientUnits="userSpaceOnUse" x1="0" y1="58" x2="0" y2="86"><stop offset="0" stop-color="${c}"/><stop offset=".55" stop-color="${c}" stop-opacity=".45"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></linearGradient></defs>`
-      + `<path d="M68.5 86 C67 66 69 58 73 56 L73 66 L72.5 86Z M131.5 86 C133 66 131 58 127 56 L127 66 L127.5 86Z" fill="url(#lowfade)"/>`
+    // the gradient id carries the color so two fades of different colors on one page do not share it
+    case 'edge': { const g = 'lowfade' + c.replace(/\W/g, '');
+      return `<defs><linearGradient id="${g}" gradientUnits="userSpaceOnUse" x1="0" y1="58" x2="0" y2="86"><stop offset="0" stop-color="${c}"/><stop offset=".55" stop-color="${c}" stop-opacity=".45"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></linearGradient></defs>`
+      + `<path d="M68.5 86 C67 66 69 58 73 56 L73 66 L72.5 86Z M131.5 86 C133 66 131 58 127 56 L127 66 L127.5 86Z" fill="url(#${g})"/>`
       + `<path d="M70 64 C69 46 80 37 100 36 C120 37 131 46 130 64 C129 61 127 58.5 124 57.5 L121 57 L79 57 L76 57.5 C73 58.5 71 61 70 64Z" fill="${c}"/>`
-      + `<path d="M84 44 C93 39.5 107 39.5 116 44" stroke="${tint(c, .3)}" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".55"/>`;
+      + `<path d="M84 44 C93 39.5 107 39.5 116 44" stroke="${tint(c, .3)}" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".55"/>`; }
     // short curls: a full rounded top with a scalloped edge and coil texture
     case 'curly': return `<path d="M68 86 C66 58 80 40 100 39 C120 40 134 58 132 86 C128 72 118 62 100 61 C82 62 72 72 68 86Z" fill="${c}"/>`
       + fluff(100, 60, 32, 22, 9, 9, c, 180, 360) + `<circle cx="69" cy="74" r="6.5" fill="${c}"/><circle cx="131" cy="74" r="6.5" fill="${c}"/>`
@@ -1133,12 +1135,16 @@ const CAST = [
 // The starter outfit is the reference look: gray-blue suit, light blue shirt, navy striped tie.
 const PLAYER_OUTFITS = {hoodie:{kind:'suit', col:'#3A6298', col2:'#D6E9F5', tie:'#1F2A44', pants:'#C8AE7E'}, blazer:{kind:'suit', col:'#1F3A7A', col2:'#F4F6FA', tie:'#7A2E3A', pants:'#16295C'},
   turtleneck:{kind:'turtleneck', col:'#26262C', pants:'#3A3F4A'}, gold:{kind:'suit', col:'#B07C14', col2:'#1B1B1F', pants:'#1B1B1F'}};
-// Second playable character: green polo, low cut fade, mustache and goatee, bold brows. His look is fixed.
-const POLO_LOOK = {skin:'#7A4A2B', hair:'edge', hairCol:'#17110D', stache:true, thickBrows:true, glasses:false, outfit:{kind:'polo', col:'#4E7B4C', pants:'#3A3F4A'}};
+// Second playable character: green polo, mustache and goatee, bold brows. Hair, skin and glasses are his own picks (state.polo).
+const POLO_LOOK = {stache:true, thickBrows:true, outfit:{kind:'polo', col:'#4E7B4C', pants:'#3A3F4A'}};
+const POLO_DEFAULT = {skin:3, hair:2, hairColor:0, glasses:false};
 const CHARACTERS = ['Blazer', 'Polo'];
 const playerMood = () => state.rep >= 35 ? 'happy' : state.rep >= 15 ? 'neutral' : 'annoyed';
-const playerLook = (c = state.char || 0) => c === 1 ? {...POLO_LOOK, mood:playerMood()} : ({skin:SKINS[state.skin == null ? 2 : state.skin] || SKINS[2], hair:HAIR_KEYS[state.hair || 0] || 'short', hairCol:HAIR_COLORS[state.hairColor || 0],
-  glasses:state.glasses !== false, outfit:PLAYER_OUTFITS[state.outfit] || PLAYER_OUTFITS.hoodie, mood:playerMood()});
+// Blazer's picks live on state itself; Polo's live on state.polo.
+const lookCfg = (c = state.char || 0) => c === 1 ? (state.polo = state.polo || {...POLO_DEFAULT}) : state;
+const playerLook = (c = state.char || 0) => { const k = lookCfg(c);
+  return {skin:SKINS[k.skin == null ? 2 : k.skin] || SKINS[2], hair:HAIR_KEYS[k.hair || 0] || 'short', hairCol:HAIR_COLORS[k.hairColor || 0],
+    glasses:k.glasses !== false, outfit:PLAYER_OUTFITS[state.outfit] || PLAYER_OUTFITS.hoodie, ...(c === 1 ? POLO_LOOK : {}), mood:playerMood()}; };
 function characterSVG(full, c){ return personSVG(playerLook(c), 'Your character', full); }
 
 // Office tab: you, seated in your chair at whatever desk and computer you have equipped, over the office photo.
@@ -2094,11 +2100,11 @@ function profileView(){
       <div class="kpi"><b>${s.breach}</b><span>security incidents</span></div><div class="kpi"><b>${s.shifts}</b><span>shifts worked</span></div></div>
       <div class="char-edit"><div class="char-pick">${CHARACTERS.map((n, i) => { const on = (state.char || 0) === i;
         return `<button class="char-preview char-card ${on ? 'on' : ''}" data-act="char" data-v="${i}" aria-pressed="${on}">${characterSVG(true, i)}<b>${n}</b><span>${on ? 'Playing' : 'Play as'}</span></button>`; }).join('')}</div><div class="char-opts">
-      ${(state.char || 0) === 1 ? `<p class="muted">The Polo look is set: green polo, low cut fade, mustache and goatee. Switch to Blazer to change hair, skin tone and glasses.</p>` : `
-      <div><p class="eyebrow" style="margin-bottom:8px">Hair</p><div class="row">${HAIR_STYLES.map((h, i) => `<button class="btn ${(state.hair || 0) === i ? "on" : ""}" data-act="hair" data-v="${i}" aria-pressed="${(state.hair || 0) === i}">${h}</button>`).join("")}</div></div>
-      <div><p class="eyebrow" style="margin-bottom:8px">Hair color</p><div class="row">${HAIR_COLORS.map((c, i) => `<button class="skin ${(state.hairColor || 0) === i ? "on" : ""}" data-act="hairColor" data-v="${i}" style="background:${c}" aria-label="Hair color ${i + 1}" aria-pressed="${(state.hairColor || 0) === i}"></button>`).join("")}</div></div>
-      <div><p class="eyebrow" style="margin-bottom:8px">Skin tone</p><div class="row">${SKINS.map((c, i) => `<button class="skin ${state.skin === i ? "on" : ""}" data-act="skin" data-v="${i}" style="background:${c}" aria-label="Skin tone ${i + 1}" aria-pressed="${state.skin === i}"></button>`).join("")}</div></div>
-      <div><p class="eyebrow" style="margin-bottom:8px">Glasses</p><div class="row">${['On','Off'].map((l, i) => `<button class="btn ${(state.glasses !== false) === !i ? "on" : ""}" data-act="glasses" data-v="${i ? 0 : 1}" aria-pressed="${(state.glasses !== false) === !i}">${l}</button>`).join("")}</div></div>`}
+      ${(k => `<p class="small muted">Styling ${CHARACTERS[state.char || 0]}</p>
+      <div><p class="eyebrow" style="margin-bottom:8px">Hair</p><div class="row">${HAIR_STYLES.map((h, i) => `<button class="btn ${(k.hair || 0) === i ? "on" : ""}" data-act="hair" data-v="${i}" aria-pressed="${(k.hair || 0) === i}">${h}</button>`).join("")}</div></div>
+      <div><p class="eyebrow" style="margin-bottom:8px">Hair color</p><div class="row">${HAIR_COLORS.map((c, i) => `<button class="skin ${(k.hairColor || 0) === i ? "on" : ""}" data-act="hairColor" data-v="${i}" style="background:${c}" aria-label="Hair color ${i + 1}" aria-pressed="${(k.hairColor || 0) === i}"></button>`).join("")}</div></div>
+      <div><p class="eyebrow" style="margin-bottom:8px">Skin tone</p><div class="row">${SKINS.map((c, i) => `<button class="skin ${k.skin === i ? "on" : ""}" data-act="skin" data-v="${i}" style="background:${c}" aria-label="Skin tone ${i + 1}" aria-pressed="${k.skin === i}"></button>`).join("")}</div></div>
+      <div><p class="eyebrow" style="margin-bottom:8px">Glasses</p><div class="row">${['On','Off'].map((l, i) => `<button class="btn ${(k.glasses !== false) === !i ? "on" : ""}" data-act="glasses" data-v="${i ? 0 : 1}" aria-pressed="${(k.glasses !== false) === !i}">${l}</button>`).join("")}</div></div>`)(lookCfg())}
       <p class="small muted">Outfits are in the Shop. Your character smiles at 35+ reputation and frowns below 15, and sits at your desk in the Office tab.</p></div></div></section>
     <section class="panel section"><h2>Save data</h2><p class="muted">Progress saves in this browser only.</p>
       ${state.rank < 5 ? `<div class="row"><button class="btn" data-act="devFounder">Testing: jump to Startup Founder</button></div>` : ''}
@@ -2161,10 +2167,10 @@ document.addEventListener('click', e => {
       state.gems -= o.gems; state.outfits.push(v); state.outfit = v; toast(`${o.name} unlocked.`); sfx('cash'); commit(); break;
     }
     case 'wear': state.outfit = v; commit(); break;
-    case 'skin': state.skin = +v; commit(); break;
-    case 'hair': state.hair = +v; commit(); break;
-    case 'hairColor': state.hairColor = +v; commit(); break;
-    case 'glasses': state.glasses = v === '1'; commit(); break;
+    case 'skin': lookCfg().skin = +v; commit(); break;
+    case 'hair': lookCfg().hair = +v; commit(); break;
+    case 'hairColor': lookCfg().hairColor = +v; commit(); break;
+    case 'glasses': lookCfg().glasses = v === '1'; commit(); break;
     case 'char': state.char = +v; commit(); break;
     case 'decor': {
       const [slot, id] = v.split(':'), it = DECOR[slot].items.find(x => x.id === id);
