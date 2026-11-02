@@ -324,6 +324,15 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;background:linear-grad
 .avatar3d{width:96px;height:96px;border-radius:50%;overflow:hidden;flex:none;background:radial-gradient(circle at 50% 35%,rgba(61,214,198,.35),rgba(10,15,26,.9));box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--teal)}
 .avatar3d svg{width:100%;height:auto;margin-top:6px}
 .char-preview{background:radial-gradient(70% 60% at 50% 35%,rgba(61,214,198,.22),rgba(10,15,26,.6))}
+.char-edit{grid-template-columns:minmax(0,340px) minmax(0,1fr)}
+.char-pick{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.char-card{display:grid;gap:4px;justify-items:center;color:var(--text,#E8ECF2);font:inherit;cursor:pointer;transition:border-color .15s,transform .15s}
+.char-card:hover{transform:translateY(-2px)}
+.char-card b{font-size:1rem}
+.char-card span{font-size:.78rem;color:var(--muted,#9AA4B2)}
+.char-card.on{border-color:var(--teal);box-shadow:0 0 0 2px var(--teal)}
+.char-card.on span{color:var(--teal)}
+@media (max-width:720px){.char-edit{grid-template-columns:1fr}.char-pick{max-width:340px}}
 .npc-tag{position:absolute;left:50%;top:12px;transform:translateX(-50%);white-space:nowrap;background:rgba(5,8,15,.72);border:1px solid var(--glass-line);border-radius:999px;padding:3px 12px;font-size:.78rem;color:rgba(233,238,246,.85)}
 .line{grid-area:line;justify-self:center;position:relative;width:min(640px,100%);margin-top:-64px;background:rgba(5,9,16,.84);border:1px solid rgba(61,214,198,.55);border-left:4px solid var(--teal);border-radius:14px;padding:50px 22px 18px;box-shadow:0 18px 40px rgba(0,0,0,.45),0 0 0 1px rgba(61,214,198,.08) inset;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);text-align:center;animation:chatIn .35s ease-out}
 .line b{display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin-bottom:6px}
@@ -958,8 +967,8 @@ function initOffice(){
 const decorItem = slot => DECOR[slot].items.find(i => i.id === state.office.eq[slot]) || DECOR[slot].items[0];
 const officeStyle = () => Object.keys(DECOR).reduce((n, slot) => n + (DECOR[slot].minRank > state.rank ? 0 : decorItem(slot).style), 0);
 const officePerk = () => Math.min(25, Math.round(officeStyle() * .5));
-const HAIR_STYLES = ['Short','Curly','Long','Bun','Afro'];
-const HAIR_KEYS = ['short','curly','long','bun','afro'];
+const HAIR_STYLES = ['Short','Afro'];
+const HAIR_KEYS = ['short','afro'];
 const HAIR_COLORS = ['#2A1E16','#6B4423','#D8B26E','#B23A2E','#9AA0A6'];
 
 /* ---------- people: clean flat corporate-illustration characters that breathe, blink and emote ---------- */
@@ -984,9 +993,22 @@ function mouthSVG(kind, lip){
   const d = {soft:'M92 105 Q100 110 108 105', flat:'M93 107 Q100 108 107 107', worry:'M93 109 Q100 104 107 109', frown:'M92 110 Q100 103 108 110', smirk:'M92 107 Q102 110 109 102'}[kind];
   return `<path d="${d}" stroke="${lip}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
 }
+// A soft cloud of hair: an ellipse ringed with overlapping puffs.
+function fluff(cx, cy, rx, ry, n, r, c, from = 0, to = 360){
+  let s = '';
+  for (let i = 0; i < n; i++){ const a = (from + (to - from) * i / (to - from === 360 ? n : n - 1)) * Math.PI / 180; s += `<circle cx="${(cx + rx * Math.cos(a)).toFixed(1)}" cy="${(cy + ry * Math.sin(a)).toFixed(1)}" r="${r}" fill="${c}"/>`; }
+  return s;
+}
+// Little coils that give curly and afro hair texture.
+const coils = (pts, c) => `<g stroke="${tint(c, .3)}" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".7">${pts.map(([x, y]) => `<path d="M${x} ${y} q2.5 -4.5 6 -1.5 q2 2.5 -1.5 4.5"/>`).join('')}</g>`;
 function hairBack(style, c){
-  if (style === 'afro') return `<ellipse cx="100" cy="62" rx="46" ry="40" fill="${c}"/>`;
-  if (style === 'long') return `<path d="M66 84 C62 46 84 32 100 32 C118 32 140 46 134 84 L140 172 Q100 182 60 172Z" fill="${c}"/>`;
+  if (style === 'afro') return `<ellipse cx="100" cy="60" rx="44" ry="38" fill="${c}"/>` + fluff(100, 60, 44, 38, 18, 10, c)
+    + `<path d="M130 30 C146 44 150 70 140 94" stroke="${tint(c, -.25)}" stroke-width="7" fill="none" stroke-linecap="round" opacity=".5"/>`
+    + `<path d="M66 40 Q82 20 106 19" stroke="${tint(c, .3)}" stroke-width="3" fill="none" stroke-linecap="round" opacity=".55"/>`
+    + coils([[74,34],[90,26],[108,25],[124,32],[66,56],[136,54],[82,42],[116,40]], c);
+  // long, layered hair that falls behind the shoulders and tapers at the ends
+  if (style === 'long') return `<path d="M63 88 C58 46 80 28 100 28 C120 28 142 46 137 88 C140 118 144 150 146 182 Q136 196 122 188 C124 150 122 120 120 100 L80 100 C78 120 76 150 78 188 Q64 196 54 182 C56 150 60 118 63 88Z" fill="${c}"/>`
+    + `<path d="M60 120 C58 146 58 166 60 182 M140 120 C142 146 142 166 140 182" stroke="${tint(c, .22)}" stroke-width="2" fill="none" stroke-linecap="round" opacity=".5"/>`;
   return '';
 }
 function hairFront(style, c){
@@ -995,10 +1017,27 @@ function hairFront(style, c){
     // swept-up quiff with short sides, like the reference illustration
     case 'short': return `<path d="M69 84 C66 58 78 42 100 41 C122 42 134 58 131 84 C129 72 126 64 121 60 C108 63 92 63 79 60 C74 64 71 72 69 84Z" fill="${c}"/><path d="M73 60 C68 36 88 18 110 20 C126 22 136 34 133 52 C129 43 121 39 111 41 C117 47 119 53 117 60 C104 54 88 54 73 60Z" fill="${c}"/><path d="M84 36 C95 26 113 25 124 32" stroke="${tint(c, .3)}" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/>`;
     case 'fade': return `<path d="M70 76 C70 52 84 41 100 41 C116 41 130 52 130 76 C125 62 114 55 100 55 C86 55 75 62 70 76Z" fill="${c}"/>`;
-    case 'curly': return [[73,66,9],[79,53,10],[91,45,11],[106,44,11],[119,50,10],[127,63,9],[86,57,9],[100,53,10],[114,57,9]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${c}"/>`).join('');
-    case 'afro': return `<path d="M70 80 C70 56 84 46 100 46 C116 46 130 56 130 80 C124 66 112 60 100 60 C88 60 76 66 70 80Z" fill="${c}"/>`;
-    case 'long': return `<path d="M69 88 C66 50 86 34 104 35 C124 36 136 54 131 90 C126 66 114 54 98 56 C86 60 76 70 69 88Z" fill="${c}"/>`;
-    case 'bun': return cap + `<circle cx="100" cy="33" r="12" fill="${c}"/>`;
+    // low cut fade: close-cropped top hugging the head, crisp edge-up hairline, sides fading down to skin
+    case 'edge': return `<defs><linearGradient id="lowfade" gradientUnits="userSpaceOnUse" x1="0" y1="58" x2="0" y2="86"><stop offset="0" stop-color="${c}"/><stop offset=".55" stop-color="${c}" stop-opacity=".45"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></linearGradient></defs>`
+      + `<path d="M68.5 86 C67 66 69 58 73 56 L73 66 L72.5 86Z M131.5 86 C133 66 131 58 127 56 L127 66 L127.5 86Z" fill="url(#lowfade)"/>`
+      + `<path d="M70 64 C69 46 80 37 100 36 C120 37 131 46 130 64 C129 61 127 58.5 124 57.5 L121 57 L79 57 L76 57.5 C73 58.5 71 61 70 64Z" fill="${c}"/>`
+      + `<path d="M84 44 C93 39.5 107 39.5 116 44" stroke="${tint(c, .3)}" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".55"/>`;
+    // short curls: a full rounded top with a scalloped edge and coil texture
+    case 'curly': return `<path d="M68 86 C66 58 80 40 100 39 C120 40 134 58 132 86 C128 72 118 62 100 61 C82 62 72 72 68 86Z" fill="${c}"/>`
+      + fluff(100, 60, 32, 22, 9, 9, c, 180, 360) + `<circle cx="69" cy="74" r="6.5" fill="${c}"/><circle cx="131" cy="74" r="6.5" fill="${c}"/>`
+      + `<path d="M78 40 Q92 30 110 32" stroke="${tint(c, .3)}" stroke-width="2.6" fill="none" stroke-linecap="round" opacity=".55"/>`
+      + coils([[78,50],[92,44],[106,44],[119,49],[86,56],[112,56]], c);
+    // soft rounded hairline in front of the full afro
+    case 'afro': return `<path d="M70 84 C68 50 82 36 100 36 C118 36 132 50 130 84 C126 72 114 63 100 63 C86 63 74 72 70 84Z" fill="${c}"/>` + coils([[80,48],[96,44],[112,46],[88,55],[106,54]], c);
+    // side part with a swept fringe and a sheen
+    case 'long': return `<path d="M68 92 C64 58 80 36 102 36 C124 36 137 56 132 94 C130 78 126 66 118 58 C110 68 94 74 80 72 C74 78 70 84 68 92Z" fill="${c}"/>`
+      + `<path d="M100 37 C96 47 90 56 81 64" stroke="${tint(c, -.25)}" stroke-width="1.6" fill="none" stroke-linecap="round"/>`
+      + `<path d="M106 42 C116 44 124 50 128 60" stroke="${tint(c, .32)}" stroke-width="2.6" fill="none" stroke-linecap="round" opacity=".6"/>`;
+    // sleek pulled-back hair with a neat top bun
+    case 'bun': return `<path d="M69 84 C67 56 82 39 100 39 C118 39 133 56 131 84 C128 68 117 58 100 57 C83 58 72 68 69 84Z" fill="${c}"/>`
+      + `<path d="M79 54 Q89 45 98 41 M121 54 Q111 45 102 41 M88 57 Q95 48 100 42" stroke="${tint(c, .25)}" stroke-width="1.4" fill="none" stroke-linecap="round" opacity=".6"/>`
+      + `<circle cx="100" cy="27" r="13" fill="${c}"/><path d="M89 38 Q100 43 111 38" stroke="${tint(c, -.3)}" stroke-width="3" fill="none" stroke-linecap="round"/>`
+      + `<path d="M92 21 Q99 15 107 18" stroke="${tint(c, .35)}" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".7"/><path d="M94 29 q6 -6 12 0" stroke="${tint(c, .2)}" stroke-width="1.4" fill="none" stroke-linecap="round" opacity=".6"/>`;
   }
   return cap;
 }
@@ -1011,6 +1050,11 @@ function outfitTop(o, full){
     let s = `<path d="M85 160 L115 160 L113 ${hem} L87 ${hem}Z" fill="${o.col2}"/><path d="M87 210 L87 ${hem} M113 210 L113 ${hem}" stroke="${tint(o.col, -.3)}" stroke-width="2"/><path d="M86 160 L96 172 L100 162Z M114 160 L104 172 L100 162Z" fill="${tint(o.col2, -.1)}"/>`;
     if (o.tie) s += `<path d="M97 165 h6 l3 6 -3 4 4 58 -7 10 -7 -10 4 -58 -3 -4z" fill="${o.tie}"/><path d="M96 190 l8 -5 M95.5 202 l9 -5 M95.2 214 l9.6 -5 M95 226 l10 -5" stroke="${tint(o.tie, .35)}" stroke-width="1.6"/>`;
     return s + `<path d="M85 160 L94 196 L87 212 L70 172Z M115 160 L106 196 L113 212 L130 172Z" fill="${shade}"/>`;
+  }
+  if (o.kind === 'polo'){
+    // polo: open placket with three buttons and a pointed two-piece collar
+    const btn = y => `<circle cx="100" cy="${y}" r="2.2" fill="${tint(o.col, .45)}" stroke="${tint(o.col, -.35)}" stroke-width=".8"/>`;
+    return `<path d="M95 160 L105 160 L105 206 L95 206Z" fill="${tint(o.col, -.12)}"/><path d="M95 160 V206 H105 V160" stroke="${tint(o.col, -.35)}" stroke-width="1.4" fill="none"/>` + btn(174) + btn(186) + btn(198);
   }
   if (o.kind === 'hoodie') return `<path d="M74 166 Q100 192 126 166" stroke="${shade}" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M93 182 v24 M107 182 v24" stroke="#EEF1F5" stroke-width="2.4" stroke-linecap="round"/>`;
   if (o.kind === 'turtleneck') return `<rect x="86" y="148" width="28" height="20" rx="8" fill="${tint(o.col, .1)}"/>`;
@@ -1029,10 +1073,14 @@ function headSVG(p){
   h += `<path d="M100 126 C116 126 130 112 130 92 L130 78 C130 66 126 56 120 50 C125 66 124 98 100 126Z" fill="${sh}" opacity=".7"/>`;
   if (p.beard) h += `<path d="M75 96 C77 116 88 127 100 127 C112 127 123 116 125 96 C120 108 112 115 100 115 C88 115 80 108 75 96Z" fill="${p.hairCol}"/><path d="M90 100 Q100 96 110 100 Q100 103 90 100Z" fill="${p.hairCol}"/>`;
   h += hairFront(p.hair, p.hairCol);
-  h += `<path d="${b1}" stroke="${bc}" stroke-width="3" fill="none" stroke-linecap="round"/><path d="${b2}" stroke="${bc}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+  const bw = p.thickBrows ? 5 : 3;
+  h += `<path d="${b1}" stroke="${bc}" stroke-width="${bw}" fill="none" stroke-linecap="round"/><path d="${b2}" stroke="${bc}" stroke-width="${bw}" fill="none" stroke-linecap="round"/>`;
   h += eye(88) + eye(112);
   h += `<path d="M100 89 Q97 98 95 101 Q100 103 105 101" stroke="${tint(sk, -.3)}" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
-  h += mouthSVG(face.mouth, lip);
+  // neat mustache over the lip and a short chin goatee; the mouth drops a touch to make room
+  h += p.stache ? `<g transform="translate(0 3)">${mouthSVG(face.mouth, lip)}</g>` : mouthSVG(face.mouth, lip);
+  if (p.stache) h += `<path d="M86 104.5 Q93 99.5 100 102 Q107 99.5 114 104.5 Q107 103.4 100 104 Q93 103.4 86 104.5Z" fill="${p.hairCol}"/>`
+    + `<path d="M92 119.5 Q100 117 108 119.5 L106.5 125 Q100 129 93.5 125Z" fill="${p.hairCol}"/>`;
   if (p.glasses) h += `<g fill="#FFFFFF" fill-opacity=".12" stroke="#16181D" stroke-width="2.8"><rect x="76" y="78" width="23" height="17" rx="6"/><rect x="101" y="78" width="23" height="17" rx="6"/></g><path d="M99 85 h2 M76 84 l-6 -2 M124 84 l6 -2" stroke="#16181D" stroke-width="2.4"/>`;
   return h;
 }
@@ -1055,11 +1103,18 @@ function personParts(p, full){
       + outfitTop(o, true)
       // shirt tucks in at the belt; trousers (not shirt) show below it
       + (o.kind === 'suit' ? `<rect x="87" y="286" width="26" height="14" fill="${pants}"/><rect x="87" y="282" width="26" height="8" fill="#3B2A20"/><rect x="96" y="281" width="8" height="10" rx="1.5" fill="none" stroke="#C9A24A" stroke-width="1.8"/><circle cx="82" cy="244" r="2.4" fill="${tint(o.col, -.35)}"/><path d="M60 236 h16 M124 236 h16" stroke="${tint(o.col, -.3)}" stroke-width="2"/>` : '')
-      + `<path d="M58 174 C46 182 42 226 46 280 L64 282 C64 242 66 206 72 188Z" fill="${tint(o.col, -.06)}"/><path d="M142 174 C154 182 158 226 154 280 L136 282 C136 242 134 206 128 188Z" fill="${tint(o.col, -.16)}"/>`
-      + `<rect x="47" y="274" width="17" height="6" rx="2" fill="${o.col2 || tint(o.col, .2)}"/><rect x="136" y="274" width="17" height="6" rx="2" fill="${o.col2 || tint(o.col, .2)}"/>`
+      + (o.kind === 'polo'
+        // short sleeves, bare forearms
+        ? `<path d="M47 214 L67 216 C66 240 64 262 64 282 L48 280 C46 258 45 236 47 214Z" fill="${p.skin}"/><path d="M153 214 L133 216 C134 240 136 262 136 282 L152 280 C154 258 155 236 153 214Z" fill="${tint(p.skin, -.1)}"/>`
+          + `<path d="M58 174 C47 182 44 200 44 220 L68 222 C68 206 69 196 72 188Z" fill="${tint(o.col, -.06)}"/><path d="M142 174 C153 182 156 200 156 220 L132 222 C132 206 131 196 128 188Z" fill="${tint(o.col, -.16)}"/>`
+          + `<path d="M44 217 L68 219 M156 217 L132 219" stroke="${tint(o.col, -.3)}" stroke-width="2"/>`
+        : `<path d="M58 174 C46 182 42 226 46 280 L64 282 C64 242 66 206 72 188Z" fill="${tint(o.col, -.06)}"/><path d="M142 174 C154 182 158 226 154 280 L136 282 C136 242 134 206 128 188Z" fill="${tint(o.col, -.16)}"/>`
+          + `<rect x="47" y="274" width="17" height="6" rx="2" fill="${o.col2 || tint(o.col, .2)}"/><rect x="136" y="274" width="17" height="6" rx="2" fill="${o.col2 || tint(o.col, .2)}"/>`)
       + `<path d="M48 279 h15 v12 q0 10 -7.5 10 q-7.5 0 -7.5 -10Z" fill="${p.skin}"/><path d="M137 279 h15 v12 q0 10 -7.5 10 q-7.5 0 -7.5 -10Z" fill="${tint(p.skin, -.1)}"/>`;
   }
-  return `<g class="p3-body"><g transform="translate(0 20)">${hairBack(p.hair, p.hairCol)}</g>${body}${neck}<g transform="translate(0 20)"><g class="p3-head">${headSVG(p)}</g></g></g>`;
+  // the polo collar stands up around the neck, so it is drawn over it
+  const collar = o.kind === 'polo' ? `<path d="M87 148 L100 166 L92 184 L74 170 L82 152Z" fill="${tint(o.col, .08)}" stroke="${tint(o.col, -.35)}" stroke-width="1.4" stroke-linejoin="round"/><path d="M113 148 L100 166 L108 184 L126 170 L118 152Z" fill="${tint(o.col, -.02)}" stroke="${tint(o.col, -.35)}" stroke-width="1.4" stroke-linejoin="round"/>` : '';
+  return `<g class="p3-body"><g transform="translate(0 20)">${hairBack(p.hair, p.hairCol)}</g>${body}${neck}${collar}<g transform="translate(0 20)"><g class="p3-head">${headSVG(p)}</g></g></g>`;
 }
 function personSVG(p, label, full){
   return `<svg class="p3" viewBox="0 0 200 ${full ? 460 : 250}" role="img" aria-label="${esc(label || 'Character')}" xmlns="http://www.w3.org/2000/svg">${personParts(p, full)}</svg>`;
@@ -1078,9 +1133,13 @@ const CAST = [
 // The starter outfit is the reference look: gray-blue suit, light blue shirt, navy striped tie.
 const PLAYER_OUTFITS = {hoodie:{kind:'suit', col:'#3A6298', col2:'#D6E9F5', tie:'#1F2A44', pants:'#C8AE7E'}, blazer:{kind:'suit', col:'#1F3A7A', col2:'#F4F6FA', tie:'#7A2E3A', pants:'#16295C'},
   turtleneck:{kind:'turtleneck', col:'#26262C', pants:'#3A3F4A'}, gold:{kind:'suit', col:'#B07C14', col2:'#1B1B1F', pants:'#1B1B1F'}};
-const playerLook = () => ({skin:SKINS[state.skin == null ? 2 : state.skin] || SKINS[2], hair:HAIR_KEYS[state.hair || 0] || 'short', hairCol:HAIR_COLORS[state.hairColor || 0],
-  glasses:state.glasses !== false, outfit:PLAYER_OUTFITS[state.outfit] || PLAYER_OUTFITS.hoodie, mood:state.rep >= 35 ? 'happy' : state.rep >= 15 ? 'neutral' : 'annoyed'});
-function characterSVG(full){ return personSVG(playerLook(), 'Your character', full); }
+// Second playable character: green polo, low cut fade, mustache and goatee, bold brows. His look is fixed.
+const POLO_LOOK = {skin:'#7A4A2B', hair:'edge', hairCol:'#17110D', stache:true, thickBrows:true, glasses:false, outfit:{kind:'polo', col:'#4E7B4C', pants:'#3A3F4A'}};
+const CHARACTERS = ['Blazer', 'Polo'];
+const playerMood = () => state.rep >= 35 ? 'happy' : state.rep >= 15 ? 'neutral' : 'annoyed';
+const playerLook = (c = state.char || 0) => c === 1 ? {...POLO_LOOK, mood:playerMood()} : ({skin:SKINS[state.skin == null ? 2 : state.skin] || SKINS[2], hair:HAIR_KEYS[state.hair || 0] || 'short', hairCol:HAIR_COLORS[state.hairColor || 0],
+  glasses:state.glasses !== false, outfit:PLAYER_OUTFITS[state.outfit] || PLAYER_OUTFITS.hoodie, mood:playerMood()});
+function characterSVG(full, c){ return personSVG(playerLook(c), 'Your character', full); }
 
 // Office tab: you, seated in your chair at whatever desk and computer you have equipped, over the office photo.
 function deskSceneSVG(){
@@ -1101,10 +1160,12 @@ function deskSceneSVG(){
   else s += `<rect x="170" y="${top}" width="460" height="9" rx="2" fill="#C8CDD4"/><path d="M200 ${top + 9} L270 450 M270 ${top + 9} L200 450 M530 ${top + 9} L600 450 M600 ${top + 9} L530 450" stroke="#8A919C" stroke-width="6"/>`;
   // forearms resting on the desk, hands on the keyboard
   // arms: elbows at your sides, forearms lying flat on the desk toward the keyboard
-  const sl = tint(look.outfit.col, -.08), sr = tint(look.outfit.col, -.18), cuff = look.outfit.col2 || tint(look.outfit.col, .2);
+  // short sleeves (polo) leave the forearms bare
+  const bare = look.outfit.kind === 'polo';
+  const sl = bare ? look.skin : tint(look.outfit.col, -.08), sr = bare ? tint(look.skin, -.1) : tint(look.outfit.col, -.18), cuff = look.outfit.col2 || tint(look.outfit.col, .2);
   s += `<rect x="352" y="344" width="96" height="9" rx="3" fill="#2B2F38"/>`;
-  s += `<path d="M326 343 L364 349" stroke="${sl}" stroke-width="20" fill="none" stroke-linecap="round"/><path d="M474 343 L436 349" stroke="${sr}" stroke-width="20" fill="none" stroke-linecap="round"/>`;
-  s += `<path d="M362 341 l5 1 -2 15 -5 -1z" fill="${cuff}"/><path d="M438 341 l-5 1 2 15 5 -1z" fill="${cuff}"/>`;
+  s += `<path d="M326 343 L364 349" stroke="${sl}" stroke-width="${bare ? 16 : 20}" fill="none" stroke-linecap="round"/><path d="M474 343 L436 349" stroke="${sr}" stroke-width="${bare ? 16 : 20}" fill="none" stroke-linecap="round"/>`;
+  if (!bare) s += `<path d="M362 341 l5 1 -2 15 -5 -1z" fill="${cuff}"/><path d="M438 341 l-5 1 2 15 5 -1z" fill="${cuff}"/>`;
   s += `<ellipse cx="376" cy="349" rx="11" ry="7" fill="${look.skin}"/><ellipse cx="424" cy="349" rx="11" ry="7" fill="${tint(look.skin, -.1)}"/>`;
   // Three-screen setup: a monitor each side (angled in a touch) plus a silver MacBook-style laptop.
   // Bigger computer upgrades just make the monitors bigger and brighter.
@@ -2031,11 +2092,13 @@ function profileView(){
   return `<div class="cols"><section class="panel section"><div class="row" style="gap:16px"><div class="avatar3d" aria-hidden="true">${characterSVG()}</div><div><p class="eyebrow">${state.founder ? esc(state.founder.name) : HOME.name}</p><h2>${RANKS[state.rank].name}</h2></div></div>
       <div class="summary"><div class="kpi"><b>${s.resolved}</b><span>tickets resolved</span></div><div class="kpi"><b>${rate}%</b><span>clean rate</span></div>
       <div class="kpi"><b>${s.breach}</b><span>security incidents</span></div><div class="kpi"><b>${s.shifts}</b><span>shifts worked</span></div></div>
-      <div class="char-edit"><div class="char-preview">${characterSVG(true)}</div><div class="char-opts">
+      <div class="char-edit"><div class="char-pick">${CHARACTERS.map((n, i) => { const on = (state.char || 0) === i;
+        return `<button class="char-preview char-card ${on ? 'on' : ''}" data-act="char" data-v="${i}" aria-pressed="${on}">${characterSVG(true, i)}<b>${n}</b><span>${on ? 'Playing' : 'Play as'}</span></button>`; }).join('')}</div><div class="char-opts">
+      ${(state.char || 0) === 1 ? `<p class="muted">The Polo look is set: green polo, low cut fade, mustache and goatee. Switch to Blazer to change hair, skin tone and glasses.</p>` : `
       <div><p class="eyebrow" style="margin-bottom:8px">Hair</p><div class="row">${HAIR_STYLES.map((h, i) => `<button class="btn ${(state.hair || 0) === i ? "on" : ""}" data-act="hair" data-v="${i}" aria-pressed="${(state.hair || 0) === i}">${h}</button>`).join("")}</div></div>
       <div><p class="eyebrow" style="margin-bottom:8px">Hair color</p><div class="row">${HAIR_COLORS.map((c, i) => `<button class="skin ${(state.hairColor || 0) === i ? "on" : ""}" data-act="hairColor" data-v="${i}" style="background:${c}" aria-label="Hair color ${i + 1}" aria-pressed="${(state.hairColor || 0) === i}"></button>`).join("")}</div></div>
       <div><p class="eyebrow" style="margin-bottom:8px">Skin tone</p><div class="row">${SKINS.map((c, i) => `<button class="skin ${state.skin === i ? "on" : ""}" data-act="skin" data-v="${i}" style="background:${c}" aria-label="Skin tone ${i + 1}" aria-pressed="${state.skin === i}"></button>`).join("")}</div></div>
-      <div><p class="eyebrow" style="margin-bottom:8px">Glasses</p><div class="row">${['On','Off'].map((l, i) => `<button class="btn ${(state.glasses !== false) === !i ? "on" : ""}" data-act="glasses" data-v="${i ? 0 : 1}" aria-pressed="${(state.glasses !== false) === !i}">${l}</button>`).join("")}</div></div>
+      <div><p class="eyebrow" style="margin-bottom:8px">Glasses</p><div class="row">${['On','Off'].map((l, i) => `<button class="btn ${(state.glasses !== false) === !i ? "on" : ""}" data-act="glasses" data-v="${i ? 0 : 1}" aria-pressed="${(state.glasses !== false) === !i}">${l}</button>`).join("")}</div></div>`}
       <p class="small muted">Outfits are in the Shop. Your character smiles at 35+ reputation and frowns below 15, and sits at your desk in the Office tab.</p></div></div></section>
     <section class="panel section"><h2>Save data</h2><p class="muted">Progress saves in this browser only.</p>
       ${state.rank < 5 ? `<div class="row"><button class="btn" data-act="devFounder">Testing: jump to Startup Founder</button></div>` : ''}
@@ -2102,6 +2165,7 @@ document.addEventListener('click', e => {
     case 'hair': state.hair = +v; commit(); break;
     case 'hairColor': state.hairColor = +v; commit(); break;
     case 'glasses': state.glasses = v === '1'; commit(); break;
+    case 'char': state.char = +v; commit(); break;
     case 'decor': {
       const [slot, id] = v.split(':'), it = DECOR[slot].items.find(x => x.id === id);
       const own = state.office.owned[slot] || (state.office.owned[slot] = []);
@@ -2231,6 +2295,8 @@ function start(data){
   if (state.tab === 'office') state.tab = 'desk'; // Desk and Office are one tab now
   // Buzz, Locs and Braids were removed: Afro keeps its look, the others fall back to Short.
   if (state.hairV !== 2){ state.hair = ({5:4})[state.hair] ?? (state.hair >= 4 ? 0 : state.hair || 0); state.hairV = 2; }
+  // Curly, Long and Bun were removed too: Afro moves to slot 1, the others fall back to Short.
+  if (state.hairV !== 3){ state.hair = state.hair === 4 ? 1 : 0; state.hairV = 3; }
   if (!state.office) initOffice();
   if (!state.week) newWeek(1);
   if (state.founder && !state.rival) state.rival = {name:'Apex Cloud', value:Math.max(2e7, netWorth() * .6), flags:[]};
