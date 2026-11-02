@@ -390,7 +390,7 @@ const ALL_GROUPS = ['All-Staff', ...DEPTS.flatMap(d => GROUPS[d]), 'Domain-Admin
 const LICENSES = ['M365 E3','M365 E5','No license'];
 const licenseFor = d => d === 'Engineering' ? 'M365 E5' : 'M365 E3';
 const CLIENTS = [{name:'Halcyon Foods',domain:'halcyonfoods.com'},{name:'Northpine Credit Union',domain:'northpinecu.org'},{name:'Vireo Health',domain:'vireohealth.com'},{name:'Quarry & Stone Law',domain:'quarrystone.law'},{name:'Lumen Aerospace',domain:'lumenaero.com'},{name:'Tidewater Schools',domain:'tidewater.edu'}];
-const HOME = {name:'Brightline Logistics',domain:'brightline.co'};
+const HOME = {name:'Billionaire Tech',domain:'billionairetech.co'};
 const WORDS = ['Cedar','Harbor','Copper','Maple','Quartz','Juniper','Falcon','Ember','Tundra','Willow'];
 
 const RANKS = [
@@ -1538,7 +1538,7 @@ const STORIES = {
               {label:'Raise a seed round',sub:'Keep 60% · $20M valuation · $1.5M in the bank',fx(name){state.founder = {name, valuation:2e7, stake:.6}; initEmpire(1.5e6);}}]}
 };
 function modalSpec(m){
-  if (m.type === 'welcome') return {eyebrow:'Day 1 · Brightline Logistics', title:'Welcome to the help desk.',
+  if (m.type === 'welcome') return {eyebrow:`Day 1 · ${HOME.name}`, title:'Welcome to the help desk.',
     body:['You are the new intern. The phones ring, the passwords are forgotten, and every ticket you close well moves you up.','Look up the account, verify the person, take only the actions the ticket needs, then resolve. Get careless and you will hand an attacker the keys.','Climb from intern to CTO, found your own company, build datacenters around the world, and reach a $1B net worth. Then keep going.'],
     choices:[{label:'Got it',sub:'Your first shift has 4 tickets. The runbook sits beside every ticket.',fx(){}}]};
   if (m.type === 'report'){
@@ -1556,7 +1556,7 @@ function modalSpec(m){
     choices:[{label:'Take the Series A',sub:'Valuation ×1.5 · your stake ×0.8',fx(){state.founder.valuation *= 1.5; state.founder.stake *= .8; state.founder.seriesA = 'taken';}},
              {label:'Stay lean',sub:'+15 reputation, keep your stake',fx(){state.rep = clamp(state.rep + 15, 0, 100); state.founder.seriesA = 'declined';}}]};
   if (m.type === 'billionaire') return {eyebrow:'Net worth over $1B', title:'You are a tech billionaire.',
-    body:[`It started with a forgotten password at Brightline Logistics. Now ${esc(state.founder.name)} handles identity for companies around the world.`,'The tickets will keep coming. What now?'],
+    body:[`It started with a forgotten password at ${HOME.name}. Now ${esc(state.founder.name)} handles identity for companies around the world.`,'The tickets will keep coming. What now?'],
     choices:[{label:'Keep building',sub:'+50 gems',fx(){state.gems += 50; state.rank = 6;}},
              {label:'Fund free IT training for students',sub:'+30 reputation · donate 5% of your shares',fx(){state.rep = clamp(state.rep + 30, 0, 100); state.founder.stake *= .95; state.rank = 6;}}]};
   if (m.type === 'story') return STORIES[m.rank];
@@ -1666,7 +1666,7 @@ function runbook(){
 
 function briefView(){
   const r = RANKS[state.rank], ls = state.lastShift;
-  const intro = state.founder ? `${esc(state.founder.name)} handles help desk tickets for client companies.` : `Brightline Logistics, ${HOME.domain}.`;
+  const intro = state.founder ? `${esc(state.founder.name)} handles help desk tickets for client companies.` : `${HOME.name}, ${HOME.domain}.`;
   return `${officeScene()}<div class="brief-grid"><section class="panel brief">
       <p class="eyebrow">Day ${state.day} · ${r.name}</p>
       <h1>${state.stats.shifts === 0 ? 'Your first shift starts at 9:00.' : state.rank === 6 ? 'Another day at the top.' : 'The queue is filling up.'}</h1>
